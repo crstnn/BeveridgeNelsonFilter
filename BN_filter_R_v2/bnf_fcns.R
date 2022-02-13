@@ -708,6 +708,7 @@ bnf <- function(y,
   # @fixed_delta: set a fixed delta to be used if delta_select=0
   # @dynamic_bands: set to T for dynamic error bands, F for fixed standard error bands
   # @ib: set to F if no iterative backcasting as in KMW2018 (just unconditional mean), set to T if iterative backcasting
+  # @varargs (...): passed into piecewise demean function
 {
     # Save 'ts' attributes if 'y' is a 'ts' object
     if (is.ts(y)) {
@@ -757,25 +758,26 @@ bnf <- function(y,
     	cycle_iter <- cbind(zeros(nrow(cycle),1),cycle)
     	iter <- 1
     	while (iter < iterative && sd(cycle_iter[,ncol(cycle_iter)]-cycle_iter[,ncol(cycle_iter)-1])>0.001*sd(demeaned_dy)){
-    	
-    	demeaned_dy <- rolling_demean(y = dy, y_cycle = DeltaBNcycle, wind = window)
-    	
-    	if (delta_select > 0){
-    delta <- select_delta(demeaned_dy, p, ib, delta_select, d0, dt)
-    }
-    else {
-    	delta <- fixed_delta
-    	}
-    tmp <- BN_Filter(demeaned_dy, p, delta, dynamic_bands, ib, window)
-    cycle <- tmp$BN_cycle
-    DeltaBNcycle <- diff(x = cycle, lag = 1)
-    
-    cycle_iter <- cbind(cycle_iter,cycle)		
-    		
-    	iter = iter + 1
+      	
+      	demeaned_dy <- rolling_demean(y = dy, y_cycle = DeltaBNcycle, wind = window)
+      	
+        if (delta_select > 0){
+          delta <- select_delta(demeaned_dy, p, ib, delta_select, d0, dt)
+        }
+        else{
+        	delta <- fixed_delta
+        }
+      	
+        tmp <- BN_Filter(demeaned_dy, p, delta, dynamic_bands, ib, window)
+        cycle <- tmp$BN_cycle
+        DeltaBNcycle <- diff(x = cycle, lag = 1)
+        
+        cycle_iter <- cbind(cycle_iter,cycle)		
+      		
+      	iter = iter + 1
     	}    	
     }
-      
+    
     colnames(cycle) <- "Cycle"
     cycle_se <- tmp$BN_cycle_se
     
