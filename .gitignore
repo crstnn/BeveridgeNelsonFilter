@@ -1,5 +1,7 @@
 **/__pycache__/
-*.idea
+*/.idea
 .Rproj.user
 *.Rproj
+*.Rhistory
+*.RData
 */us_cycle_R_bnf.csv
