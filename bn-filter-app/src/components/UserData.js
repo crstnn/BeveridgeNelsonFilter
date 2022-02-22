@@ -34,7 +34,7 @@ export class UserData extends Component {
                         label="Time Series (Y)"
                         title="Paste Chosen Time Series Here"
                         onChange={handleChange('firstName')}
-                        defaultValue={values.firstName}
+                        defaultValue={values.unprocessedY}
                     />
 
                 </FormControl>

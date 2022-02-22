@@ -6,6 +6,7 @@ import UserData from "./UserData";
 export class UserForm extends Component {
     state = {
         step: 1,
+        unprocessedY: '',
         y: '', // time series
         fixedDelta: '',
         deltaSelect: '',

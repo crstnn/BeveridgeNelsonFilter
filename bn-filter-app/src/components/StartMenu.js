@@ -16,7 +16,7 @@ export class StartMenu extends Component {
                     <p>We will guide you through the steps to perform trend-cycle composition, on either a time series
                         of
                         your choosing or a country's GDP from the Federal Reserve Economic Database (FRED)</p>
-                    <p>Choose the kind of time series you would like to proceed with:</p>
+                    <p>Choose the source of the time series you would like to proceed with:</p>
                 </div>
 
 
