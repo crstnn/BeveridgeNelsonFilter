@@ -4,14 +4,14 @@
 
 
 # Clear the workspace -- comment out if you have loaded other packages already
-rm(list = ls(all = TRUE))
+rm(list = ls(all = T))
 gc()
 
 # Source required functions
 source("bnf_fcns.R")
 
 # Read in US centric data to use for the demonstration
-usdata <- read.csv(file = 'us_data.csv', header = TRUE, stringsAsFactors = FALSE)
+usdata <- read.csv(file = 'us_data.csv', header = T, stringsAsFactors = F)
 #usdata <- read.csv(file = 'USGDP_updated.csv', header = TRUE, stringsAsFactors = FALSE)
 
 # Make the series GDP a 'ts' object
@@ -20,7 +20,7 @@ gdp <- ts(data = usdata$GDPC1, end = c(2016, 2), frequency = 4)
 #gdp <- ts(data = usdata$GDPC1, end = c(2021, 2), frequency = 4)
 
 #Take logs and multiply by 100
-y <- transform_series(y = gdp, take_log = TRUE, pcode = "p1") # same as: log(raw_y) * 100.0
+y <- transform_series(y = gdp, take_log = T, pcode = "p1") # same as: log(raw_y) * 100.0
 
 
 # Example: Automatically determined delta and full sample mean demeaning method
