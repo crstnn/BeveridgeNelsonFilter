@@ -5,3 +5,4 @@
 *.Rhistory
 *.RData
 */us_cycle_R_bnf.csv
+*node_modules
