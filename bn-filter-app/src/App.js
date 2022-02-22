@@ -1,15 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import './styles/App.css';
+import UserForm from './components/UserForm';
+import React from "react";
+
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        BN Filter Trend-Cycle Decomposition
-      </header>
-      <p>This is an element</p>
-    </div>
-  );
+    return (
+        <div className="App">
+            <header className="appHeader">
+                BN Filter Trend-Cycle Decomposition
+            </header>
+            <div className="information welcomeInformation">
+                <p>This tool performs trend-cycle decomposition.
+                    It is implemented using the method described in <a target="_blank" rel="noopener noreferrer"
+                                                                       href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3434174">
+                        Kamber, Morley, and Wong</a>, which is based on the Beveridge-Nelson filter.
+                </p>
+
+            </div>
+            <UserForm/>
+        </div>
+    );
 }
 
 export default App;
