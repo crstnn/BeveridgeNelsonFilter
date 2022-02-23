@@ -3,7 +3,9 @@ import {Button, FormControl, TextField} from "@mui/material";
 import '../styles/App.css';
 
 export class UserData extends Component {
+
     continue = e => {
+
         e.preventDefault();
         // process form
         this.props.nextStep();
@@ -36,7 +38,6 @@ export class UserData extends Component {
                         onChange={handleChange('firstName')}
                         defaultValue={values.unprocessedY}
                     />
-
                 </FormControl>
                 <br/>
                 <Button
@@ -49,9 +50,7 @@ export class UserData extends Component {
                     style={styles.button}
                     onClick={this.continue}
                 >Continue</Button>
-
                 <br/>
-
             </div>
         )
     }

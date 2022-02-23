@@ -36,8 +36,8 @@ export class UserForm extends Component {
 
     render() {
         const {step} = this.state;
-        const {firstName, lastName, email, occupation, city, bio} = this.state;
-        const values = {firstName, lastName, email, occupation, city, bio}
+        const {unprocessedY, fixedDelta, deltaSelect, demean, iterativeBackcasting, window} = this.state;
+        const values = {unprocessedY, fixedDelta, deltaSelect, demean, iterativeBackcasting, window};
 
         switch (step) {
             case 2:
@@ -70,9 +70,6 @@ export class UserForm extends Component {
                 )
         }
 
-        return (
-            <div>UserForm</div>
-        )
     }
 }
 

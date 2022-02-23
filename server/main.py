@@ -8,4 +8,4 @@ def index():
 
 @app.route('/to-ping')
 def to_ping():
-    return "test"
+    return "alive"

@@ -10,6 +10,7 @@
 # MATLAB codes converted to R by Luke Hartigan, 2017
 # Additional R codes and wrapper class 'bnf' written by Luke Hartigan, 2017
 # Updated by James Morley, 2022
+# Additional code changes by Cristian
 ####################################################################################################
 
 # Helper functions used by the main functions below
