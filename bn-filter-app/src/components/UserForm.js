@@ -60,7 +60,11 @@ export class UserForm extends Component {
                     />
                 )
             case 4:
-                return <RenderedPlot/>
+                return (<RenderedPlot
+                        prevStep={this.prevStep}
+                        handleChange={this.handleChange}
+                        values={values}/>
+                )
             default: // also case 1
                 return (
                     <StartMenu

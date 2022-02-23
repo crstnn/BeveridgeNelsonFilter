@@ -42,49 +42,50 @@ export class UserData extends Component {
                             defaultValue={values.unprocessedY}
                         />
                     </FormControl>
-                <div style={{
-                    width: "450px",
-                    alignItems: "center",
-                    display: "inline-block",
+                    <div style={{
+                        width: "450px",
+                        alignItems: "center",
+                        display: "inline-block",
                     }}>
-                <Grid container direction="column" sx={{minHeight: 500}} justifyContent="space-evenly" alignItems="center">
-                    <Grid item xs={4}>
-                    <FormControl variant="standard" sx={{minWidth: 200}}>
-                        <InputLabel>Periodicity</InputLabel>
-                        <Select
-                            label="Periodicity"
-                            title=""
-                            onChange={handleChange('lastName')}
-                            defaultValue={values.deltaSelect}
-                        >
-                            <MenuItem value={0}>Quarterly</MenuItem>
-                            <MenuItem value={1}>Monthly</MenuItem>
-                            <MenuItem value={2}>Fortnightly</MenuItem>
-                            <MenuItem value={3}>Weekly</MenuItem>
-                            <MenuItem value={3}>Hourly</MenuItem>
-                            <MenuItem value={3}>By The Minute</MenuItem>
-                            <MenuItem value={4}>Unspecified</MenuItem>
-                        </Select>
-                    </FormControl>
-                    </Grid>
-                    <Grid item xs={4}>
-                    <CustomDatePicker/>
-                    </Grid>
-                    <Grid item xs={4}>
-                    <Button
-                        variant="contained"
-                        style={styles.button}
-                        onClick={this.back}
-                    >Back</Button>
-                    <Button
-                        variant="contained"
-                        style={styles.button}
-                        onClick={this.continue}
-                    >Continue</Button>
-                    </Grid>
-                </Grid>
+                        <Grid container direction="column" sx={{minHeight: 500}} justifyContent="space-evenly"
+                              alignItems="center">
+                            <Grid item xs={4}>
+                                <FormControl variant="standard" sx={{minWidth: 200}}>
+                                    <InputLabel>Periodicity</InputLabel>
+                                    <Select
+                                        label="Periodicity"
+                                        title=""
+                                        onChange={handleChange('lastName')}
+                                        defaultValue={values.deltaSelect}
+                                    >
+                                        <MenuItem value={0}>Quarterly</MenuItem>
+                                        <MenuItem value={1}>Monthly</MenuItem>
+                                        <MenuItem value={2}>Fortnightly</MenuItem>
+                                        <MenuItem value={3}>Weekly</MenuItem>
+                                        <MenuItem value={3}>Hourly</MenuItem>
+                                        <MenuItem value={3}>By The Minute</MenuItem>
+                                        <MenuItem value={4}>Unspecified</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <CustomDatePicker/>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <Button
+                                    variant="contained"
+                                    style={styles.button}
+                                    onClick={this.back}
+                                >Back</Button>
+                                <Button
+                                    variant="contained"
+                                    style={styles.button}
+                                    onClick={this.continue}
+                                >Continue</Button>
+                            </Grid>
+                        </Grid>
 
-                </div>
+                    </div>
 
                 </div>
 
