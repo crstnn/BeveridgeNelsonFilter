@@ -49,7 +49,7 @@ export class UserData extends Component {
                     }}>
                 <Grid container direction="column" sx={{minHeight: 500}} justifyContent="space-evenly" alignItems="center">
                     <Grid item xs={4}>
-                    <FormControl variant="standard" sx={{minWidth: 300}}>
+                    <FormControl variant="standard" sx={{minWidth: 200}}>
                         <InputLabel>Periodicity</InputLabel>
                         <Select
                             label="Periodicity"
