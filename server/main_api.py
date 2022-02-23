@@ -1,12 +1,7 @@
 import gc
 import os
-
 import dicttoxml
 from flask import Flask, jsonify
-
-
-
-FILEPATH = "./BN_filter_R_v2/"
 
 if os.environ['FLASK_ENV'] == 'prod':
     print("flask_prod")
@@ -18,6 +13,8 @@ else:
 
 import rpy2.robjects as robj
 from rpy2.robjects.vectors import FloatVector
+
+FILEPATH = "./BN_filter_R_v2/"
 
 app = Flask(__name__)
 
