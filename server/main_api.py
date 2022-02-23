@@ -1,23 +1,13 @@
-import gc
-import os
-import dicttoxml
-from flask import Flask, jsonify
-
-if 'FLASK_ENV' in os.environ and os.environ['FLASK_ENV'] == 'dev':
-    print("flask_dev")
-    os.environ['R_HOME'] = 'C:/Program Files/R/R-4.0.2'
-    # must be set before rpy2 import
-    # only necessary locally
-else:
-    print("flask_prod")
-
-
-import rpy2.robjects as robj
-from rpy2.robjects.vectors import FloatVector
-
-FILEPATH = "./BN_filter_R_v2/"
+from GLOBAL_imp import *
+from python_to_r_interface.TestTimeSeries import *
+# from python_to_r_interface.FREDTimeSeries import *
+# from python_to_r_interface.UserTimeSeries import *
+from python_to_r_interface.Bnf import *
+from pathlib import Path
 
 app = Flask(__name__)
+
+CURR_FILEPATH = str(Path(__file__).parents[0])
 
 
 @app.route('/')
@@ -27,31 +17,34 @@ def index():
 
 @app.route('/fred-time-series')
 def fred_time_series():
-    return "alive"
+    R = robj.r
+    R.source(CURR_FILEPATH + FILTER_FILEPATH + BNF_FUNCTIONS)
+    user_series = FREDTimeSeries(r_instance=R)
+    user_series.set_default_transformation()
+
+    bnf = BNF(user_series.get_time_series(), r_instance=R)
+
+    return jsonify(bnf.run())
 
 
 @app.route('/user-specified-time-series')
 def user_specified_time_series():
     R = robj.r
-    R.source(FILEPATH + "bnf_fcns.R")
+    R.source(CURR_FILEPATH + FILTER_FILEPATH + BNF_FUNCTIONS)
+    user_series = UserTimeSeries(r_instance=R)
+    user_series.set_default_transformation()
 
-    def US_GDP_test_data():
-        list2 = []
-        with open(FILEPATH + "us_data.csv") as f:
-            for row in f:
-                try:
-                    list2.append(float(row.split(',')[1]))
-                except:
-                    pass
-        return list2
+    bnf = BNF(user_series.get_time_series(), r_instance=R)
 
-    def func(time_series):
-        y = FloatVector(time_series)
-        transformed_y = R('transform_series')(y, take_log=True, pcode="p1")
-        result = R('bnf')(transformed_y, demean="dm")
-        gc.collect()  # using Python's garage collector to free up unnecessary use of R memory space
-        return result
+    return jsonify(bnf.run())
 
-    bnf_output = func(US_GDP_test_data())
 
-    return jsonify([v for v in bnf_output.rx2('cycle')])
+@app.route('/test-time-series')
+def test_time_series():
+    R = robj.r
+    R.source(CURR_FILEPATH + FILTER_FILEPATH + BNF_FUNCTIONS)
+    us_gdp = TestTimeSeries(r_instance=R)  # default GDPC1
+    us_gdp.set_default_transformation()
+    bnf = BNF(us_gdp.get_time_series(), r_instance=R)
+
+    return jsonify(bnf.run())

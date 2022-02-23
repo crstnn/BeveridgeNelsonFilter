@@ -5,23 +5,20 @@ os.environ['R_HOME'] = 'C:/Program Files/R/R-4.0.2'  # must be set before rpy2 i
 import rpy2.robjects as robj
 from rpy2.robjects.vectors import FloatVector
 
-# os.environ['PYTHONHOME'] = 'C:/Users/crstn/Python38/'
-# os.environ['PYTHONPATH'] = 'C:/Users/crstn/Python38/lib/site-packages'
-# os.environ['R_USER'] = 'C:/Users/crstn/Python38/Lib/site-packages/rpy2'
 
 R = robj.r
 R.source("bnf_fcns.R")
 
 
 def US_GDP_test_data():
-    list2 = []
+    us_gdp_data = []
     with open("us_data.csv") as f:
         for row in f:
             try:
-                list2.append(float(row.split(',')[1]))
+                us_gdp_data.append(float(row.split(',')[1]))
             except:
                 pass
-    return list2
+    return us_gdp_data
 
 
 def func(time_series):
