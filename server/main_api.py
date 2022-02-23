@@ -3,13 +3,13 @@ import os
 import dicttoxml
 from flask import Flask, jsonify
 
-if os.environ['FLASK_ENV'] == 'prod':
-    print("flask_prod")
-else:
-    print("flask_dev")
-    os.environ['R_HOME'] = 'C:/Program Files/R/R-4.0.2'
-    # must be set before rpy2 import
-    # only necessary locally
+# if os.environ['FLASK_ENV'] == 'prod':
+#     print("flask_prod")
+# else:
+#     print("flask_dev")
+#     os.environ['R_HOME'] = 'C:/Program Files/R/R-4.0.2'
+#     # must be set before rpy2 import
+#     # only necessary locally
 
 import rpy2.robjects as robj
 from rpy2.robjects.vectors import FloatVector
