@@ -47,7 +47,7 @@ export class UserData extends Component {
                     alignItems: "center",
                     display: "inline-block",
                     }}>
-                <Grid container direction="column" sx={{minHeight: 500}} justifyContent="space-evenly" alignItems="center" spacing={4}>
+                <Grid container direction="column" sx={{minHeight: 500}} justifyContent="space-evenly" alignItems="center">
                     <Grid item xs={4}>
                     <FormControl variant="standard" sx={{minWidth: 300}}>
                         <InputLabel>Periodicity</InputLabel>
