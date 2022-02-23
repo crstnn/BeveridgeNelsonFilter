@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
-import {Button, FormControl, TextField} from "@mui/material";
+import {Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField} from "@mui/material";
 import '../styles/App.css';
+import CustomDatePicker from "./CustomDatePicker";
+
 
 export class UserData extends Component {
 
@@ -29,28 +31,63 @@ export class UserData extends Component {
                         Pasting time series from a CSV will achieve the above.
                     </p>
                 </div>
-                <FormControl variant="standard" sx={{m: 1, minWidth: 250}}>
-                    <TextField
-                        multiline
-                        rows={18}
-                        label="Time Series (Y)"
-                        title="Paste Chosen Time Series Here"
-                        onChange={handleChange('firstName')}
-                        defaultValue={values.unprocessedY}
-                    />
-                </FormControl>
-                <br/>
-                <Button
-                    variant="contained"
-                    style={styles.button}
-                    onClick={this.back}
-                >Back</Button>
-                <Button
-                    variant="contained"
-                    style={styles.button}
-                    onClick={this.continue}
-                >Continue</Button>
-                <br/>
+                <div>
+                    <FormControl variant="standard" sx={{m: 1, minWidth: 250}}>
+                        <TextField
+                            multiline
+                            rows={18}
+                            label="Time Series (Y)"
+                            title="Paste Chosen Time Series Here"
+                            onChange={handleChange('firstName')}
+                            defaultValue={values.unprocessedY}
+                        />
+                    </FormControl>
+                <div style={{
+                    width: "450px",
+                    alignItems: "center",
+                    display: "inline-block",
+                    }}>
+                <Grid container direction="column" sx={{minHeight: 500}} justifyContent="space-evenly" alignItems="center" spacing={4}>
+                    <Grid item xs={4}>
+                    <FormControl variant="standard" sx={{minWidth: 300}}>
+                        <InputLabel>Periodicity</InputLabel>
+                        <Select
+                            label="Periodicity"
+                            title=""
+                            onChange={handleChange('lastName')}
+                            defaultValue={values.deltaSelect}
+                        >
+                            <MenuItem value={0}>Quarterly</MenuItem>
+                            <MenuItem value={1}>Monthly</MenuItem>
+                            <MenuItem value={2}>Fortnightly</MenuItem>
+                            <MenuItem value={3}>Weekly</MenuItem>
+                            <MenuItem value={3}>Hourly</MenuItem>
+                            <MenuItem value={3}>By The Minute</MenuItem>
+                            <MenuItem value={4}>Unspecified</MenuItem>
+                        </Select>
+                    </FormControl>
+                    </Grid>
+                    <Grid item xs={4}>
+                    <CustomDatePicker/>
+                    </Grid>
+                    <Grid item xs={4}>
+                    <Button
+                        variant="contained"
+                        style={styles.button}
+                        onClick={this.back}
+                    >Back</Button>
+                    <Button
+                        variant="contained"
+                        style={styles.button}
+                        onClick={this.continue}
+                    >Continue</Button>
+                    </Grid>
+                </Grid>
+
+                </div>
+
+                </div>
+
             </div>
         )
     }

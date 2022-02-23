@@ -4,11 +4,13 @@ import React from "react";
 
 
 function App() {
+
     return (
         <div className="App">
             <header className="appHeader">
                 BN Filter Trend-Cycle Decomposition
             </header>
+
             <div className="information welcomeInformation">
                 <p>This tool performs trend-cycle decomposition.
                     It is implemented using the method described in <a target="_blank" rel="noopener noreferrer"
