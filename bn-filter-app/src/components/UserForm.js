@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import StartMenu from './StartMenu';
 import FormFilterParameters from "./FormFilterParameters";
 import UserData from "./UserData";
+import RenderedPlot from "./RenderedPlot";
 
 export class UserForm extends Component {
     state = {
@@ -59,8 +60,8 @@ export class UserForm extends Component {
                     />
                 )
             case 4:
-                return <h1>Success</h1>
-            default: // case 1
+                return <RenderedPlot/>
+            default: // also case 1
                 return (
                     <StartMenu
                         nextStep={this.nextStep}
