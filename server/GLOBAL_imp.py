@@ -1,7 +1,7 @@
 import gc
 import os
 import dicttoxml
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 
 if 'FLASK_ENV' in os.environ and os.environ['FLASK_ENV'] == 'development':
