@@ -1,7 +1,7 @@
 import gc
 import os
 
-os.environ['R_HOME'] = 'C:/Program Files/R/R-4.0.2'
+os.environ['R_HOME'] = 'C:/Program Files/R/R-4.0.2'  # must be set before rpy2 import
 import rpy2.robjects as robj
 from rpy2.robjects.vectors import FloatVector
 
@@ -11,6 +11,7 @@ from rpy2.robjects.vectors import FloatVector
 
 R = robj.r
 R.source("bnf_fcns.R")
+
 
 def US_GDP_test_data():
     list2 = []
@@ -22,6 +23,7 @@ def US_GDP_test_data():
                 pass
     return list2
 
+
 def func(time_series):
     y = FloatVector(time_series)
     transformed_y = R('transform_series')(y, take_log=True, pcode="p1")
@@ -30,8 +32,6 @@ def func(time_series):
     return result
 
 
-
 bnf_output = func(US_GDP_test_data())
 
 print([v for v in bnf_output.rx2('cycle')])
-

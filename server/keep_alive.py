@@ -1,7 +1,7 @@
 import requests
 
 try:
-    r = requests.get('https://bn-filtering.herokuapp.com/to-ping')
+    r = requests.get('https://bn-filtering.herokuapp.com/')
     if r.status_code == requests.codes.ok:
         print("keep_alive ping status: ALIVE")
     else:
