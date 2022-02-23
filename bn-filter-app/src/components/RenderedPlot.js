@@ -12,11 +12,13 @@ export class RenderedPlot extends Component {
         return (
             <div>
                 <Plot/>
-                <Button
-                    variant="contained"
-                    style={styles.button}
-                    onClick={this.back}
-                >Back</Button>
+                <div>
+                    <Button
+                        variant="contained"
+                        style={styles.button}
+                        onClick={this.back}
+                    >Back</Button>
+                </div>
             </div>
 
         );
