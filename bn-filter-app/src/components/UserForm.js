@@ -18,7 +18,7 @@ export class UserForm extends Component {
         window: '',
     }
 
-    baseBackendURL = 'https://bn-filtering.herokuapp.com/'
+    baseBackendURL = 'https://bn-filtering.herokuapp.com'
 
     nextStep = () => {
         const {step} = this.state;

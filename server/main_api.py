@@ -13,8 +13,7 @@ app = Flask(__name__)
 CORS(app)
 cors = CORS(app, resources={
     r"/*": {
-        "origins": ["localhost",
-                    "crstnn.github.io/BeveridgeNelsonFilter/",
+        "origins": ["crstnn.github.io/BeveridgeNelsonFilter/",
                     "bnfiltering"]
     }
 })
@@ -43,7 +42,9 @@ def user_specified_time_series():
     window = request.args.get("window")
     delta_select = request.args.get("delta_select")
     fixed_delta = request.args.get("fixed_delta")
-    ib = request.args.get("ib")
+
+    ib = request.args.get("ib") == "true"
+
     demean = request.args.get("demean")
 
     user_y = request.args.get("processed_y")
