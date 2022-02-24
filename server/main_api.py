@@ -23,7 +23,6 @@ CURR_FILEPATH = str(Path(__file__).parents[0])
 
 @app.route('/')
 def index():
-    print('here')
     return "alive"
 
 

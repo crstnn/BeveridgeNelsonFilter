@@ -3,6 +3,7 @@ from GLOBAL_imp import *
 from pathlib import Path
 from rpy2.robjects.vectors import FloatVector
 
+
 # ABSTRACT CLASS
 class TimeSeries(ABC):
     CURR_FILTER_FILEPATH = str(Path(__file__).parents[1]) + FILTER_FILEPATH
@@ -10,7 +11,6 @@ class TimeSeries(ABC):
     # transformation types
     d_code_types = ("nd", "d1", "d4", "d12")
     p_code_types = ("np", "p1", "p4", "p12")
-
 
     def __init__(self, r_instance, time_series):
         self.r_instance = r_instance
@@ -20,16 +20,16 @@ class TimeSeries(ABC):
         self.p_code = TimeSeries.p_code_types[0]
         self.take_log = False
         self.transform = False
+        print(time_series)
         self.y = FloatVector(time_series)
 
     @property
     def y(self):
-        return FloatVector(self._y)
+        return self._y
 
     @y.setter
     def y(self, value):
         self._y = value
-
 
     @property
     def d_code(self):
@@ -37,7 +37,7 @@ class TimeSeries(ABC):
 
     @d_code.setter
     def d_code(self, d):
-        if d not in TimeSeries.d_code_types or d is not None:
+        if d not in TimeSeries.d_code_types and d is not None:
             raise ValueError("Invalid d_code type. Expected one of: %s" % (TimeSeries.d_code_types,))
         self._d_code = d
         self._transform = True
@@ -48,7 +48,7 @@ class TimeSeries(ABC):
 
     @p_code.setter
     def p_code(self, p):
-        if p not in TimeSeries.p_code_types or p is not None:
+        if p not in TimeSeries.p_code_types and p is not None:
             raise ValueError("Invalid p_code type. Expected one of: %s" % (TimeSeries.p_code_types,))
         self._p_code = p
         self._transform = True
@@ -59,7 +59,7 @@ class TimeSeries(ABC):
 
     @take_log.setter
     def take_log(self, l):
-        if type(l) is not bool or l is not None:
+        if type(l) is not bool and l is not None:
             raise TypeError("Invalid take_log type, Expected type: Boolean or None")
         self._take_log = l
         self._transform = True
@@ -89,5 +89,3 @@ class TimeSeries(ABC):
 
     def _check_valid_input(self):
         pass
-
-
