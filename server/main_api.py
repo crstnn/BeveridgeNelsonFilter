@@ -49,12 +49,16 @@ def user_specified_time_series():
     R.source(FILTER_FILEPATH + BNF_FUNCTIONS)
     user_series = UserTimeSeries(R, user_y)
 
-    if bool(request.args.get("transform")):
+    if request.args.get("transform") == "true":
         user_series.d_code = request.args.get("d_code")
         user_series.p_code = request.args.get("p_code")
-        user_series.take_log = request.args.get("take_log")
+        user_series.take_log = request.args.get("take_log") == "true"
+
+    print(user_series.get_time_series())
 
     bnf = BNF(user_series, R, window, delta_select, fixed_delta, ib, demean)
+
+    print(bnf.run())
 
     return jsonify(bnf.run())
 

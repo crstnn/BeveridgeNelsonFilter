@@ -71,8 +71,8 @@ class TimeSeries(ABC):
         self._transform = value
 
     def get_time_series(self):
-        if self.d_code is not None or self.p_code is not None or self.take_log is not None:
-            # untransformed series
+        if not (self.d_code is None or self.p_code is None or self.take_log is None):
+            # transformed series
             ret_series = self.r_instance('transform_series')(y=self.y,
                                                              take_log=self.take_log,
                                                              dcode=self.d_code,
