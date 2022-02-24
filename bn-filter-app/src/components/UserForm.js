@@ -9,13 +9,16 @@ export class UserForm extends Component {
         step: 1,
         unprocessedY: '',
         y: [], // time series
-        fixedDelta: 0.05,
-        deltaSelect: 0,
+        startDate: '',
+        fixedDelta: '',
+        deltaSelect: 2,
         demean: 'sm',
         iterativeBackcasting: true,
         isAutomaticWindow: true,
-        window: 40,
+        window: '',
     }
+
+    baseBackendURL = 'https://bn-filtering.herokuapp.com/'
 
     nextStep = () => {
         const {step} = this.state;
@@ -63,6 +66,7 @@ export class UserForm extends Component {
                         handleChange={this.handleChange}
                         handleCheckboxChange={this.handleCheckboxChange}
                         values={values}
+                        apiUrl={this.baseBackendURL}
                     />
                 )
             case 4:

@@ -1,11 +1,23 @@
 from GLOBAL_imp import *
+import gc
 from python_to_r_interface.TestTimeSeries import *
 from python_to_r_interface.FREDTimeSeries import *
 from python_to_r_interface.UserTimeSeries import *
 from python_to_r_interface.Bnf import *
 from pathlib import Path
+import dicttoxml
+from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
+cors = CORS(app, resources={
+    r"/*": {
+        "origins": ["localhost",
+                    "crstnn.github.io/BeveridgeNelsonFilter/",
+                    "bnfiltering"]
+    }
+})
 
 CURR_FILEPATH = str(Path(__file__).parents[0])
 

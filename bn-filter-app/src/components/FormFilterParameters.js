@@ -17,7 +17,33 @@ export class FormFilterParameters extends Component {
 
     continue = e => {
         e.preventDefault();
-        // process form
+
+        const {apiUrl} = this.props;
+        const {values} = this.props;
+
+        const paramsStr = [['window', values.window],
+                            ['delta_select',values.deltaSelect],
+                            ['fixed_delta',values.fixedDelta],
+                            ['ib',values.iterativeBackcasting],
+                            ['demean',values.demean],
+                            ['y',values.y]]
+                            .reduce((pStr, currA) => {
+                                return pStr + currA[0].toString() + '=' + currA[1].toString() + '&'
+                            }, '?');
+
+        console.log(paramsStr)
+
+        fetch(apiUrl + paramsStr, {
+            method: 'GET',
+        })
+            .then(response => response.json())
+            .then(result => {
+                console.log('Success:', result);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
         this.props.nextStep();
     }
 
@@ -80,8 +106,8 @@ export class FormFilterParameters extends Component {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={7}>
-                            <FormControl variant="standard" sx={{minWidth: 340}}>
+                        <Grid item xs={6}>
+                            <FormControl variant="standard" sx={{minWidth: 240}}>
                                 <FormControlLabel label="Automatic Rolling Window or"
                                     control={<Checkbox
                                         onChange={handleCheckboxChange('isAutomaticWindow')}
@@ -89,8 +115,8 @@ export class FormFilterParameters extends Component {
                                     />
                             </FormControl>
                         </Grid>
-                        <Grid item xs={5}>
-                            <FormControl variant="standard" sx={{minWidth: 120}}>
+                        <Grid item xs={6}>
+                            <FormControl variant="standard" sx={{minWidth: 200}}>
                                 <TextField
                                     label="Manual Rolling Window"
                                     type="number"
