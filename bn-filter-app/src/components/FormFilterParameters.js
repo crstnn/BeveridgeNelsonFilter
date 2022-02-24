@@ -21,28 +21,29 @@ export class FormFilterParameters extends Component {
         const {apiUrl} = this.props;
         const {values} = this.props;
 
+        console.log('test')
+
         const paramsStr = [['window', values.window],
                             ['delta_select',values.deltaSelect],
                             ['fixed_delta',values.fixedDelta],
                             ['ib',values.iterativeBackcasting],
                             ['demean',values.demean],
-                            ['y',values.y]]
+                            ['processed_y',values.y]]
                             .reduce((pStr, currA) => {
                                 return pStr + currA[0].toString() + '=' + currA[1].toString() + '&'
                             }, '?');
 
         console.log(paramsStr)
 
-        fetch(apiUrl + paramsStr, {
-            method: 'GET',
-        })
+        fetch(apiUrl + "/user-specified-time-series" + paramsStr)
+            .catch(error => {
+                console.error('Error:', error);
+            })
             .then(response => response.json())
             .then(result => {
                 console.log('Success:', result);
-            })
-            .catch(error => {
-                console.error('Error:', error);
             });
+
 
         this.props.nextStep();
     }

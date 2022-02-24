@@ -46,7 +46,7 @@ def user_specified_time_series():
     ib = request.args.get("ib")
     demean = request.args.get("demean")
 
-    user_y = request.data.get("processed_y")
+    user_y = request.args.get("processed_y")
 
     R = robj.r
     R.source(CURR_FILEPATH + FILTER_FILEPATH + BNF_FUNCTIONS)
