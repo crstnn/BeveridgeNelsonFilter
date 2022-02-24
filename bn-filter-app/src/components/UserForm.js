@@ -16,6 +16,11 @@ export class UserForm extends Component {
         iterativeBackcasting: true,
         isAutomaticWindow: true,
         window: '',
+        // transforms to data before bnf
+        transform: false,
+        dCode: 'nd',
+        pCode: 'p1',
+        takeLog: false,
     }
 
     baseBackendURL = 'https://bn-filtering.herokuapp.com'
@@ -45,8 +50,34 @@ export class UserForm extends Component {
 
     render() {
         const {step} = this.state;
-        const {y, unprocessedY, fixedDelta, deltaSelect, demean,  iterativeBackcasting, isAutomaticWindow, window} = this.state;
-        const values = {y, unprocessedY, fixedDelta, deltaSelect, demean, iterativeBackcasting, isAutomaticWindow, window};
+        const {
+            y,
+            unprocessedY,
+            fixedDelta,
+            deltaSelect,
+            demean,
+            iterativeBackcasting,
+            isAutomaticWindow,
+            window,
+            transform,
+            dCode,
+            pCode,
+            takeLog
+        } = this.state;
+        const values = {
+            y,
+            unprocessedY,
+            fixedDelta,
+            deltaSelect,
+            demean,
+            iterativeBackcasting,
+            isAutomaticWindow,
+            window,
+            transform,
+            dCode,
+            pCode,
+            takeLog
+        };
 
         switch (step) {
             case 2:

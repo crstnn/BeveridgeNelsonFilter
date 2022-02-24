@@ -15,7 +15,7 @@ class TestTimeSeries(TimeSeries):
         with open(FILTER_FILEPATH + "us_data.csv") as f:
             for row in f:
                 try:
-                    self.y.append(float(row.split(',')[time_series_name.index(time_series_name)+1]))
+                    self.y.append(float(row.split(',')[time_series_name.index(time_series_name) + 1]))
                     # + 1 to skip date column
                 except:
                     pass

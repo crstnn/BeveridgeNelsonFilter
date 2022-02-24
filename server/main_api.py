@@ -54,8 +54,6 @@ def user_specified_time_series():
         user_series.p_code = request.args.get("p_code")
         user_series.take_log = request.args.get("take_log") == "true"
 
-    print(user_series.get_time_series())
-
     bnf = BNF(user_series, R, window, delta_select, fixed_delta, ib, demean)
 
     print(bnf.run())

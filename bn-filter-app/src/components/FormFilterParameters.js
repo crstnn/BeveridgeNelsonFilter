@@ -24,20 +24,19 @@ export class FormFilterParameters extends Component {
         console.log('test')
 
         const paramsStr = [['window', values.window],
-                            ['delta_select',values.deltaSelect],
-                            ['fixed_delta',values.fixedDelta],
-                            ['ib',values.iterativeBackcasting],
-                            ['demean',values.demean],
-                            ['processed_y',values.unprocessedY.
-                            replace(/(\r\n|\n|\r)/gm, ",")], // dealing with all operating system's newline characters
-                            ['transform', values.transform],
-                            ['p_code', values.pCode],
-                            ['d_code', values.dCode],
-                            ['take_log', values.takeLog]]
+            ['delta_select', values.deltaSelect],
+            ['fixed_delta', values.fixedDelta],
+            ['ib', values.iterativeBackcasting],
+            ['demean', values.demean],
+            ['processed_y', values.unprocessedY.replace(/(\r\n|\n|\r)/gm, ",")], // dealing with all operating system's newline characters
+            ['transform', values.transform],
+            ['p_code', values.pCode],
+            ['d_code', values.dCode],
+            ['take_log', values.takeLog]]
 
-                            .reduce((pStr, currA) => {
-                                return pStr + currA[0].toString() + '=' + currA[1].toString() + '&'
-                            }, '?');
+            .reduce((pStr, currA) => {
+                return pStr + currA[0].toString() + '=' + currA[1].toString() + '&'
+            }, '?');
 
         console.log(paramsStr)
 
@@ -116,10 +115,10 @@ export class FormFilterParameters extends Component {
                         <Grid item xs={6}>
                             <FormControl variant="standard" sx={{minWidth: 240}}>
                                 <FormControlLabel label="Automatic Rolling Window or"
-                                    control={<Checkbox
-                                        onChange={handleCheckboxChange('isAutomaticWindow')}
-                                        checked={values.isAutomaticWindow}/>}
-                                    />
+                                                  control={<Checkbox
+                                                      onChange={handleCheckboxChange('isAutomaticWindow')}
+                                                      checked={values.isAutomaticWindow}/>}
+                                />
                             </FormControl>
                         </Grid>
                         <Grid item xs={6}>
@@ -137,10 +136,10 @@ export class FormFilterParameters extends Component {
                         <Grid item xs={12}>
                             <FormControl variant="standard" sx={{minWidth: 450}}>
                                 <FormControlLabel label="Iterative Backcasting"
-                                    control={<Checkbox
-                                        onChange={handleCheckboxChange('iterativeBackcasting')}
-                                        checked={values.iterativeBackcasting}/>}
-                                    />
+                                                  control={<Checkbox
+                                                      onChange={handleCheckboxChange('iterativeBackcasting')}
+                                                      checked={values.iterativeBackcasting}/>}
+                                />
                             </FormControl>
                         </Grid>
                     </Grid>
