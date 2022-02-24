@@ -28,7 +28,7 @@ export class FormFilterParameters extends Component {
 
 
     render() {
-        const {values, handleChange} = this.props;
+        const {values, handleChange, handleCheckboxChange} = this.props;
 
         return (
             <div>
@@ -40,12 +40,13 @@ export class FormFilterParameters extends Component {
                 }}>
                     <Grid container alignItems="center" spacing={4}>
                         <Grid item xs={8}>
+
                             <FormControl variant="standard" sx={{minWidth: 300}}>
                                 <InputLabel>Signal-to-Noise Ratio (Delta)</InputLabel>
                                 <Select
                                     label="Signal-to-Noise Ratio (Delta)"
                                     title="Signal-to-Noise Ratio according to benchmark KMW approach"
-                                    onChange={handleChange('lastName')}
+                                    onChange={handleChange('deltaSelect')}
                                     defaultValue={values.deltaSelect}
                                 >
                                     <MenuItem value={0}>Fixed Delta</MenuItem>
@@ -59,10 +60,10 @@ export class FormFilterParameters extends Component {
                                 <TextField
                                     label="Fixed Delta"
                                     type="number"
-                                    title="Only necessary when 'Fixed Delta' is set for Signal-to-Noise Ratio"
-                                    onChange={handleChange('firstName')}
+                                    title="Only necessary when Signal-to-Noise Ratio is set to 'Fixed Delta'"
+                                    onChange={handleChange('fixedDelta')}
                                     defaultValue={values.fixedDelta}
-                                    disabled={false}
+                                    disabled={values.deltaSelect !== 0}
                                 />
                             </FormControl>
                         </Grid>
@@ -71,7 +72,7 @@ export class FormFilterParameters extends Component {
                                 <InputLabel>Iterative Dynamic Demeaning</InputLabel>
                                 <Select
                                     label="Iterative Dynamic Demeaning"
-                                    onChange={handleChange('lastName')}
+                                    onChange={handleChange('demean')}
                                     defaultValue={values.demean}
                                 >
                                     <MenuItem value={"sm"}>Static Demeaning</MenuItem>
@@ -79,28 +80,34 @@ export class FormFilterParameters extends Component {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={4}>
-                            <FormControl variant="standard" sx={{minWidth: 140}}>
-                                <FormControlLabel control={<Checkbox defaultChecked/>} label="Automatic or"/>
+                        <Grid item xs={7}>
+                            <FormControl variant="standard" sx={{minWidth: 340}}>
+                                <FormControlLabel label="Automatic Rolling Window or"
+                                    control={<Checkbox
+                                        onChange={handleCheckboxChange('isAutomaticWindow')}
+                                        checked={values.isAutomaticWindow}/>}
+                                    />
                             </FormControl>
                         </Grid>
-                        <Grid item xs={8}>
-                            <FormControl variant="standard" sx={{minWidth: 280}}>
+                        <Grid item xs={5}>
+                            <FormControl variant="standard" sx={{minWidth: 120}}>
                                 <TextField
-                                    label="Manual Rolling Sample Window"
+                                    label="Manual Rolling Window"
                                     type="number"
-                                    title="Rolling Window Length"
-                                    onChange={handleChange('firstName')}
+                                    title="Only necessary when 'Rolling Window' is not set to automatic"
+                                    onChange={handleChange('window')}
                                     defaultValue={values.window}
-                                    disabled={false}
+                                    disabled={values.isAutomaticWindow}
                                 />
                             </FormControl>
                         </Grid>
                         <Grid item xs={12}>
                             <FormControl variant="standard" sx={{minWidth: 450}}>
-                                <FormControlLabel defaultValue={values.iterativeBackcasting} control={
-                                    <Checkbox defaultChecked/>}
-                                                  label="Iterative Backcasting"/>
+                                <FormControlLabel label="Iterative Backcasting"
+                                    control={<Checkbox
+                                        onChange={handleCheckboxChange('iterativeBackcasting')}
+                                        checked={values.iterativeBackcasting}/>}
+                                    />
                             </FormControl>
                         </Grid>
                     </Grid>

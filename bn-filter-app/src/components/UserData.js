@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField} from "@mui/material";
 import '../styles/App.css';
-import CustomDatePicker from "./CustomDatePicker";
+import CustomDatePicker from "../pickers/CustomDatePicker";
 
 
 export class UserData extends Component {
@@ -36,7 +36,7 @@ export class UserData extends Component {
                         <TextField
                             multiline
                             rows={18}
-                            label="Time Series (Y)"
+                            label="Time Series (y)"
                             title="Paste Chosen Time Series Here"
                             onChange={handleChange('firstName')}
                             defaultValue={values.unprocessedY}
@@ -58,13 +58,14 @@ export class UserData extends Component {
                                         onChange={handleChange('lastName')}
                                         defaultValue={values.deltaSelect}
                                     >
-                                        <MenuItem value={0}>Quarterly</MenuItem>
-                                        <MenuItem value={1}>Monthly</MenuItem>
-                                        <MenuItem value={2}>Fortnightly</MenuItem>
-                                        <MenuItem value={3}>Weekly</MenuItem>
-                                        <MenuItem value={3}>Hourly</MenuItem>
-                                        <MenuItem value={3}>By The Minute</MenuItem>
-                                        <MenuItem value={4}>Unspecified</MenuItem>
+                                        <MenuItem value={1}>Quarterly</MenuItem>
+                                        <MenuItem value={2}>Monthly</MenuItem>
+                                        <MenuItem value={3}>Fortnightly</MenuItem>
+                                        <MenuItem value={4}>Weekly</MenuItem>
+                                        <MenuItem value={5}>Daily</MenuItem>
+                                        <MenuItem value={6}>Hourly</MenuItem>
+                                        <MenuItem value={7}>By The Minute</MenuItem>
+                                        <MenuItem value={0}>Unspecified</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>

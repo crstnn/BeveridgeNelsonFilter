@@ -11,7 +11,8 @@ export class RenderedPlot extends Component {
     render() {
         return (
             <div>
-                <Plot/>
+                <Plot layout={{autosize: true}}
+                />
                 <div>
                     <Button
                         variant="contained"

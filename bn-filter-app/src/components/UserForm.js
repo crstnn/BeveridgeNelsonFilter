@@ -8,12 +8,13 @@ export class UserForm extends Component {
     state = {
         step: 1,
         unprocessedY: '',
-        y: '', // time series
-        fixedDelta: '',
-        deltaSelect: '',
-        demean: '',
+        y: [], // time series
+        fixedDelta: 0.05,
+        deltaSelect: 0,
+        demean: 'sm',
         iterativeBackcasting: true,
-        window: '',
+        isAutomaticWindow: true,
+        window: 40,
     }
 
     nextStep = () => {
@@ -34,11 +35,15 @@ export class UserForm extends Component {
         this.setState({[input]: e.target.value});
     }
 
+    handleCheckboxChange = input => e => {
+        this.setState({[input]: e.target.checked});
+    }
+
 
     render() {
         const {step} = this.state;
-        const {unprocessedY, fixedDelta, deltaSelect, demean, iterativeBackcasting, window} = this.state;
-        const values = {unprocessedY, fixedDelta, deltaSelect, demean, iterativeBackcasting, window};
+        const {y, unprocessedY, fixedDelta, deltaSelect, demean,  iterativeBackcasting, isAutomaticWindow, window} = this.state;
+        const values = {y, unprocessedY, fixedDelta, deltaSelect, demean, iterativeBackcasting, isAutomaticWindow, window};
 
         switch (step) {
             case 2:
@@ -56,14 +61,17 @@ export class UserForm extends Component {
                         nextStep={this.nextStep}
                         prevStep={this.prevStep}
                         handleChange={this.handleChange}
+                        handleCheckboxChange={this.handleCheckboxChange}
                         values={values}
                     />
                 )
             case 4:
-                return (<RenderedPlot
+                return (
+                    <RenderedPlot
                         prevStep={this.prevStep}
                         handleChange={this.handleChange}
-                        values={values}/>
+                        values={values}
+                    />
                 )
             default: // also case 1
                 return (
