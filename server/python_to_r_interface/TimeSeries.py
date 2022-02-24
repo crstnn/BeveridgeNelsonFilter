@@ -12,7 +12,6 @@ class TimeSeries(ABC):
     p_code_types = ("np", "p1", "p4", "p12")
 
     def __init__(self, r_instance, time_series):
-        self.raw_time_series = self.y = time_series
         self.r_instance = r_instance
 
         # defaults
