@@ -13,5 +13,5 @@ import rpy2.robjects as robj
 from rpy2.robjects.vectors import FloatVector
 from rpy2.robjects.vectors import BoolVector
 
-FILTER_FILEPATH = "./BN_filter_R_v2/"
+FILTER_FILEPATH = "/BN_filter_R_v2/"
 BNF_FUNCTIONS = "bnf_fcns.R"
