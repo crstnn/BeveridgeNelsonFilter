@@ -1,7 +1,7 @@
 class BNF:
     def __init__(self, time_series,
                  r_instance, window, delta_select, fixed_delta, ib, demean):
-        self.time_series = time_series.get_transformed_series()
+        self.time_series = time_series.get_time_series()
         self.r_instance = r_instance
         self.window = window
         self.delta_select = delta_select
@@ -15,6 +15,5 @@ class BNF:
                                             delta_select=self.delta_select,
                                             fixed_delta=self.fixed_delta,
                                             demean=self.demean,
-                                            ib=self.demean)
-
+                                            ib=self.ib)
         return [v for v in bnf_output.rx2('cycle')]

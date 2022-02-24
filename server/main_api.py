@@ -10,11 +10,11 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
 cors = CORS(app, resources={
     r"/*": {
-        "origins": ["crstnn.github.io/BeveridgeNelsonFilter/",
-                    "bnfiltering"]
+        "origins": ["http://localhost:3000",
+                    "https://crstnn.github.io/BeveridgeNelsonFilter",
+                    "https://bnfiltering"]
     }
 })
 
@@ -23,6 +23,7 @@ CURR_FILEPATH = str(Path(__file__).parents[0])
 
 @app.route('/')
 def index():
+    print('here')
     return "alive"
 
 

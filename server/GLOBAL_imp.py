@@ -1,4 +1,5 @@
 import os
+import gc
 
 if 'FLASK_ENV' in os.environ and os.environ['FLASK_ENV'] == 'development':
     print("flask_dev")
@@ -10,6 +11,7 @@ else:
 
 import rpy2.robjects as robj
 from rpy2.robjects.vectors import FloatVector
+from rpy2.robjects.vectors import BoolVector
 
 FILTER_FILEPATH = "\\BN_filter_R_v2\\"
 BNF_FUNCTIONS = "bnf_fcns.R"
