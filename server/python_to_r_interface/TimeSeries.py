@@ -20,7 +20,6 @@ class TimeSeries(ABC):
         self.p_code = TimeSeries.p_code_types[0]
         self.take_log = False
         self.transform = False
-        print(time_series)
         self.y = FloatVector(time_series)
 
     @property

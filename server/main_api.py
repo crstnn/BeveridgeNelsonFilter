@@ -39,9 +39,10 @@ def fred_time_series():
 
 @app.route('/user-specified-time-series', methods=['GET'])
 def user_specified_time_series():
+    # lightweight backend validation as the majority of validation is done in frontend
     window = int(request.args.get("window"))
     delta_select = int(request.args.get("delta_select"))
-    fixed_delta = float(request.args.get("fixed_delta")) if not request.args.get("fixed_delta") else 0.05
+    fixed_delta = float(request.args.get("fixed_delta")) if request.args.get("fixed_delta") else 0.05
     ib = request.args.get("ib") == "true"
     demean = request.args.get("demean")
     user_y = request.args.get("processed_y").split(",")
