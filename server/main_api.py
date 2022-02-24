@@ -18,8 +18,6 @@ cors = CORS(app, resources={
     }
 })
 
-CURR_FILEPATH = str(Path(__file__).parents[0])
-
 
 @app.route('/')
 def index():
@@ -29,7 +27,7 @@ def index():
 @app.route('/fred-time-series', methods=['GET'])
 def fred_time_series():
     R = robj.r
-    R.source(CURR_FILEPATH + FILTER_FILEPATH + BNF_FUNCTIONS)
+    R.source(FILTER_FILEPATH + BNF_FUNCTIONS)
     fred_series = FREDTimeSeries(R)
 
     bnf = BNF(fred_series, R)
@@ -48,7 +46,7 @@ def user_specified_time_series():
     user_y = request.args.get("processed_y").split(",")
 
     R = robj.r
-    R.source(CURR_FILEPATH + FILTER_FILEPATH + BNF_FUNCTIONS)
+    R.source(FILTER_FILEPATH + BNF_FUNCTIONS)
     user_series = UserTimeSeries(R, user_y)
 
     if bool(request.args.get("transform")):
@@ -64,7 +62,7 @@ def user_specified_time_series():
 @app.route('/test-time-series', methods=['GET'])
 def test_time_series():
     R = robj.r
-    R.source(CURR_FILEPATH + FILTER_FILEPATH + BNF_FUNCTIONS)
+    R.source(FILTER_FILEPATH + BNF_FUNCTIONS)
     us_gdp = TestTimeSeries(R)  # default GDPC1
     us_gdp.set_default_transformation()
     bnf = BNF(us_gdp,

@@ -28,7 +28,7 @@ export class FormFilterParameters extends Component {
                             ['fixed_delta',values.fixedDelta],
                             ['ib',values.iterativeBackcasting],
                             ['demean',values.demean],
-                            ['processed_y',values.y]]
+                            ['processed_y',values.unprocessedY.replace(/(\r\n|\n|\r)/gm, ",")]]
                             .reduce((pStr, currA) => {
                                 return pStr + currA[0].toString() + '=' + currA[1].toString() + '&'
                             }, '?');
