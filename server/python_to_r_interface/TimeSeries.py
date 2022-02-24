@@ -1,4 +1,4 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 from GLOBAL_imp import *
 from pathlib import Path
 from rpy2.robjects.vectors import FloatVector
@@ -11,14 +11,25 @@ class TimeSeries(ABC):
     d_code_types = ("nd", "d1", "d4", "d12")
     p_code_types = ("np", "p1", "p4", "p12")
 
+
     def __init__(self, r_instance, time_series):
         self.r_instance = r_instance
 
         # defaults
-        self._d_code = TimeSeries.d_code_types[0]
-        self._p_code = TimeSeries.p_code_types[0]
-        self._take_log = False
-        self._transform = False
+        self.d_code = TimeSeries.d_code_types[0]
+        self.p_code = TimeSeries.p_code_types[0]
+        self.take_log = False
+        self.transform = False
+        self.y = FloatVector(time_series)
+
+    @property
+    def y(self):
+        return FloatVector(self._y)
+
+    @y.setter
+    def y(self, value):
+        self._y = value
+
 
     @property
     def d_code(self):
@@ -57,6 +68,10 @@ class TimeSeries(ABC):
     def transform(self):
         return self._transform
 
+    @transform.setter
+    def transform(self, value):
+        self._transform = value
+
     def get_time_series(self):
         if self.d_code is not None or self.p_code is not None or self.take_log is not None:
             # untransformed series
@@ -74,3 +89,5 @@ class TimeSeries(ABC):
 
     def _check_valid_input(self):
         pass
+
+
