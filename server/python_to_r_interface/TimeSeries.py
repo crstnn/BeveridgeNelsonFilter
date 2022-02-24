@@ -6,7 +6,6 @@ from rpy2.robjects.vectors import FloatVector
 
 # ABSTRACT CLASS
 class TimeSeries(ABC):
-    CURR_FILTER_FILEPATH = str(Path(__file__).parents[1]) + FILTER_FILEPATH
 
     # transformation types
     d_code_types = ("nd", "d1", "d4", "d12")
