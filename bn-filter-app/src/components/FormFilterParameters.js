@@ -21,7 +21,6 @@ export class FormFilterParameters extends Component {
         const {apiUrl} = this.props;
         const {values} = this.props;
 
-        console.log('test')
 
         const paramsStr = [['window', values.window],
             ['delta_select', values.deltaSelect],
@@ -47,6 +46,7 @@ export class FormFilterParameters extends Component {
             .then(response => response.json())
             .then(result => {
                 console.log('Success:', result);
+                values.cycle = JSON.parse(result);
             });
 
 

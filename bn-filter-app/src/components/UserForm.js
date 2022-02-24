@@ -21,6 +21,8 @@ export class UserForm extends Component {
         dCode: 'nd',
         pCode: 'p1',
         takeLog: false,
+        // bnf output (from API)
+        cycle: []
     }
 
     baseBackendURL = 'https://bn-filtering.herokuapp.com'
@@ -62,7 +64,8 @@ export class UserForm extends Component {
             transform,
             dCode,
             pCode,
-            takeLog
+            takeLog,
+            cycle
         } = this.state;
         const values = {
             y,
@@ -76,8 +79,13 @@ export class UserForm extends Component {
             transform,
             dCode,
             pCode,
-            takeLog
+            takeLog,
+            cycle
         };
+
+        const plotPageValues = {y, cycle}
+
+
 
         switch (step) {
             case 2:
@@ -113,7 +121,7 @@ export class UserForm extends Component {
                     <StartMenu
                         nextStep={this.nextStep}
                         handleChange={this.handleChange}
-                        values={values}
+                        values={plotPageValues}
                     />
                 )
         }
