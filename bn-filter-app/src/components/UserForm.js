@@ -125,7 +125,7 @@ export class UserForm extends Component {
                     <RenderedPlot
                         prevStep={this.prevStep}
                         handleChange={this.handleChange}
-                        values={values}
+                        plotPageValues={plotPageValues}
                     />
                 )
             default: // also case 1
@@ -133,7 +133,6 @@ export class UserForm extends Component {
                     <StartMenu
                         nextStep={this.nextStep}
                         handleChange={this.handleChange}
-                        values={plotPageValues}
                     />
                 )
         }

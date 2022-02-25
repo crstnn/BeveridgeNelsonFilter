@@ -16,7 +16,7 @@ import '../styles/App.css';
 
 export class FormFilterParameters extends Component {
 
-    continue = e => {
+    continue = async e => {
         e.preventDefault();
 
         const {apiUrl} = this.props;
@@ -38,23 +38,22 @@ export class FormFilterParameters extends Component {
                 return pStr + currA[0].toString() + '=' + currA[1].toString() + '&'
             }, '?');
 
+
         console.log(apiUrl + "/user-specified-time-series" + paramsStr)
 
-        setTimeout(function(){
-            fetch(apiUrl + "/user-specified-time-series" + paramsStr)
-                .catch(error => {
-                    console.error('Error:', error);
-                })
-                .then(response => response.json())
-                .then(result => {
-                    console.log('Success:', result);
-                    setCycle("cycle")(result["cycle"].map(x => Number(x)));
-                    setCycle("cycleSE")(result["cycleSE"].map(x => Number(x)));
-                    console.log(this.props)
-                });
-            console.log("there")
-        }, 8000);
+        await fetch(apiUrl + "/user-specified-time-series" + paramsStr)
+            .catch(error => {
+                console.error('Error:', error);
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log('Success:', result);
+                setCycle("cycle")(result["cycle"].map(x => Number(x)));
+                setCycle("cycleSE")(result["cycleSE"].map(x => Number(x)));
+                console.log(this.props)
+            });
 
+        this.props.nextStep();
 
     }
 
