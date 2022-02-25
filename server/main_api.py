@@ -38,11 +38,17 @@ def fred_time_series():
 @app.route('/user-specified-time-series', methods=['GET'])
 def user_specified_time_series():
     # lightweight backend validation as the majority of validation is done in frontend
+
     window = int(request.args.get("window"))
     delta_select = int(request.args.get("delta_select"))
     fixed_delta = float(request.args.get("fixed_delta")) if request.args.get("fixed_delta") else 0.05
     ib = request.args.get("ib") == "true"
     demean = request.args.get("demean")
+
+    # Design Note: Time series data is a comma delimited string in the URL parameters
+    # for huge time series this may be problematic due to URL length limits (as we cannot send
+    # this data in the body because GET requests do not have bodies according to the RESTful gods).
+    # May need to change to POST if this poses a problem in the future.
     user_y = request.args.get("processed_y").split(",")
 
     R = robj.r
