@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {
     Button,
     Checkbox,
+    Divider,
     FormControl,
     FormControlLabel,
     Grid,
@@ -64,15 +65,17 @@ export class FormFilterParameters extends Component {
 
         return (
             <div>
+                <div className="information">
+                    <Divider style={{fontSize: 'x-large'}}>BN Filter Parameters</Divider>
+                </div>
                 <div style={{
                     width: "450px",
                     alignItems: "center",
                     display: "inline-block",
                     paddingBottom: "50px"
                 }}>
-                    <Grid container alignItems="center" spacing={4}>
+                    <Grid container alignItems="center" justifyContent="space-evenly" spacing={4}>
                         <Grid item xs={8}>
-
                             <FormControl variant="standard" sx={{minWidth: 300}}>
                                 <InputLabel>Signal-to-Noise Ratio (Delta)</InputLabel>
                                 <Select

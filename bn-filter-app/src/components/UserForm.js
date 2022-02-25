@@ -9,20 +9,23 @@ export class UserForm extends Component {
         step: 1,
         unprocessedY: '',
         y: [], // time series
-        startDate: '',
         fixedDelta: '',
         deltaSelect: 2,
         demean: 'sm',
         iterativeBackcasting: true,
         isAutomaticWindow: true,
         window: '',
+        // periodicity
+        periodicity: 0,
+        dateObj: Object(),
         // transforms to data before bnf
         transform: false,
         dCode: 'nd',
-        pCode: 'p1',
+        pCode: 'np',
         takeLog: false,
         // bnf output (from API)
-        cycle: []
+        cycle: [],
+        cycleSE: [],
     }
 
     baseBackendURL = 'https://bn-filtering.herokuapp.com'
@@ -61,11 +64,14 @@ export class UserForm extends Component {
             iterativeBackcasting,
             isAutomaticWindow,
             window,
+            periodicity,
+            dateObj,
             transform,
             dCode,
             pCode,
             takeLog,
-            cycle
+            cycle,
+            cycleSE,
         } = this.state;
         const values = {
             y,
@@ -83,8 +89,7 @@ export class UserForm extends Component {
             cycle
         };
 
-        const plotPageValues = {y, cycle}
-
+        const plotPageValues = {y, cycle, cycleSE, periodicity, dateObj}
 
 
         switch (step) {
@@ -94,6 +99,7 @@ export class UserForm extends Component {
                         nextStep={this.nextStep}
                         prevStep={this.prevStep}
                         handleChange={this.handleChange}
+                        handleCheckboxChange={this.handleCheckboxChange}
                         values={values}
                     />
                 )

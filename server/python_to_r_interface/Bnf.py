@@ -16,4 +16,7 @@ class BNF:
                                             fixed_delta=self.fixed_delta,
                                             demean=self.demean,
                                             ib=self.ib)
-        return [v for v in bnf_output.rx2('cycle')]
+        return {
+            "cycle": [str(v) for v in bnf_output.rx2('cycle')],
+            "cycleSE": [str(v) for v in bnf_output.rx2('cycle_se')]
+        }
