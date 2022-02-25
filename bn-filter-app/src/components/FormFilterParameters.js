@@ -20,7 +20,7 @@ export class FormFilterParameters extends Component {
         e.preventDefault();
 
         const {apiUrl} = this.props;
-        const {values} = this.props;
+        const {values, setCycle} = this.props;
 
 
         const paramsStr = [['window', values.window],
@@ -38,20 +38,24 @@ export class FormFilterParameters extends Component {
                 return pStr + currA[0].toString() + '=' + currA[1].toString() + '&'
             }, '?');
 
-        console.log(paramsStr)
+        console.log(apiUrl + "/user-specified-time-series" + paramsStr)
 
-        fetch(apiUrl + "/user-specified-time-series" + paramsStr)
-            .catch(error => {
-                console.error('Error:', error);
-            })
-            .then(response => response.json())
-            .then(result => {
-                console.log('Success:', result);
-                values.cycle = JSON.parse(result);
-            });
+        setTimeout(function(){
+            fetch(apiUrl + "/user-specified-time-series" + paramsStr)
+                .catch(error => {
+                    console.error('Error:', error);
+                })
+                .then(response => response.json())
+                .then(result => {
+                    console.log('Success:', result);
+                    setCycle("cycle")(result["cycle"].map(x => Number(x)));
+                    setCycle("cycleSE")(result["cycleSE"].map(x => Number(x)));
+                    console.log(this.props)
+                });
+            console.log("there")
+        }, 8000);
 
 
-        this.props.nextStep();
     }
 
     back = e => {

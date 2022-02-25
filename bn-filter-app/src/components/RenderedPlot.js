@@ -9,9 +9,18 @@ export class RenderedPlot extends Component {
     }
 
     render() {
+        const {plotPageValues} = this.props;
         return (
             <div>
                 <Plot layout={{autosize: true}}
+                      data={[
+                          {
+                              x: Array.from({length: plotPageValues.cycle.length}, (_, i) => i + 1),
+                              y: plotPageValues.cycle,
+                              type: 'scatter',
+                              mode: 'lines+markers',
+                              marker: {color: 'red'},
+                          }]}
                 />
                 <div>
                     <Button

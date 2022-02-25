@@ -48,6 +48,10 @@ export class UserForm extends Component {
         this.setState({[input]: e.target.value});
     }
 
+    setCycle = input => d => {
+        this.setState({[input]: d});
+    }
+
     handleCheckboxChange = input => e => {
         this.setState({[input]: e.target.checked});
     }
@@ -86,7 +90,8 @@ export class UserForm extends Component {
             dCode,
             pCode,
             takeLog,
-            cycle
+            cycle,
+            cycleSE,
         };
 
         const plotPageValues = {y, cycle, cycleSE, periodicity, dateObj}
@@ -110,6 +115,7 @@ export class UserForm extends Component {
                         prevStep={this.prevStep}
                         handleChange={this.handleChange}
                         handleCheckboxChange={this.handleCheckboxChange}
+                        setCycle={this.setCycle}
                         values={values}
                         apiUrl={this.baseBackendURL}
                     />
