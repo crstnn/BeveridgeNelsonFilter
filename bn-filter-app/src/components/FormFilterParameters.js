@@ -16,43 +16,10 @@ import '../styles/App.css';
 
 export class FormFilterParameters extends Component {
 
-    continue = async e => {
+    continue = e => {
+        const {getResults} = this.props;
         e.preventDefault();
-
-        const {apiUrl} = this.props;
-        const {values, setCycle} = this.props;
-
-
-        const paramsStr = [['window', values.window],
-            ['delta_select', values.deltaSelect],
-            ['fixed_delta', values.fixedDelta],
-            ['ib', values.iterativeBackcasting],
-            ['demean', values.demean],
-            ['processed_y', values.unprocessedY.replace(/(\r\n|\n|\r)/gm, ",")], // dealing with all operating system's newline characters
-            ['transform', values.transform],
-            ['p_code', values.pCode],
-            ['d_code', values.dCode],
-            ['take_log', values.takeLog]]
-
-            .reduce((pStr, currA) => {
-                return pStr + currA[0].toString() + '=' + currA[1].toString() + '&'
-            }, '?');
-
-
-        console.log(apiUrl + "/user-specified-time-series" + paramsStr)
-
-        await fetch(apiUrl + "/user-specified-time-series" + paramsStr)
-            .catch(error => {
-                console.error('Error:', error);
-            })
-            .then(response => response.json())
-            .then(result => {
-                console.log('Success:', result);
-                setCycle("cycle")(result["cycle"].map(x => Number(x)));
-                setCycle("cycleSE")(result["cycleSE"].map(x => Number(x)));
-                console.log(this.props)
-            });
-
+        getResults();
         this.props.nextStep();
 
     }

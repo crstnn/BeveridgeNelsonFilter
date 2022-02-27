@@ -89,7 +89,7 @@ export class UserData extends Component {
                             </Grid>
                         </Grid>
 
-                        <Divider light > <FormControl variant="standard">
+                        <Divider light> <FormControl variant="standard">
                             <FormControlLabel label="Transformations"
                                               control={<Checkbox
                                                   onChange={handleCheckboxChange('transform')}
