@@ -90,15 +90,6 @@ export class UserForm extends Component {
                 .catch(error => {
                     console.error('Error:', error);
                 })
-                .then(result => {
-                        if (result.status !== 200) {
-                            this.setState({
-                                loading: null,
-                            })
-                            throw ("bad status");
-                        }
-                    }
-                )
                 .then(response => {
                     if (response.status === 200) {
                         const result = response.json()
@@ -108,6 +99,11 @@ export class UserForm extends Component {
                             cycle: (result["cycle"].map(x => Number(x))),
                             cycleSE: (result["cycleSE"].map(x => Number(x))),
                         })
+                    } else {
+                        this.setState({
+                            loading: null,
+                        })
+                        throw ("bad status");
                     }
 
                 });
