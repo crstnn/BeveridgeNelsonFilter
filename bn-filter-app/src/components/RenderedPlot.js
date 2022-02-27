@@ -11,8 +11,6 @@ export class RenderedPlot extends Component {
     render() {
         const {plotPageValues} = this.props;
 
-        console.log(plotPageValues)
-
         return (
             <div>
                 <Plot layout={{autosize: true}}

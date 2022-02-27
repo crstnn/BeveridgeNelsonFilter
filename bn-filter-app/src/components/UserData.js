@@ -9,11 +9,11 @@ import {
     InputLabel,
     MenuItem,
     Select,
-    TextField, Typography
+    TextField,
+    Typography
 } from "@mui/material";
 import '../styles/App.css';
 import CustomDatePicker from "../pickers/CustomDatePicker";
-import * as MaterialUI from "@mui/material";
 
 
 export class UserData extends Component {
@@ -61,7 +61,9 @@ export class UserData extends Component {
                         alignItems: "center",
                         display: "inline-block",
                     }}>
-                        <Divider light style={{fontSize: 'large'}}>Horizontal-Axis</Divider>
+                        <Divider light
+                                 title="This option does not make alterations to the data but changes the display on the x-axis"
+                                 style={{fontSize: 'large'}}>X-Axis Display</Divider>
                         <Grid container direction="column" sx={{minHeight: 200}} justifyContent="space-evenly"
                               alignItems="center">
 
@@ -89,20 +91,23 @@ export class UserData extends Component {
                             </Grid>
                         </Grid>
 
-                        <Divider light> <FormControl variant="standard">
-                            <FormControlLabel label={<Typography style={styles.headingFormControlLabel}>Transformations</Typography>}
-                                              control={<Checkbox
-                                                  onChange={handleCheckboxChange('transform')}
-                                                  checked={values.transform}/>}
+                        <Divider light><FormControl variant="standard">
+                            <FormControlLabel
+                                label={<Typography style={styles.headingFormControlLabel}>Transformations</Typography>}
+                                title="Transformations are applied in the order below and are done prior to the BN Filter run"
+                                control={<Checkbox
+                                    onChange={handleCheckboxChange('transform')}
+                                    checked={values.transform}/>}
                             />
                         </FormControl></Divider>
                         <Grid container direction="column" sx={{minHeight: 360}} justifyContent="space-evenly"
                               alignItems="center">
                             <Grid item xs={3}>
-                                <FormControl variant="standard" sx={{minWidth: 240}}>
-                                    <FormControlLabel label="Perform Natural Logarithm Transform"
-                                                      title="Logarithm is applied before percentage and differencing transformations"
+                                <FormControl variant="standard">
+                                    <FormControlLabel label="Natural Logarithm"
+                                                      title="Logarithm to the base of Euler's number"
                                                       control={<Checkbox
+                                                          size="small"
                                                           onChange={handleCheckboxChange('takeLog')}
                                                           checked={values.takeLog}
                                                           disabled={!values.transform}/>}
@@ -111,25 +116,9 @@ export class UserData extends Component {
                             </Grid>
                             <Grid item xs={3}>
                                 <FormControl variant="standard" sx={{minWidth: 320}}>
-                                    <InputLabel>Computed Percentages</InputLabel>
-                                    <Select
-                                        title="Percentage multiple applied before BN filter"
-                                        onChange={handleChange('pCode')}
-                                        defaultValue={values.pCode}
-                                        disabled={!values.transform}
-                                    >
-                                        <MenuItem value={'np'}>No Change</MenuItem>
-                                        <MenuItem value={'p1'}>Multiply by 100</MenuItem>
-                                        <MenuItem value={'p4'}>Multiply by 400 (Annualised Quarterly Rate)</MenuItem>
-                                        <MenuItem value={'p12'}>Multiply by 1200 (Annualised Monthly Rate)</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={3}>
-                                <FormControl variant="standard" sx={{minWidth: 320}}>
                                     <InputLabel>Differencing Method</InputLabel>
                                     <Select
-                                        title="Differencing method applied before BN filter"
+                                        title="Differencing method applied"
                                         onChange={handleChange('dCode')}
                                         defaultValue={values.dCode}
                                         disabled={!values.transform}
@@ -138,6 +127,22 @@ export class UserData extends Component {
                                         <MenuItem value={'d1'}>1st Difference</MenuItem>
                                         <MenuItem value={'d4'}>4th Difference (Ideal for Quarterly Data)</MenuItem>
                                         <MenuItem value={'d12'}>12th Difference (Ideal for Monthly Data)</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={3}>
+                                <FormControl variant="standard" sx={{minWidth: 320}}>
+                                    <InputLabel>Computed Percentages</InputLabel>
+                                    <Select
+                                        title="Percentage multiple applied"
+                                        onChange={handleChange('pCode')}
+                                        defaultValue={values.pCode}
+                                        disabled={!values.transform}
+                                    >
+                                        <MenuItem value={'np'}>No Change</MenuItem>
+                                        <MenuItem value={'p1'}>Multiply by 100</MenuItem>
+                                        <MenuItem value={'p4'}>Multiply by 400 (Annualised Quarterly Rate)</MenuItem>
+                                        <MenuItem value={'p12'}>Multiply by 1200 (Annualised Monthly Rate)</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>
@@ -169,7 +174,7 @@ const styles = {
     button: {
         margin: 15
     },
-    headingFormControlLabel: { fontSize: 'large' }
+    headingFormControlLabel: {fontSize: 'large'}
 }
 
 

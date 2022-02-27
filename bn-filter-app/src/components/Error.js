@@ -8,7 +8,7 @@ export class Error extends Component {
     }
 
     render() {
-        return(<div style={{paddingTop: "10vh"}}>During the running of the BN Filter a problem occurred.
+        return (<div style={{paddingTop: "10vh"}}>During the running of the BN Filter a problem occurred.
             Please check that the inputs are appropriate.
             <br/>
             <br/>

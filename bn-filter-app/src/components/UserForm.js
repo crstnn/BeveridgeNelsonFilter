@@ -4,7 +4,7 @@ import FormFilterParameters from "./FormFilterParameters";
 import UserData from "./UserData";
 import RenderedPlot from "./RenderedPlot";
 import {Error} from "./Error";
-import {Circles, Grid, Oval} from "react-loader-spinner";
+import {Circles} from "react-loader-spinner";
 
 export class UserForm extends Component {
     state = {
@@ -63,20 +63,23 @@ export class UserForm extends Component {
 
     getResults = async () => {
 
+        const processedY = this.state.unprocessedY.replace(/(\r\n|\n|\r)/gm, ",")
+                            .split(",")
+                            .filter(x=>x!=="")
+
+        console.log(processedY)
 
         const paramsStr = [['window', this.state.window],
             ['delta_select', this.state.deltaSelect],
             ['fixed_delta', this.state.fixedDelta],
             ['ib', this.state.iterativeBackcasting],
             ['demean', this.state.demean],
-            ['processed_y', this.state.unprocessedY.
-                replace(/(\r\n|\n|\r)/gm, ",")],
+            ['processed_y', processedY],
             // dealing with all operating system's newline characters
             ['transform', this.state.transform],
             ['p_code', this.state.pCode],
             ['d_code', this.state.dCode],
             ['take_log', this.state.takeLog]]
-
             .reduce((pStr, currA) => {
                 return pStr + currA[0].toString() + '=' + currA[1].toString() + '&'
             }, '?');
@@ -85,29 +88,29 @@ export class UserForm extends Component {
         console.log(this.baseBackendURL + "/user-specified-time-series" + paramsStr)
 
 
-        this.setState({loading: true}, () => {
+        this.setState({loading: true}, async () => {
             fetch(this.baseBackendURL + "/user-specified-time-series" + paramsStr)
                 .catch(error => {
                     console.error('Error:', error);
                 })
-                .then(response => {
-                    if (response.status === 200) {
-                        const result = response.json()
-                        console.log('Success:', result);
-                        this.setState({
-                            loading: false,
-                            cycle: (result["cycle"].map(x => Number(x))),
-                            cycleSE: (result["cycleSE"].map(x => Number(x))),
-                        })
-                    } else {
-                        this.setState({
-                            loading: null,
-                        })
+                .then((response) => {
+                    if(response.status !== 200) {
+                             this.setState({
+                                loading: null,
+                            })
                         throw ("bad status");
-                    }
+                    } else {return response;}})
+                .then((response) => response.json())
+                .then(result => {
+                    console.log('Success:', result);
+                    this.setState({
+                        loading: false,
+                        cycle: (result["cycle"].map(x => Number(x))),
+                        cycleSE: (result["cycleSE"].map(x => Number(x))),
+                        })
 
+                    })
                 });
-        });
 
     }
 
@@ -187,10 +190,10 @@ export class UserForm extends Component {
                             } else if (this.state.loading === false) {
                                 return (
                                     <RenderedPlot
-                                    prevStep={this.prevStep}
-                                    handleChange={this.handleChange}
-                                    plotPageValues={plotPageValues}
-                                />)
+                                        prevStep={this.prevStep}
+                                        handleChange={this.handleChange}
+                                        plotPageValues={plotPageValues}
+                                    />)
                             } else {
                                 return (
                                     // error page

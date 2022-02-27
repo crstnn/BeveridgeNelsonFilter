@@ -65,7 +65,7 @@ export class FormFilterParameters extends Component {
                                 <TextField
                                     label="Fixed Delta"
                                     type="number"
-                                    title="Only necessary when Signal-to-Noise Ratio is set to 'Fixed Delta'"
+                                    title="Only necessary when Signal-to-noise ratio is set to 'Fixed Delta'"
                                     onChange={handleChange('fixedDelta')}
                                     defaultValue={values.fixedDelta}
                                     disabled={values.deltaSelect !== 0}
@@ -88,6 +88,7 @@ export class FormFilterParameters extends Component {
                         <Grid item xs={6}>
                             <FormControl variant="standard" sx={{minWidth: 240}}>
                                 <FormControlLabel label="Automatic Rolling Window or"
+                                                  title="An algorithm is applied to make this automatic selection"
                                                   control={<Checkbox
                                                       onChange={handleCheckboxChange('isAutomaticWindow')}
                                                       checked={values.isAutomaticWindow}/>}
@@ -99,7 +100,7 @@ export class FormFilterParameters extends Component {
                                 <TextField
                                     label="Manual Rolling Window"
                                     type="number"
-                                    title="Only necessary when 'Rolling Window' is not set to automatic"
+                                    title="Only necessary when the rolling window is not set to automatic"
                                     onChange={handleChange('window')}
                                     defaultValue={values.window}
                                     disabled={values.isAutomaticWindow}
@@ -109,6 +110,8 @@ export class FormFilterParameters extends Component {
                         <Grid item xs={12}>
                             <FormControl variant="standard" sx={{minWidth: 450}}>
                                 <FormControlLabel label="Iterative Backcasting"
+                                                  title="When unselected backcasting is based on unconditional mean
+                                                        (original KMW approach)"
                                                   control={<Checkbox
                                                       onChange={handleCheckboxChange('iterativeBackcasting')}
                                                       checked={values.iterativeBackcasting}/>}

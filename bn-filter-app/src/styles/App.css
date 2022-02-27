@@ -1,6 +1,7 @@
 .App {
     text-align: center;
     min-width: 500px;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
 }
 
 .appHeader {
