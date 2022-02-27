@@ -100,7 +100,7 @@ export class FormFilterParameters extends Component {
                                 <TextField
                                     label="Manual Rolling Window"
                                     type="number"
-                                    title="Only necessary when the rolling window is not set to automatic"
+                                    title="Only necessary when the rolling window is not set to automatic. Must be an integer"
                                     onChange={handleChange('window')}
                                     defaultValue={values.window}
                                     disabled={values.isAutomaticWindow}
