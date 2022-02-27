@@ -3,8 +3,8 @@ import StartMenu from './StartMenu';
 import FormFilterParameters from "./FormFilterParameters";
 import UserData from "./UserData";
 import RenderedPlot from "./RenderedPlot";
-import {Circles} from 'react-loader-spinner';
 import {Error} from "./Error";
+import {Circles, Grid, Oval} from "react-loader-spinner";
 
 export class UserForm extends Component {
     state = {
@@ -176,16 +176,17 @@ export class UserForm extends Component {
                 )
             case 4:
                 return (
-                    <div>
+                    <>
                         {(() => {
                             if (this.state.loading === true) {
                                 return (
                                     <div style={{display: "flex", justifyContent: "space-around", paddingTop: "30vh"}}>
-                                        <Circles color="#003366" height={60} width={60}/>
+                                        <Circles height={75} width={75} color='grey'/>
                                     </div>
                                 )
                             } else if (this.state.loading === false) {
-                                return (<RenderedPlot
+                                return (
+                                    <RenderedPlot
                                     prevStep={this.prevStep}
                                     handleChange={this.handleChange}
                                     plotPageValues={plotPageValues}
@@ -193,12 +194,14 @@ export class UserForm extends Component {
                             } else {
                                 return (
                                     // error page
-                                    <Error/>
+                                    <Error
+                                        prevStep={this.prevStep}
+                                    />
                                 )
                             }
                         })()}
 
-                    </div>
+                    </>
                 )
             default: // also case 1
                 return (

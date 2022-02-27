@@ -9,10 +9,11 @@ import {
     InputLabel,
     MenuItem,
     Select,
-    TextField
+    TextField, Typography
 } from "@mui/material";
 import '../styles/App.css';
 import CustomDatePicker from "../pickers/CustomDatePicker";
+import * as MaterialUI from "@mui/material";
 
 
 export class UserData extends Component {
@@ -50,7 +51,7 @@ export class UserData extends Component {
                             multiline
                             rows={20}
                             label="Time Series (y)"
-                            title="Paste Chosen Time Series Here"
+                            title="Paste your chosen time series here"
                             onChange={handleChange('unprocessedY')}
                             defaultValue={values.unprocessedY}
                         />
@@ -60,16 +61,15 @@ export class UserData extends Component {
                         alignItems: "center",
                         display: "inline-block",
                     }}>
-                        <Divider light style={{fontSize: 'large'}}>X-Axis</Divider>
+                        <Divider light style={{fontSize: 'large'}}>Horizontal-Axis</Divider>
                         <Grid container direction="column" sx={{minHeight: 200}} justifyContent="space-evenly"
                               alignItems="center">
 
                             <Grid item xs={6}>
                                 <FormControl variant="standard" sx={{minWidth: 200}}>
-                                    <InputLabel>Periodicity</InputLabel>
+                                    <InputLabel>Data Frequency</InputLabel>
                                     <Select
-                                        label="Periodicity"
-                                        title=""
+                                        title="Time-series frequency"
                                         onChange={handleChange('periodicity')}
                                         defaultValue={values.periodicity}
                                     >
@@ -90,7 +90,7 @@ export class UserData extends Component {
                         </Grid>
 
                         <Divider light> <FormControl variant="standard">
-                            <FormControlLabel label="Transformations"
+                            <FormControlLabel label={<Typography style={styles.headingFormControlLabel}>Transformations</Typography>}
                                               control={<Checkbox
                                                   onChange={handleCheckboxChange('transform')}
                                                   checked={values.transform}/>}
@@ -101,6 +101,7 @@ export class UserData extends Component {
                             <Grid item xs={3}>
                                 <FormControl variant="standard" sx={{minWidth: 240}}>
                                     <FormControlLabel label="Perform Natural Logarithm Transform"
+                                                      title="Logarithm is applied before percentage and differencing transformations"
                                                       control={<Checkbox
                                                           onChange={handleCheckboxChange('takeLog')}
                                                           checked={values.takeLog}
@@ -112,8 +113,7 @@ export class UserData extends Component {
                                 <FormControl variant="standard" sx={{minWidth: 320}}>
                                     <InputLabel>Computed Percentages</InputLabel>
                                     <Select
-                                        label="Percentages Computed"
-                                        title="Percentages Computed"
+                                        title="Percentage multiple applied before BN filter"
                                         onChange={handleChange('pCode')}
                                         defaultValue={values.pCode}
                                         disabled={!values.transform}
@@ -129,8 +129,7 @@ export class UserData extends Component {
                                 <FormControl variant="standard" sx={{minWidth: 320}}>
                                     <InputLabel>Differencing Method</InputLabel>
                                     <Select
-                                        label="Differencing Method"
-                                        title="Differencing Method"
+                                        title="Differencing method applied before BN filter"
                                         onChange={handleChange('dCode')}
                                         defaultValue={values.dCode}
                                         disabled={!values.transform}
@@ -169,7 +168,9 @@ export class UserData extends Component {
 const styles = {
     button: {
         margin: 15
-    }
+    },
+    headingFormControlLabel: { fontSize: 'large' }
 }
+
 
 export default UserData
