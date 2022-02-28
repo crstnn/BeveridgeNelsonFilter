@@ -1,10 +1,12 @@
 import './styles/App.css';
 import UserForm from './components/UserForm';
-import React from "react";
+import React, {useState} from "react";
+import {CSSTransition} from "react-transition-group";
 
 
 function App() {
-
+    const [showButton, setShowButton] = useState(true);
+    const [showMessage, setShowMessage] = useState(false);
     return (
         <div className="App">
             <header className="appHeader">
@@ -19,7 +21,18 @@ function App() {
                 </p>
 
             </div>
+            {/*<CSSTransition*/}
+            {/*    in={showMessage}*/}
+            {/*    timeout={300}*/}
+            {/*    classNames="fade"*/}
+            {/*    unmountOnExit*/}
+            {/*    onEnter={() => setShowButton(false)}*/}
+            {/*    onExited={() => setShowButton(true)}*/}
+            {/*>*/}
+                <>
             <UserForm/>
+                </>
+            {/*</CSSTransition>*/}
         </div>
     );
 }

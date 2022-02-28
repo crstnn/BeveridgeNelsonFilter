@@ -141,7 +141,7 @@ export class FormFilterParameters extends Component {
 
 const styles = {
     button: {
-        margin: 15
+        margin: 20
     }
 }
 

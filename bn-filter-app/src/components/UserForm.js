@@ -5,6 +5,7 @@ import UserData from "./UserData";
 import RenderedPlot from "./RenderedPlot";
 import {Error} from "./Error";
 import {Circles} from "react-loader-spinner";
+import {Alert} from "@mui/lab";
 
 export class UserForm extends Component {
     state = {
@@ -64,8 +65,8 @@ export class UserForm extends Component {
     getResults = async () => {
 
         const processedY = this.state.unprocessedY.replace(/(\r\n|\n|\r)/gm, ",")
-                            .split(",")
-                            .filter(x=>x!=="")
+            .split(",")
+            .filter(x => x !== "")
 
         console.log(processedY)
 
@@ -94,12 +95,15 @@ export class UserForm extends Component {
                     console.error('Error:', error);
                 })
                 .then((response) => {
-                    if(response.status !== 200) {
-                             this.setState({
-                                loading: null,
-                            })
+                    if (response.status !== 200) {
+                        this.setState({
+                            loading: null,
+                        })
                         throw ("bad status");
-                    } else {return response;}})
+                    } else {
+                        return response;
+                    }
+                })
                 .then((response) => response.json())
                 .then(result => {
                     console.log('Success:', result);
@@ -107,10 +111,10 @@ export class UserForm extends Component {
                         loading: false,
                         cycle: (result["cycle"].map(x => Number(x))),
                         cycleSE: (result["cycleSE"].map(x => Number(x))),
-                        })
-
                     })
-                });
+
+                })
+        });
 
     }
 
@@ -158,6 +162,7 @@ export class UserForm extends Component {
         switch (step) {
             case 2:
                 return (
+
                     <UserData
                         nextStep={this.nextStep}
                         prevStep={this.prevStep}
@@ -168,6 +173,18 @@ export class UserForm extends Component {
                 )
             case 3:
                 return (
+                    <>
+                        {(() => {
+                            if (this.state.loading === null) {
+                                return (
+                                    <div style={{margin: "2px 20%"}}>
+                                    <Alert variant="filled" severity="error"
+                                           onClose={() => {this.setState({loading:false})}}>
+                                        During the running of the BN Filter a problem occurred.
+                                        Please check that the inputs are appropriate.
+                                    </Alert>
+                                    </div>
+                                    )}})()}
                     <FormFilterParameters
                         nextStep={this.nextStep}
                         prevStep={this.prevStep}
@@ -176,6 +193,7 @@ export class UserForm extends Component {
                         getResults={this.getResults}
                         values={values}
                     />
+                    </>
                 )
             case 4:
                 return (
@@ -195,23 +213,20 @@ export class UserForm extends Component {
                                         plotPageValues={plotPageValues}
                                     />)
                             } else {
-                                return (
-                                    // error page
-                                    <Error
-                                        prevStep={this.prevStep}
-                                    />
-                                )
+                                // error
+                                this.prevStep();
                             }
                         })()}
-
                     </>
                 )
             default: // also case 1
                 return (
+
                     <StartMenu
                         nextStep={this.nextStep}
                         handleChange={this.handleChange}
                     />
+
                 )
         }
 

@@ -16,7 +16,6 @@
     left: 0;
 }
 
-
 .information {
     text-align: left;
     margin: 3vh 20%;
@@ -26,5 +25,16 @@
 .welcomeInformation {
     margin-top: 4vh;
     margin-bottom: 3vh;
+}
+
+.fade-appear, .fade-enter {
+    opacity: 0;
+    transform: scale(0.2);
+}
+
+.fade-appear-active, .fade-enter-active {
+    opacity: 1;
+    transform: scale(1);
+    transition: all 1000ms;
 }
 

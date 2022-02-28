@@ -68,7 +68,7 @@ export class UserData extends Component {
                               alignItems="center">
 
                             <Grid item xs={6}>
-                                <FormControl variant="standard" sx={{minWidth: 200}}>
+                                <FormControl variant="standard" sx={{minWidth: 150}}>
                                     <InputLabel>Data Frequency</InputLabel>
                                     <Select
                                         title="Time-series frequency"
@@ -100,7 +100,7 @@ export class UserData extends Component {
                                     checked={values.transform}/>}
                             />
                         </FormControl></Divider>
-                        <Grid container direction="column" sx={{minHeight: 360}} justifyContent="space-evenly"
+                        <Grid container direction="column" sx={{minHeight: 340}} justifyContent="space-evenly"
                               alignItems="center">
                             <Grid item xs={3}>
                                 <FormControl variant="standard">
@@ -172,7 +172,8 @@ export class UserData extends Component {
 
 const styles = {
     button: {
-        margin: 15
+        margin: 30
+
     },
     headingFormControlLabel: {fontSize: 'large'}
 }
