@@ -3,7 +3,6 @@ import StartMenu from './StartMenu';
 import FormFilterParameters from "./FormFilterParameters";
 import UserData from "./UserData";
 import RenderedPlot from "./RenderedPlot";
-import {Error} from "./Error";
 import {Circles} from "react-loader-spinner";
 import {Alert} from "@mui/lab";
 
@@ -99,7 +98,7 @@ export class UserForm extends Component {
                         this.setState({
                             loading: null,
                         })
-                        throw ("bad status");
+                        throw Error("bad status");
                     } else {
                         return response;
                     }
@@ -178,21 +177,25 @@ export class UserForm extends Component {
                             if (this.state.loading === null) {
                                 return (
                                     <div style={{margin: "2px 20%"}}>
-                                    <Alert variant="filled" severity="error"
-                                           onClose={() => {this.setState({loading:false})}}>
-                                        During the running of the BN Filter a problem occurred.
-                                        Please check that the inputs are appropriate.
-                                    </Alert>
+                                        <Alert variant="filled" severity="error"
+                                               onClose={() => {
+                                                   this.setState({loading: false})
+                                               }}>
+                                            During the running of the BN Filter a problem occurred.
+                                            Please check that the inputs are appropriate.
+                                        </Alert>
                                     </div>
-                                    )}})()}
-                    <FormFilterParameters
-                        nextStep={this.nextStep}
-                        prevStep={this.prevStep}
-                        handleChange={this.handleChange}
-                        handleCheckboxChange={this.handleCheckboxChange}
-                        getResults={this.getResults}
-                        values={values}
-                    />
+                                )
+                            }
+                        })()}
+                        <FormFilterParameters
+                            nextStep={this.nextStep}
+                            prevStep={this.prevStep}
+                            handleChange={this.handleChange}
+                            handleCheckboxChange={this.handleCheckboxChange}
+                            getResults={this.getResults}
+                            values={values}
+                        />
                     </>
                 )
             case 4:

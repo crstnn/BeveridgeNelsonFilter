@@ -93,7 +93,7 @@ export class UserData extends Component {
 
                         <Divider light><FormControl variant="standard">
                             <FormControlLabel
-                                label={<Typography style={styles.headingFormControlLabel}>Transformations</Typography>}
+                                label={<Typography style={styles.headingFormControlLabel}>Pre-Analysis Transformations</Typography>}
                                 title="Transformations are applied in the order below and are done prior to the BN Filter run"
                                 control={<Checkbox
                                     onChange={handleCheckboxChange('transform')}

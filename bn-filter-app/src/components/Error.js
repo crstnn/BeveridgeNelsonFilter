@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import {Button} from "@mui/material";
-import {Alert} from "@mui/lab";
 
 export class Error extends Component {
     back = e => {
