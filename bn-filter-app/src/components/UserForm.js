@@ -157,80 +157,89 @@ export class UserForm extends Component {
         const plotPageValues = {y, cycle, cycleSE, periodicity, dateObj}
 
 
-        switch (step) {
-            case 2:
-                return (
-
-                    <UserData
-                        nextStep={this.nextStep}
-                        prevStep={this.prevStep}
-                        handleChange={this.handleChange}
-                        handleCheckboxChange={this.handleCheckboxChange}
-                        values={values}
-                    />
-                )
-            case 3:
-                return (
-                    <>
-                        {(() => {
-                            if (this.state.loading === null) {
-                                return (
-                                    <div style={{margin: "2px 20%"}}>
-                                        <Alert variant="filled" severity="error"
-                                               onClose={() => {
-                                                   this.setState({loading: false})
-                                               }}>
-                                            During the running of the BN Filter a problem occurred.
-                                            Please check that the inputs are appropriate.
-                                        </Alert>
-                                    </div>
-                                )
-                            }
-                        })()}
-                        <FormFilterParameters
-                            nextStep={this.nextStep}
-                            prevStep={this.prevStep}
-                            handleChange={this.handleChange}
-                            handleCheckboxChange={this.handleCheckboxChange}
-                            getResults={this.getResults}
-                            values={values}
-                        />
-                    </>
-                )
-            case 4:
-                return (
-                    <>
-                        {(() => {
-                            if (this.state.loading === true) {
-                                return (
-                                    <div style={{display: "flex", justifyContent: "space-around", paddingTop: "30vh"}}>
-                                        <Circles height={75} width={75} color='grey'/>
-                                    </div>
-                                )
-                            } else if (this.state.loading === false) {
-                                return (
-                                    <RenderedPlot
+        return (
+            <>
+                {(() => {
+                    switch (step) {
+                        case 2:
+                            return (
+                                <UserData
+                                    nextStep={this.nextStep}
+                                    prevStep={this.prevStep}
+                                    handleChange={this.handleChange}
+                                    handleCheckboxChange={this.handleCheckboxChange}
+                                    values={values}
+                                />
+                            )
+                        case 3:
+                            return (
+                                <>
+                                    {(() => {
+                                        if (this.state.loading === null) {
+                                            return (
+                                                <div style={{margin: "2px 20%"}}>
+                                                    <Alert variant="filled" severity="error"
+                                                           onClose={() => {
+                                                               this.setState({loading: false})
+                                                           }}>
+                                                        During the running of the BN Filter a problem occurred.
+                                                        Please check that the inputs are appropriate.
+                                                    </Alert>
+                                                </div>
+                                            )
+                                        }
+                                    })()}
+                                    <FormFilterParameters
+                                        nextStep={this.nextStep}
                                         prevStep={this.prevStep}
                                         handleChange={this.handleChange}
-                                        plotPageValues={plotPageValues}
-                                    />)
-                            } else {
-                                // error
-                                this.prevStep();
-                            }
-                        })()}
-                    </>
-                )
-            default: // also case 1
-                return (
+                                        handleCheckboxChange={this.handleCheckboxChange}
+                                        getResults={this.getResults}
+                                        values={values}
+                                    />
+                                </>
+                            )
+                        case 4:
+                            return (
+                                <>
+                                    {(() => {
+                                        if (this.state.loading === true) {
+                                            return (
+                                                <div style={{
+                                                    display: "flex",
+                                                    justifyContent: "space-around",
+                                                    paddingTop: "30vh"
+                                                }}>
+                                                    <Circles height={75} width={75} color='grey'/>
+                                                </div>
+                                            )
+                                        } else if (this.state.loading === false) {
+                                            return (
+                                                <RenderedPlot
+                                                    prevStep={this.prevStep}
+                                                    handleChange={this.handleChange}
+                                                    plotPageValues={plotPageValues}
+                                                />)
+                                        } else {
+                                            // error
+                                            this.prevStep();
+                                        }
+                                    })()}
+                                </>
+                            )
+                        default: // also case 1
+                            return (
 
-                    <StartMenu
-                        nextStep={this.nextStep}
-                        handleChange={this.handleChange}
-                    />
+                                <StartMenu
+                                    nextStep={this.nextStep}
+                                    handleChange={this.handleChange}
+                                />
 
-                )
-        }
+                            )
+                    }
+                })()}
+            </>
+        )
 
     }
 }
