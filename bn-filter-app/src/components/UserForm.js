@@ -90,15 +90,12 @@ export class UserForm extends Component {
 
         this.setState({loading: true}, async () => {
             fetch(this.baseBackendURL + "/user-specified-time-series" + paramsStr)
-                .catch(error => {
-                    console.error('Error:', error);
-                })
                 .then((response) => {
                     if (response.status !== 200) {
                         this.setState({
                             loading: null,
                         })
-                        throw Error("bad status");
+                        throw new Error("bad status");
                     } else {
                         return response;
                     }
@@ -112,7 +109,9 @@ export class UserForm extends Component {
                         cycleSE: (result["cycleSE"].map(x => Number(x))),
                     })
 
-                })
+                }).catch((error) => {
+                console.log(error)
+            });
         });
 
     }
