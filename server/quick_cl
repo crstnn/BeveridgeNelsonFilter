@@ -1,1 +1,3 @@
 git subtree push --prefix server <host> main
+
+k6 run "script.js"
