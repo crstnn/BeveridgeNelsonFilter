@@ -27,7 +27,7 @@ export class UserForm extends Component {
         takeLog: false,
         // bnf output (from API)
         cycle: [],
-        cycleSE: [],
+        cycleCI: [],
         loading: true,
     }
 
@@ -106,7 +106,7 @@ export class UserForm extends Component {
                     this.setState({
                         loading: false,
                         cycle: (result["cycle"].map(x => Number(x))),
-                        cycleSE: (result["cycleSE"].map(x => Number(x))),
+                        cycleCI: (result["ci"].map(x => Number(x))),
                     })
 
                 }).catch((error) => {
@@ -135,7 +135,7 @@ export class UserForm extends Component {
             pCode,
             takeLog,
             cycle,
-            cycleSE,
+            cycleCI,
         } = this.state;
         const values = {
             y,
@@ -151,10 +151,10 @@ export class UserForm extends Component {
             pCode,
             takeLog,
             cycle,
-            cycleSE,
+            cycleCI,
         };
 
-        const plotPageValues = {y, cycle, cycleSE, periodicity, dateObj}
+        const plotPageValues = {y, cycle, cycleCI, periodicity, dateObj}
 
 
         return (

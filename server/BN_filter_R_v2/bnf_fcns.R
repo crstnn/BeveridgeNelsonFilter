@@ -798,8 +798,6 @@ bnf <- function(y,
     result$demean_method <- demean_method
     result$iterative <- iterative
     result$ci <- round(qnorm(p = 0.05 / 2.0, lower.tail = FALSE), 2) * cycle_se
-    result$c_ub <- ceiling(max(cycle) + result$ci)
-    result$c_lb <- floor(min(cycle) - result$ci)
     if (iterative > 0){
     	result$iterations <- ncol(cycle_iter)-1
     }
@@ -858,8 +856,8 @@ plot.bnfClass <- function(x,  main = "BN Filter Cycle",
         x_axis <- seq(from = 1, to = length(x$cycle), by = 1)
     }
 
-    c_ub <- ceiling(ifelse(plot_ci, x$c_ub, max(x$cycle)))
-    c_lb <- floor(ifelse(plot_ci, x$c_lb, min(x$cycle)))
+    c_ub <- ceiling(ifelse(plot_ci, ceiling(max(x$cycle) + x$ci), max(x$cycle)))
+    c_lb <- floor(ifelse(plot_ci, floor(min(x$cycle) - x$ci), min(x$cycle)))
 
     # Establish the cycle plotting region
     plot(x$cycle, type = 'n', col = NA, 

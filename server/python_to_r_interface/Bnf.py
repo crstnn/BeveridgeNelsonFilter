@@ -21,6 +21,5 @@ class BNF:
         gc.collect()  # using Python's garbage collector to free up unnecessary use of R memory space
         return {
             "cycle": [str(v) for v in bnf_output.rx2('cycle')],
-            "cycle_ci_ub": [str(v) for v in bnf_output.rx2('c_ub')],
-            "cycle_ci_lb": [str(v) for v in bnf_output.rx2('c_lb')]
+            "ci": [str(v) for v in bnf_output.rx2('ci')]
         }

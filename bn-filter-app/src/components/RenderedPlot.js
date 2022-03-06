@@ -8,21 +8,51 @@ export class RenderedPlot extends Component {
         this.props.prevStep();
     }
 
-    render() {
+    zip = (cycle, ci, bound) => cycle.map((x, i) => bound === "lb" ? x - ci[i] : x + ci[i] /* ub */);
+
+    getPlot() {
         const {plotPageValues} = this.props;
+        const xAxis = Array.from({length: plotPageValues.cycle.length}, (_, i) => i + 1);
+
+        return (
+            <Plot layout={{autosize: true}}
+                  data={[
+                      {
+                          x: xAxis,
+                          y: this.zip(plotPageValues.cycle, plotPageValues.cycleCI, "lb"),
+                          fill: "tonexty",
+                          fillcolor: "rgba(0,100,80,0.2)",
+                          line: {color: "transparent"},
+                          showlegend: false,
+                          type: "scatter",
+                      },
+                      {
+                          x: xAxis,
+                          y: plotPageValues.cycle,
+                          type: 'scatter',
+                          mode: 'lines+markers',
+                          marker: {color: 'blue'},
+                          name: "cycle"
+                      },
+                      {
+                          x: xAxis,
+                          y: this.zip(plotPageValues.cycle, plotPageValues.cycleCI, "ub"),
+                          fill: "tozeroy",
+                          fillcolor: "rgba(0,100,80,0.2)",
+                          line: {color: "transparent"},
+                          showlegend: false,
+                          type: "scatter",
+                      },
+                      ]}
+            />
+        )
+    }
+
+    render() {
 
         return (
             <div>
-                <Plot layout={{autosize: true}}
-                      data={[
-                          {
-                              x: Array.from({length: plotPageValues.cycle.length}, (_, i) => i + 1),
-                              y: plotPageValues.cycle,
-                              type: 'scatter',
-                              mode: 'lines+markers',
-                              marker: {color: 'red'},
-                          }]}
-                />
+                {this.getPlot()}
                 <div>
                     <Button
                         variant="contained"
