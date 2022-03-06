@@ -8,8 +8,6 @@ export class RenderedPlot extends Component {
         this.props.prevStep();
     }
 
-    static zip = (cycle, ci, bound) => cycle.map((x, i) => bound === "lb" ? x - ci[i] : x + ci[i] /* ub */);
-
     getPlot() {
         const {plotPageValues} = this.props;
         const xAxis = Array.from({length: plotPageValues.cycle.length}, (_, i) => i + 1);
@@ -29,16 +27,17 @@ export class RenderedPlot extends Component {
                       },
                       { // confint lower bound: enclosing line (which is hidden) hence 0 opacity (using properties of 'tonexty')
                           x: xAxis,
-                          y: RenderedPlot.zip(plotPageValues.cycle, plotPageValues.cycleCI, "lb"),
+                          y: plotPageValues.cycleCILB,
                           fill: "tonexty",
                           fillcolor: "rgba(0, 0, 0, 0)",
+                          line: {color: "transparent"},
                           showlegend: false,
                           type: "scatter",
                           hoverinfo: 'skip',
                       },
                       { // confint upper bound
                           x: xAxis,
-                          y: RenderedPlot.zip(plotPageValues.cycle, plotPageValues.cycleCI, "ub"),
+                          y: plotPageValues.cycleCIUB,
                           fill: "tonexty",
                           fillcolor: "rgba(0,100,80,0.2)",
                           line: {color: "transparent"},

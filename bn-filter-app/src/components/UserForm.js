@@ -28,6 +28,8 @@ export class UserForm extends Component {
         // bnf output (from API)
         cycle: [],
         cycleCI: [],
+        cycleCILB: [],
+        cycleCIUB: [],
         loading: true,
     }
 
@@ -49,6 +51,7 @@ export class UserForm extends Component {
         });
     }
 
+
     handleChange = input => e => {
         this.setState({[input]: e.target.value});
     }
@@ -60,6 +63,8 @@ export class UserForm extends Component {
     handleCheckboxChange = input => e => {
         this.setState({[input]: e.target.checked});
     }
+
+    static confIntZip = (cycle, ci, bound) => cycle.map((x, i) => bound === "lb" ? x - ci[i] : x + ci[i] /* ub */);
 
     getResults = async () => {
 
@@ -109,6 +114,11 @@ export class UserForm extends Component {
                         cycleCI: (result["ci"].map(x => Number(x))),
                     })
 
+                    this.setState({
+                        cycleCILB: UserForm.confIntZip(this.state.cycle, this.state.cycleCI, "lb"),
+                        cycleCIUB: UserForm.confIntZip(this.state.cycle, this.state.cycleCI, "ub"),
+                    })
+
                 }).catch((error) => {
                 console.log(error)
             });
@@ -135,7 +145,8 @@ export class UserForm extends Component {
             pCode,
             takeLog,
             cycle,
-            cycleCI,
+            cycleCILB,
+            cycleCIUB,
         } = this.state;
         const values = {
             y,
@@ -150,11 +161,9 @@ export class UserForm extends Component {
             dCode,
             pCode,
             takeLog,
-            cycle,
-            cycleCI,
         };
 
-        const plotPageValues = {y, cycle, cycleCI, periodicity, dateObj}
+        const plotPageValues = {y, cycle, cycleCILB, cycleCIUB, periodicity, dateObj}
 
 
         return (
