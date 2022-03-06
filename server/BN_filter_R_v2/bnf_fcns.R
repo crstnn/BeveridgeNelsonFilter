@@ -797,6 +797,9 @@ bnf <- function(y,
     result$delta <- delta
     result$demean_method <- demean_method
     result$iterative <- iterative
+    result$ci <- round(qnorm(p = 0.05 / 2.0, lower.tail = FALSE), 2) * cycle_se
+    result$c_ub <- ceiling(max(cycle) + result$ci)
+    result$c_lb <- floor(min(cycle) - result$ci)
     if (iterative > 0){
     	result$iterations <- ncol(cycle_iter)-1
     }
@@ -854,10 +857,9 @@ plot.bnfClass <- function(x,  main = "BN Filter Cycle",
     } else {
         x_axis <- seq(from = 1, to = length(x$cycle), by = 1)
     }
-    
-    ci <- round(qnorm(p = 0.05 / 2.0, lower.tail = FALSE), 2) * x$cycle_se
-    c_ub <- ceiling(ifelse(plot_ci, max(x$cycle) + ci, max(x$cycle)))
-    c_lb <- floor(ifelse(plot_ci, min(x$cycle) - ci, min(x$cycle)))
+
+    c_ub <- ceiling(ifelse(plot_ci, x$c_ub, max(x$cycle)))
+    c_lb <- floor(ifelse(plot_ci, x$c_lb, min(x$cycle)))
 
     # Establish the cycle plotting region
     plot(x$cycle, type = 'n', col = NA, 
@@ -868,7 +870,7 @@ plot.bnfClass <- function(x,  main = "BN Filter Cycle",
 
     # 95% Confidence Intervals (if requested)
     if (plot_ci) { 
-        polygon(x = c(x_axis, rev(x_axis)), y = c((x$cycle - ci), rev(x$cycle + ci)),
+        polygon(x = c(x_axis, rev(x_axis)), y = c((x$cycle - x$ci), rev(x$cycle + x$ci)),
             col = adjustcolor(col, alpha.f = 0.2), border = NA)
     }
 
