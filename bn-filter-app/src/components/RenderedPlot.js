@@ -1,12 +1,25 @@
 import React, {Component} from "react";
 import Plot from 'react-plotly.js';
 import {Button} from "@mui/material";
+import { CSVLink } from "react-csv";
+import UserForm from "./UserForm";
 
 export class RenderedPlot extends Component {
     back = e => {
         e.preventDefault();
         this.props.prevStep();
     }
+
+
+    getCSVData() {
+        const {plotPageValues} = this.props;
+
+        return UserForm.colsToRows(
+            ["cycle"].concat(plotPageValues.cycle),
+            ["conf_int_lower_bound"].concat(plotPageValues.cycleCILB),
+            ["conf_int_upper_bound"].concat(plotPageValues.cycleCIUB));
+    }
+
 
     getPlot() {
         const {plotPageValues} = this.props;
@@ -54,14 +67,20 @@ export class RenderedPlot extends Component {
 
         return (
             <div>
-                {this.getPlot()}
                 <div>
-                    <Button
-                        variant="contained"
-                        style={styles.button}
-                        onClick={this.back}
-                    >Back</Button>
+                <div>
+                    {this.getPlot()}
                 </div>
+                Download the above data as a CSV <CSVLink
+                filename={"BNF_cycle.csv"}
+                data={this.getCSVData()}>
+                here</CSVLink>.
+                </div>
+                <Button
+                    variant="contained"
+                    style={styles.button}
+                    onClick={this.back}
+                >Back</Button>
             </div>
 
         );
@@ -70,7 +89,7 @@ export class RenderedPlot extends Component {
 
 const styles = {
     button: {
-        margin: 15
+        margin: 30
     }
 }
 

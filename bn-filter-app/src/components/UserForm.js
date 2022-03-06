@@ -66,6 +66,28 @@ export class UserForm extends Component {
 
     static confIntZip = (cycle, ci, bound) => cycle.map((x, i) => bound === "lb" ? x - ci[i] : x + ci[i] /* ub */);
 
+    static colsToRows = (...columns) => {
+
+        // Invariant: All arrays are same length
+        const
+            rowLength = columns.length,
+            colLength = columns[0].length;
+
+        const retArr = [];
+
+        for (let c = 0; c < colLength; c++) {
+            const row = [];
+            for (let r = 0; r < rowLength; r++) {
+                row.push(columns[r][c]);
+            }
+            retArr.push(row)
+        }
+
+        return retArr;
+
+
+    };
+
     getResults = async () => {
 
         const processedY = this.state.unprocessedY.replace(/(\r\n|\n|\r)/gm, ",")
@@ -109,12 +131,12 @@ export class UserForm extends Component {
                 .then(result => {
                     console.log('Success:', result);
                     this.setState({
-                        loading: false,
                         cycle: (result["cycle"].map(x => Number(x))),
                         cycleCI: (result["ci"].map(x => Number(x))),
                     })
 
                     this.setState({
+                        loading: false,
                         cycleCILB: UserForm.confIntZip(this.state.cycle, this.state.cycleCI, "lb"),
                         cycleCIUB: UserForm.confIntZip(this.state.cycle, this.state.cycleCI, "ub"),
                     })
