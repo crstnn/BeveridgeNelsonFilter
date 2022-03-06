@@ -8,7 +8,7 @@ export class RenderedPlot extends Component {
         this.props.prevStep();
     }
 
-    zip = (cycle, ci, bound) => cycle.map((x, i) => bound === "lb" ? x - ci[i] : x + ci[i] /* ub */);
+    static zip = (cycle, ci, bound) => cycle.map((x, i) => bound === "lb" ? x - ci[i] : x + ci[i] /* ub */);
 
     getPlot() {
         const {plotPageValues} = this.props;
@@ -19,7 +19,7 @@ export class RenderedPlot extends Component {
                   data={[
                       {
                           x: xAxis,
-                          y: this.zip(plotPageValues.cycle, plotPageValues.cycleCI, "lb"),
+                          y: RenderedPlot.zip(plotPageValues.cycle, plotPageValues.cycleCI, "lb"),
                           fill: "tonexty",
                           fillcolor: "rgba(0,100,80,0.2)",
                           line: {color: "transparent"},
@@ -36,7 +36,7 @@ export class RenderedPlot extends Component {
                       },
                       {
                           x: xAxis,
-                          y: this.zip(plotPageValues.cycle, plotPageValues.cycleCI, "ub"),
+                          y: RenderedPlot.zip(plotPageValues.cycle, plotPageValues.cycleCI, "ub"),
                           fill: "tozeroy",
                           fillcolor: "rgba(0,100,80,0.2)",
                           line: {color: "transparent"},
