@@ -1,5 +1,5 @@
 {
-  "homepage": "http://crstnn.github.io/BeveridgeNelsonFilter",
+  "homepage": "http://bnfiltering.com",
   "name": "bn-filter-app",
   "version": "0.1.0",
   "private": true,
@@ -30,7 +30,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "predeploy": "npm run build",
+    "predeploy": "npm run build && COPY \"CNAME\" \"./build/CNAME\"",
     "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
