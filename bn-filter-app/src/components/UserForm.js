@@ -18,7 +18,7 @@ export class UserForm extends Component {
         isAutomaticWindow: true,
         window: '',
         // periodicity
-        periodicity: 0,
+        periodicity: 'q',
         dateObj: Object(),
         // transforms to data before bnf
         transform: false,
@@ -182,7 +182,7 @@ export class UserForm extends Component {
                                                            onClose={() => {
                                                                this.setState({loading: false})
                                                            }}>
-                                                        During the running of the BN Filter a problem occurred.
+                                                        During the running of the BN filter a problem occurred.
                                                         Please check that the inputs are appropriate.
                                                     </Alert>
                                                 </div>

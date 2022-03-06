@@ -89,6 +89,7 @@ export class FormFilterParameters extends Component {
                             <FormControl variant="standard" sx={{minWidth: 240}}>
                                 <FormControlLabel label="Automatic Rolling Window or"
                                                   title="An algorithm is applied to make this automatic selection"
+                                                  disabled={values.demean === "sm"}
                                                   control={<Checkbox
                                                       onChange={handleCheckboxChange('isAutomaticWindow')}
                                                       checked={values.isAutomaticWindow}/>}
@@ -103,7 +104,7 @@ export class FormFilterParameters extends Component {
                                     title="Only necessary when the rolling window is not set to automatic. Must be an integer"
                                     onChange={handleChange('window')}
                                     defaultValue={values.window}
-                                    disabled={values.isAutomaticWindow}
+                                    disabled={values.isAutomaticWindow || values.demean === "sm"}
                                 />
                             </FormControl>
                         </Grid>

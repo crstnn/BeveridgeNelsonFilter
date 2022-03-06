@@ -18,6 +18,8 @@ import CustomDatePicker from "../pickers/CustomDatePicker";
 
 export class UserData extends Component {
 
+
+
     continue = e => {
 
         e.preventDefault();
@@ -34,7 +36,7 @@ export class UserData extends Component {
         const {values, handleChange, handleCheckboxChange} = this.props;
 
         return (
-            <div>
+            <>
 
                 <div className="information">
                     <Divider style={{fontSize: 'x-large'}}>Time Series Input and Transformations</Divider>
@@ -165,7 +167,7 @@ export class UserData extends Component {
 
                 </div>
 
-            </div>
+            </>
         )
     }
 }
