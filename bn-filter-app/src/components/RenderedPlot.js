@@ -14,34 +14,42 @@ export class RenderedPlot extends Component {
         const {plotPageValues} = this.props;
         const xAxis = Array.from({length: plotPageValues.cycle.length}, (_, i) => i + 1);
 
+        console.log(xAxis.concat(xAxis.reverse()))
+        console.log(RenderedPlot.zip(plotPageValues.cycle, plotPageValues.cycleCI, "lb")
+            .concat(RenderedPlot.zip(plotPageValues.cycle, plotPageValues.cycleCI, "ub")))
+
         return (
             <Plot layout={{autosize: true}}
                   data={[
-                      {
-                          x: xAxis,
-                          y: RenderedPlot.zip(plotPageValues.cycle, plotPageValues.cycleCI, "lb"),
-                          fill: "tonexty",
-                          fillcolor: "rgba(0,100,80,0.2)",
-                          line: {color: "transparent"},
-                          showlegend: false,
-                          type: "scatter",
-                      },
+
                       {
                           x: xAxis,
                           y: plotPageValues.cycle,
                           type: 'scatter',
                           mode: 'lines+markers',
                           marker: {color: 'blue'},
-                          name: "cycle"
+                          name: "cycle",
+                          showlegend: false,
+                      },
+                      {
+                          x: xAxis,
+                          y: RenderedPlot.zip(plotPageValues.cycle, plotPageValues.cycleCI, "lb"),
+                          fill: "tonexty",
+                          fillcolor: "rgba(0,100,80,0)",
+                          line: {color: "transparent"},
+                          showlegend: false,
+                          type: "scatter",
+                          hoverinfo: 'skip',
                       },
                       {
                           x: xAxis,
                           y: RenderedPlot.zip(plotPageValues.cycle, plotPageValues.cycleCI, "ub"),
-                          fill: "tozeroy",
+                          fill: "tonexty",
                           fillcolor: "rgba(0,100,80,0.2)",
                           line: {color: "transparent"},
                           showlegend: false,
                           type: "scatter",
+                          hoverinfo: 'skip',
                       },
                       ]}
             />
