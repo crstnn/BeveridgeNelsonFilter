@@ -71,10 +71,9 @@ export class RenderedPlot extends Component {
                 <div>
                     {this.getPlot()}
                 </div>
-                Download the above data as a CSV <CSVLink
+                <CSVLink
                 filename={"BNF_cycle.csv"}
-                data={this.getCSVData()}>
-                here</CSVLink>.
+                data={this.getCSVData()}>Download as CSV</CSVLink>.
                 </div>
                 <Button
                     variant="contained"
@@ -89,7 +88,7 @@ export class RenderedPlot extends Component {
 
 const styles = {
     button: {
-        margin: 30
+        margin: 40
     }
 }
 
