@@ -14,10 +14,6 @@ export class RenderedPlot extends Component {
         const {plotPageValues} = this.props;
         const xAxis = Array.from({length: plotPageValues.cycle.length}, (_, i) => i + 1);
 
-        console.log(xAxis.concat(xAxis.reverse()))
-        console.log(RenderedPlot.zip(plotPageValues.cycle, plotPageValues.cycleCI, "lb")
-            .concat(RenderedPlot.zip(plotPageValues.cycle, plotPageValues.cycleCI, "ub")))
-
         return (
             <Plot layout={{autosize: true}}
                   data={[
@@ -31,17 +27,16 @@ export class RenderedPlot extends Component {
                           name: "cycle",
                           showlegend: false,
                       },
-                      {
+                      { // confint lower bound: enclosing line (which is hidden) hence 0 opacity (using properties of 'tonexty')
                           x: xAxis,
                           y: RenderedPlot.zip(plotPageValues.cycle, plotPageValues.cycleCI, "lb"),
                           fill: "tonexty",
-                          fillcolor: "rgba(0,100,80,0)",
-                          line: {color: "transparent"},
+                          fillcolor: "rgba(0, 0, 0, 0)",
                           showlegend: false,
                           type: "scatter",
                           hoverinfo: 'skip',
                       },
-                      {
+                      { // confint upper bound
                           x: xAxis,
                           y: RenderedPlot.zip(plotPageValues.cycle, plotPageValues.cycleCI, "ub"),
                           fill: "tonexty",
