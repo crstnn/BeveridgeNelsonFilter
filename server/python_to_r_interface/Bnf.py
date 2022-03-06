@@ -18,7 +18,7 @@ class BNF:
                                             fixed_delta=self.fixed_delta,
                                             demean=self.demean,
                                             ib=self.ib)
-        gc.collect()  # using Python's garage collector to free up unnecessary use of R memory space
+        gc.collect()  # using Python's garbage collector to free up unnecessary use of R memory space
         return {
             "cycle": [str(v) for v in bnf_output.rx2('cycle')],
             "cycleSE": [str(v) for v in bnf_output.rx2('cycle_se')]

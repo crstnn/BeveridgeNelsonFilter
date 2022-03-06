@@ -76,7 +76,7 @@ class TimeSeries(ABC):
                                                              take_log=self.take_log,
                                                              dcode=self.d_code,
                                                              pcode=self.p_code)
-            gc.collect()  # using Python's garage collector to free up unnecessary use of R memory space
+            gc.collect()  # using Python's garbage collector to free up unnecessary use of R memory space
             return ret_series
 
         return self.y
