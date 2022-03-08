@@ -39,7 +39,8 @@ def fred_time_series():
 def user_specified_time_series():
     # lightweight backend validation as the majority of validation is done in frontend
 
-    window = int(request.args.get("window"))
+    window = 40 if request.args.get("window") == "" else int(request.args.get("window"))
+    # empty string param when set to 'static demeaning'
     delta_select = int(request.args.get("delta_select"))
     fixed_delta = float(request.args.get("fixed_delta")) if request.args.get("fixed_delta") else 0.05
     ib = request.args.get("ib") == "true"
