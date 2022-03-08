@@ -8,11 +8,14 @@ class BNF:
         self.window = window
         self.delta_select = delta_select
         self.fixed_delta = fixed_delta
-        self.demean = demean
         self.ib = ib
+        self.demean = demean
+        self.iterative = 0 if demean != "dm" else 100
+        # Iterative must be set to 0 if dynamic demeaning is selected (otherwise default of 100)
 
     def run(self):
         bnf_output = self.r_instance('bnf')(self.time_series,
+                                            iterative=self.iterative,
                                             window=self.window,
                                             delta_select=self.delta_select,
                                             fixed_delta=self.fixed_delta,
