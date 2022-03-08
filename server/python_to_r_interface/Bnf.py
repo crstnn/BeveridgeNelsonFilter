@@ -1,5 +1,6 @@
 import gc
 
+
 class BNF:
     def __init__(self, time_series,
                  r_instance, window, delta_select, fixed_delta, ib, demean):
