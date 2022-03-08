@@ -73,7 +73,7 @@ export class RenderedPlot extends Component {
                 </div>
                 <CSVLink
                 filename={"BNF_cycle.csv"}
-                data={this.getCSVData()}>Download as CSV</CSVLink>.
+                data={this.getCSVData()}>Download as CSV</CSVLink>
                 </div>
                 <Button
                     variant="contained"
