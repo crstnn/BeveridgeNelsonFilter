@@ -711,6 +711,11 @@ bnf <- function(y,
   # @ib: set to F if no iterative backcasting as in KMW2018 (just unconditional mean), set to T if iterative backcasting
   # @varargs (...): passed into piecewise demean function
 {
+
+    if(iterative !=0 & demean != 'dm'){
+        stop("Set @iterative to 0 if @demean is not 'dm'.")
+    }
+  
     # Save 'ts' attributes if 'y' is a 'ts' object
     if (is.ts(y)) {
         y_ts <- TRUE
