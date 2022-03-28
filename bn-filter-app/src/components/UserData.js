@@ -69,7 +69,7 @@ export class UserData extends Component {
                               alignItems="center">
 
                             <Grid item xs={6}>
-                                <FormControl variant="standard" sx={{minWidth: 150}}>
+                                <FormControl variant="standard" sx={{minWidth: 300}}>
                                     <InputLabel>Data Frequency</InputLabel>
                                     <Select
                                         title="Time-series frequency"
@@ -88,7 +88,7 @@ export class UserData extends Component {
                                 </FormControl>
                             </Grid>
                             <Grid item xs={6}>
-                                <CustomDatePicker isDisabled={getState("periodicity")===0} />
+                                <CustomDatePicker isDisabled={getState("periodicity") === 0}/>
                             </Grid>
                         </Grid>
 

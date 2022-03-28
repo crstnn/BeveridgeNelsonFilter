@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import Plot from 'react-plotly.js';
 import {Button} from "@mui/material";
-import { CSVLink } from "react-csv";
+import {CSVLink} from "react-csv";
 import UserForm from "./UserForm";
 
 export class RenderedPlot extends Component {
@@ -58,7 +58,7 @@ export class RenderedPlot extends Component {
                           type: "scatter",
                           hoverinfo: 'skip',
                       },
-                      ]}
+                  ]}
             />
         )
     }
@@ -68,12 +68,12 @@ export class RenderedPlot extends Component {
         return (
             <div>
                 <div>
-                <div>
-                    {this.getPlot()}
-                </div>
-                <CSVLink
-                filename={"BNF_cycle.csv"}
-                data={this.getCSVData()}>Download as CSV</CSVLink>
+                    <div>
+                        {this.getPlot()}
+                    </div>
+                    <CSVLink
+                        filename={"BNF_cycle.csv"}
+                        data={this.getCSVData()}>Download as CSV</CSVLink>
                 </div>
                 <Button
                     variant="contained"

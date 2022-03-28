@@ -37,37 +37,6 @@ export class UserForm extends Component {
 
     baseBackendURL = 'https://bn-filtering.herokuapp.com';
 
-    nextStep = () => {
-        const {step} = this.state;
-        this.setState({
-            step: step + 1
-        });
-    }
-
-    prevStep = () => {
-        const {step} = this.state;
-        this.setState({
-            step: step - 1
-        });
-    }
-
-
-    handleChange = input => e => {
-        this.setState({[input]: e.target.value});
-    }
-
-    getState = input => {
-        return this.state[input];
-    }
-
-    setCycle = input => d => {
-        this.setState({[input]: d});
-    }
-
-    handleCheckboxChange = input => e => {
-        this.setState({[input]: e.target.checked});
-    }
-
     static confIntZip = (cycle, ci, bound) => cycle.map((x, i) => bound === "lb" ? x - ci[i] : x + ci[i] /* ub */);
 
     static colsToRows = (...columns) => {
@@ -91,6 +60,36 @@ export class UserForm extends Component {
 
 
     };
+
+    nextStep = () => {
+        const {step} = this.state;
+        this.setState({
+            step: step + 1
+        });
+    }
+
+    prevStep = () => {
+        const {step} = this.state;
+        this.setState({
+            step: step - 1
+        });
+    }
+
+    handleChange = input => e => {
+        this.setState({[input]: e.target.value});
+    }
+
+    getState = input => {
+        return this.state[input];
+    }
+
+    setCycle = input => d => {
+        this.setState({[input]: d});
+    }
+
+    handleCheckboxChange = input => e => {
+        this.setState({[input]: e.target.checked});
+    }
 
     getResults = async () => {
 
