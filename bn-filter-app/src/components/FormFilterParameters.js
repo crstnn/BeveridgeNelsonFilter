@@ -72,8 +72,8 @@ export class FormFilterParameters extends Component {
                                 />
                             </FormControl>
                         </Grid>
-                        <Grid item xs={12}>
-                            <FormControl variant="standard" sx={{minWidth: 450}}>
+                        <Grid item xs={7}>
+                            <FormControl variant="standard" sx={{minWidth: 250}}>
                                 <InputLabel>Iterative Dynamic Demeaning</InputLabel>
                                 <Select
                                     label="Iterative Dynamic Demeaning"
@@ -96,8 +96,8 @@ export class FormFilterParameters extends Component {
                         {/*        />*/}
                         {/*    </FormControl>*/}
                         {/*</Grid>*/}
-                        <Grid item xs={6}>
-                            <FormControl variant="standard" sx={{minWidth: 200}}>
+                        <Grid item xs={5}>
+                            <FormControl variant="standard" sx={{minWidth: 100}}>
                                 <TextField
                                     label="Manual Rolling Window"
                                     type="number"
