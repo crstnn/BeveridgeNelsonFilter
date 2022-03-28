@@ -15,7 +15,7 @@ export class UserForm extends Component {
         deltaSelect: 2,
         demean: 'sm',
         iterativeBackcasting: true,
-        isAutomaticWindow: true,
+        isAutomaticWindow: false,
         window: 40,
         // periodicity
         periodicity: 'q',

@@ -85,17 +85,17 @@ export class FormFilterParameters extends Component {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={6}>
-                            <FormControl variant="standard" sx={{minWidth: 240}}>
-                                <FormControlLabel label="Automatic Rolling Window or"
-                                                  title="An algorithm is applied to make this automatic selection"
-                                                  disabled={values.demean === "sm"}
-                                                  control={<Checkbox
-                                                      onChange={handleCheckboxChange('isAutomaticWindow')}
-                                                      checked={values.isAutomaticWindow}/>}
-                                />
-                            </FormControl>
-                        </Grid>
+                        {/*<Grid item xs={6}>*/}
+                        {/*    <FormControl variant="standard" sx={{minWidth: 240}}>*/}
+                        {/*        <FormControlLabel label="Automatic Rolling Window or"*/}
+                        {/*                          title="An algorithm is applied to make this automatic selection"*/}
+                        {/*                          disabled={values.demean === "sm"}*/}
+                        {/*                          control={<Checkbox*/}
+                        {/*                              onChange={handleCheckboxChange('isAutomaticWindow')}*/}
+                        {/*                              checked={values.isAutomaticWindow}/>}*/}
+                        {/*        />*/}
+                        {/*    </FormControl>*/}
+                        {/*</Grid>*/}
                         <Grid item xs={6}>
                             <FormControl variant="standard" sx={{minWidth: 200}}>
                                 <TextField
