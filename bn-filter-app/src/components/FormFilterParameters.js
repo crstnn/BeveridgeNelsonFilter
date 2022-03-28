@@ -55,8 +55,8 @@ export class FormFilterParameters extends Component {
                                     defaultValue={values.deltaSelect}
                                 >
                                     <MenuItem value={0}>Fixed Delta</MenuItem>
-                                    <MenuItem value={1}>Maximise Amplitude-to-Noise Ratio</MenuItem>
-                                    <MenuItem value={2}>Minimise Trend Shocks</MenuItem>
+                                    <MenuItem value={1}>Maximize Amplitude-to-Noise Ratio</MenuItem>
+                                    <MenuItem value={2}>Smoothest Stochastic Trend</MenuItem>
                                 </Select>
                             </FormControl>
                         </Grid>

@@ -11,12 +11,12 @@ export class UserForm extends Component {
         step: 1,
         unprocessedY: '',
         y: [], // time series
-        fixedDelta: '',
+        fixedDelta: 0.1,
         deltaSelect: 2,
         demean: 'sm',
         iterativeBackcasting: true,
         isAutomaticWindow: true,
-        window: '',
+        window: 40,
         // periodicity
         periodicity: 'q',
         dateObj: Object(),
@@ -54,6 +54,10 @@ export class UserForm extends Component {
 
     handleChange = input => e => {
         this.setState({[input]: e.target.value});
+    }
+
+    getState = input => {
+        return this.state[input];
     }
 
     setCycle = input => d => {
@@ -199,6 +203,7 @@ export class UserForm extends Component {
                                     prevStep={this.prevStep}
                                     handleChange={this.handleChange}
                                     handleCheckboxChange={this.handleCheckboxChange}
+                                    getState={this.getState}
                                     values={values}
                                 />
                             )

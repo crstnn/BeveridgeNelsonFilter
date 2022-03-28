@@ -15,9 +15,7 @@ import {
 import '../styles/App.css';
 import CustomDatePicker from "../pickers/CustomDatePicker";
 
-
 export class UserData extends Component {
-
 
 
     continue = e => {
@@ -33,17 +31,17 @@ export class UserData extends Component {
     }
 
     render() {
-        const {values, handleChange, handleCheckboxChange} = this.props;
+        const {values, handleChange, handleCheckboxChange, getState} = this.props;
 
         return (
             <>
 
                 <div className="information">
                     <Divider style={{fontSize: 'x-large'}}>Time Series Input and Transformations</Divider>
-                    <p>Paste your chosen time series below.
+                    <p>Enter or paste in your chosen time series below.
                         <br/>
-                        Each line must contain a numerical value. The next time-step must start on the next line (and so
-                        on).
+                        Each line must contain a numerical value. The next observation must start on the next line (and
+                        so on). For example, pasting a time series from a CSV will achieve the appropriate formatting.
                         Pasting time series from a CSV will achieve the above.
                     </p>
                 </div>
@@ -55,6 +53,7 @@ export class UserData extends Component {
                             label="Time Series (y)"
                             title="Paste your chosen time series here"
                             onChange={handleChange('unprocessedY')}
+                            placeholder={"e.g. 101.2,\n104.8,\n102.4,\n…"}
                             defaultValue={values.unprocessedY}
                         />
                     </FormControl>
@@ -77,7 +76,7 @@ export class UserData extends Component {
                                         onChange={handleChange('periodicity')}
                                         defaultValue={values.periodicity}
                                     >
-                                        <MenuItem value={0}>Unspecified</MenuItem>
+                                        <MenuItem value={0}>Undated</MenuItem>
                                         <MenuItem value={'q'}>Quarterly</MenuItem>
                                         <MenuItem value={'m'}>Monthly</MenuItem>
                                         <MenuItem value={'f'}>Fortnightly</MenuItem>
@@ -89,7 +88,7 @@ export class UserData extends Component {
                                 </FormControl>
                             </Grid>
                             <Grid item xs={6}>
-                                <CustomDatePicker/>
+                                <CustomDatePicker isDisabled={getState("periodicity")===0} />
                             </Grid>
                         </Grid>
 

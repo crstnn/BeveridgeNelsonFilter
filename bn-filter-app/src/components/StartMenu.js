@@ -13,9 +13,12 @@ export class StartMenu extends Component {
         return (
             <div>
                 <div className="information">
-                    <p>We will guide you through the steps to perform trend-cycle composition, on either a time series
-                        of your choosing or a country's GDP from the Federal Reserve Economic Database (FRED). Note
-                        that there is additional information when hovering over the options in the subsequent pages.</p>
+                    <p>We will guide you through the steps to perform trend-cycle decomposition on either (i) a time
+                        series of your choosing to be pasted into a field or (ii) a time series from the Federal Reserve
+                        Economic Database (FRED) using its mnemonic. Note that there is additional information provided
+                        when hovering over the options in the subsequent pages. The cycle is reported and can be
+                        downloaded as a CSV.
+                    </p>
                     <p>Choose the source of the time series you would like to proceed with:</p>
                 </div>
 
@@ -24,12 +27,12 @@ export class StartMenu extends Component {
                     variant="contained"
                     style={styles.button}
                     onClick={this.continue}
-                >FRED time series</Button>
+                >Proceed with FRED mnemonic</Button>
                 <Button
                     variant="contained"
                     style={styles.button}
                     onClick={this.continue}
-                >My own time series</Button>
+                >Proceed with my own time series</Button>
                 <br/>
 
 
