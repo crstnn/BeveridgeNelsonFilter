@@ -102,7 +102,7 @@ export class FormFilterParameters extends Component {
                                 <TextField
                                     label="Rolling Window"
                                     type="number"
-                                    title="Only necessary when the demeaning method is set to constant. Must be an integer"
+                                    title="Only necessary when the demeaning method is dynamic. Must be an integer"
                                     onChange={handleChange('window')}
                                     defaultValue={values.window}
                                     disabled={values.isAutomaticWindow || values.demean === "sm"}
