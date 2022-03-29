@@ -100,9 +100,9 @@ export class FormFilterParameters extends Component {
                         <Grid item xs={5}>
                             <FormControl variant="standard" sx={{minWidth: 100}}>
                                 <TextField
-                                    label="Manual Rolling Window"
+                                    label="Rolling Window"
                                     type="number"
-                                    title="Only necessary when the rolling window is not set to automatic. Must be an integer"
+                                    title="Only necessary when the demeaning method is set to constant. Must be an integer"
                                     onChange={handleChange('window')}
                                     defaultValue={values.window}
                                     disabled={values.isAutomaticWindow || values.demean === "sm"}
