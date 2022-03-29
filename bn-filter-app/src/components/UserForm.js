@@ -93,7 +93,7 @@ export class UserForm extends Component {
 
     getResults = async () => {
 
-        const processedY = this.state.unprocessedY.replace(/(\r\n|\n|\r)/gm, ",")
+        const processedY = this.state.unprocessedY.replace(/,?(\r\n|\n|\r)/gm, ",")
             .split(",")
             .filter(x => x !== "")
 
