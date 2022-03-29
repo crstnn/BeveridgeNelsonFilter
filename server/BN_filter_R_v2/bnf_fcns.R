@@ -712,7 +712,7 @@ bnf <- function(y,
   # @varargs (...): passed into piecewise demean function
 {
 
-    if(iterative !=0 & demean != 'dm'){
+    if(iterative !=0 && demean != 'dm'){
         stop("Set @iterative to 0 if @demean is not 'dm'.")
     }
   
