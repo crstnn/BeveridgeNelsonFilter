@@ -37,7 +37,7 @@ export class UserData extends Component {
             <>
 
                 <div className="information">
-                    <Divider style={{fontSize: 'x-large'}}>Time Series Input and Transformations</Divider>
+                    <Divider style={{fontSize: 'x-large'}}>Data and Transformations</Divider>
                     <p>Enter or paste in your chosen time series below.
                         <br/>
                         Each line must contain a numerical value. The next observation must start on the next line (and
@@ -52,17 +52,24 @@ export class UserData extends Component {
                             label="Time Series (y)"
                             title="Paste your chosen time series here"
                             onChange={handleChange('unprocessedY')}
-//                             InputLabelProps={{
-//                                 shrink: true
-//                             }}
-//                             placeholder=
-//                                 "e.g.
-// 101.2
-// 104.8
-// 102.4
-//                                 ..."
-                            placeholder={"e.g.\r\n101.2\r\n104.8\r\n102.4\r\n..."}
+                            // Hacky newline fix that works across all browsers
+                            // (newline or line break not functioning in Safari)
+                            placeholder={"e.g." + (new Array(100).join(" ")) +
+                                        "101.2" + (new Array(100).join(" ")) +
+                                        "104.8" + (new Array(100).join(" ")) +
+                                        "102.4" + (new Array(100).join(" ")) +
+                                        "..."}
                             defaultValue={values.unprocessedY}
+                            // Former solution to newline but broken in some browsers
+                            //                             InputLabelProps={{
+                            //                                 shrink: true
+                            //                             }}
+                            //                             placeholder=
+                            //                                 "e.g.
+                            // 101.2
+                            // 104.8
+                            // 102.4
+                            //                                 ..."
                         />
                     </FormControl>
                     <div style={{
