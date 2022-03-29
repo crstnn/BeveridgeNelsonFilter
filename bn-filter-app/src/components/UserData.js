@@ -136,8 +136,8 @@ export class UserData extends Component {
                                     >
                                         <MenuItem value={'nd'}>No Differencing (Levels)</MenuItem>
                                         <MenuItem value={'d1'}>1st Difference</MenuItem>
-                                        <MenuItem value={'d4'}>4th Difference (Ideal for Quarterly Data)</MenuItem>
-                                        <MenuItem value={'d12'}>12th Difference (Ideal for Monthly Data)</MenuItem>
+                                        <MenuItem value={'d4'}>4th Difference (for Quarterly Data)</MenuItem>
+                                        <MenuItem value={'d12'}>12th Difference (for Monthly Data)</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>
