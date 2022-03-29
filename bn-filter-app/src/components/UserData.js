@@ -52,15 +52,16 @@ export class UserData extends Component {
                             label="Time Series (y)"
                             title="Paste your chosen time series here"
                             onChange={handleChange('unprocessedY')}
-                            InputLabelProps={{
-                                shrink: true
-                            }}
-                            placeholder=
-                                "e.g.
-101.2
-104.8
-102.4
-                                ..."
+//                             InputLabelProps={{
+//                                 shrink: true
+//                             }}
+//                             placeholder=
+//                                 "e.g.
+// 101.2
+// 104.8
+// 102.4
+//                                 ..."
+                            placeholder={"e.g.\r\n101.2\r\n104.8\r\n102.4\r\n..."}
                             defaultValue={values.unprocessedY}
                         />
                     </FormControl>
