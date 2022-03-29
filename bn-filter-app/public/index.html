@@ -3,19 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script>
-      // prevents zoom in on small devices
-      // app requires a minimum width (based on width set in App.css)
-      window.onload = () => {
-        if(window.innerWidth <= 600) document.getElementById('viewport').setAttribute('content','width=600');
-      }
-    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
     <meta name="theme-color" content="#000000" />
     <meta name="google-site-verification" content="N5MmXLsEwfeNXagrJ7FvM0bn6vy8Tp-0xtAxSKRd1Po" />
     <meta
       name="description"
-      content="A trend-cycle decomposition tool that is based on an implementation of the Beveridge-Nelson filter.
+      content="A trend-cycle decomposition tool that is based on the Beveridge-Nelson filter.
       Users can specify their own time series or a chosen time series from FRED."
     />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
