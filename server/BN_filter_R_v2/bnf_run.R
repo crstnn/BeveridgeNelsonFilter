@@ -28,6 +28,7 @@ cat("Example: log US real GDP\n\n")
 
 bnfOutput <- bnf(as.vector(y), 
                  window = 40, 
+                 iterative = 100, 
                  demean = "dm", 
                  delta_select = 2, 
                  ib = T)    

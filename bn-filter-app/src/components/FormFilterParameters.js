@@ -74,14 +74,15 @@ export class FormFilterParameters extends Component {
                         </Grid>
                         <Grid item xs={7}>
                             <FormControl variant="standard" sx={{minWidth: 250}}>
-                                <InputLabel>Iterative Dynamic Demeaning</InputLabel>
+                                <InputLabel>Demeaning</InputLabel>
                                 <Select
                                     label="Iterative Dynamic Demeaning"
                                     onChange={handleChange('demean')}
                                     defaultValue={values.demean}
                                 >
-                                    <MenuItem value={"sm"}>Static Demeaning</MenuItem>
+                                    <MenuItem value={"sm"}>Constant (Static Demeaning)</MenuItem>
                                     <MenuItem value={"dm"}>Dynamic Demeaning</MenuItem>
+                                    <MenuItem value={"idm"}>Iterative Dynamic Demeaning</MenuItem>
                                 </Select>
                             </FormControl>
                         </Grid>

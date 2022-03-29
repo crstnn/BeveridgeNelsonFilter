@@ -11,7 +11,14 @@ class BNF:
         self.fixed_delta = fixed_delta
         self.ib = ib
         self.demean = demean
-        self.iterative = 0 if demean != "dm" else 100
+        if demean == "idm":
+            self.demean = 'dm'
+            self.iterative = 100
+        elif demean == "dm":
+            self.iterative = 1
+        else:
+            self.iterative = 0
+
         # Iterative must be set to 0 if dynamic demeaning is selected (otherwise default of 100)
 
     def run(self):
