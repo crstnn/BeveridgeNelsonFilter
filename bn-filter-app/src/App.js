@@ -13,10 +13,9 @@ function App() {
 
             <div className="information welcomeInformation">
                 <p>This tool performs trend-cycle decomposition.
-                    It is implemented using the Beveridge-Nelson filter method described in
-                    <a target="_blank"
-                       rel="noopener noreferrer"
-                       href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3434174">
+                    It is implemented using the Beveridge-Nelson filter method described in <a target="_blank"
+                                                                                               rel="noopener noreferrer"
+                                                                                               href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3434174">
                         Kamber, Morley, and Wong</a>.
                 </p>
 
