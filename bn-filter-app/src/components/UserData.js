@@ -52,6 +52,9 @@ export class UserData extends Component {
                             label="Time Series (y)"
                             title="Paste your chosen time series here"
                             onChange={handleChange('unprocessedY')}
+                            InputLabelProps={{
+                                shrink: true
+                            }}
                             // Hacky newline fix that works across all browsers
                             // (newline or line break not functioning in Safari)
                             placeholder={"e.g." + (new Array(100).join(" ")) +
@@ -60,16 +63,6 @@ export class UserData extends Component {
                                         "102.4" + (new Array(100).join(" ")) +
                                         "..."}
                             defaultValue={values.unprocessedY}
-                            // Former solution to newline but broken in some browsers
-                            //                             InputLabelProps={{
-                            //                                 shrink: true
-                            //                             }}
-                            //                             placeholder=
-                            //                                 "e.g.
-                            // 101.2
-                            // 104.8
-                            // 102.4
-                            //                                 ..."
                         />
                     </FormControl>
                     <div style={{
