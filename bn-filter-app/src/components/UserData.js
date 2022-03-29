@@ -42,7 +42,6 @@ export class UserData extends Component {
                         <br/>
                         Each line must contain a numerical value. The next observation must start on the next line (and
                         so on). For example, pasting a time series from a CSV will achieve the appropriate formatting.
-                        Pasting time series from a CSV will achieve the above.
                     </p>
                 </div>
                 <div>
@@ -76,7 +75,7 @@ export class UserData extends Component {
                                         onChange={handleChange('periodicity')}
                                         defaultValue={values.periodicity}
                                     >
-                                        <MenuItem value={0}>Undated</MenuItem>
+                                        <MenuItem value={'y'}>Yearly</MenuItem>
                                         <MenuItem value={'q'}>Quarterly</MenuItem>
                                         <MenuItem value={'m'}>Monthly</MenuItem>
                                         <MenuItem value={'f'}>Fortnightly</MenuItem>
@@ -84,6 +83,7 @@ export class UserData extends Component {
                                         <MenuItem value={'d'}>Daily</MenuItem>
                                         <MenuItem value={'h'}>Hourly</MenuItem>
                                         <MenuItem value={'m'}>By The Minute</MenuItem>
+                                        <MenuItem value={0}>Undated/Unspecified</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>
