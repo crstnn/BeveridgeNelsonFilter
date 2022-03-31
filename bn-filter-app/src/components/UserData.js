@@ -87,11 +87,7 @@ export class UserData extends Component {
                                         <MenuItem value={'y'}>Yearly</MenuItem>
                                         <MenuItem value={'q'}>Quarterly</MenuItem>
                                         <MenuItem value={'m'}>Monthly</MenuItem>
-                                        <MenuItem value={'f'}>Fortnightly</MenuItem>
                                         <MenuItem value={'w'}>Weekly</MenuItem>
-                                        <MenuItem value={'d'}>Daily</MenuItem>
-                                        <MenuItem value={'h'}>Hourly</MenuItem>
-                                        <MenuItem value={'m'}>By The Minute</MenuItem>
                                         <MenuItem value={0}>Undated/Unspecified</MenuItem>
                                     </Select>
                                 </FormControl>
