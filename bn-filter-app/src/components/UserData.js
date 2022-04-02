@@ -97,7 +97,7 @@ export class UserData extends Component {
 
                             <Grid item xs={4}>
                                 <FormControl sx={{marginBottom: 3, marginTop: 2}} variant="standard">
-                                    <FormControlLabel label="Display Confidence Intervals"
+                                    <FormControlLabel label="95% Confidence Intervals"
                                                       title="Choose to display 95% confidence intervals in graph output"
                                                       control={<Checkbox
                                                           size="small"
