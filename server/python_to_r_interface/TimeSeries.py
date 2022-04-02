@@ -80,8 +80,3 @@ class TimeSeries:
 
         return self.y
 
-    def _json_to_list(self):
-        pass
-
-    def _check_valid_input(self):
-        pass

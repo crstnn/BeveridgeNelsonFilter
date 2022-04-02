@@ -5,21 +5,21 @@ from python_to_r_interface.TimeSeries import *
 class TestTimeSeries(TimeSeries):
     test_data_series = ("DATE", "GDPC1", "cpiaucsl", "GDPDEF", "UNRATE")
 
-    def __init__(self, r_instance, time_series=[], time_series_name=test_data_series[0]):
-        super().__init__(r_instance, time_series)
+    def __init__(self, r_instance, time_series_name_abbr=test_data_series[0]):
+        super().__init__(r_instance, [])
 
-        if time_series_name not in TestTimeSeries.test_data_series:
+        if time_series_name_abbr not in TestTimeSeries.test_data_series:
             raise ValueError("Invalid time series. Expected one of: %s" % (TestTimeSeries.test_data_series,))
 
-        self.y = []
+        t_s = []
         with open(FILTER_FILEPATH + "us_data.csv") as f:
             for row in f:
                 try:
-                    self.y.append(float(row.split(',')[time_series_name.index(time_series_name) + 1]))
+                    t_s.append(float(row.split(',')[time_series_name_abbr.index(time_series_name_abbr) + 1]))
                     # + 1 to skip date column
                 except:
                     pass
-        self.y = FloatVector(self.y)
+        self.y = FloatVector(t_s)
 
     def set_default_transformation(self):
         self.p_code = "p1"
