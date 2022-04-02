@@ -120,6 +120,16 @@ export class FormFilterParameters extends Component {
                                 />
                             </FormControl>
                         </Grid>
+                        <Grid item xs={12}>
+                            <FormControl variant="standard" sx={{minWidth: 450}}>
+                                <FormControlLabel label="Display Confidence Intervals"
+                                                  title="Choose to display 95% confidence intervals in graph output"
+                                                  control={<Checkbox
+                                                      onChange={handleCheckboxChange('dispCycleCI')}
+                                                      checked={values.dispCycleCI}/>}
+                                />
+                            </FormControl>
+                        </Grid>
                     </Grid>
                 </div>
                 <br/>

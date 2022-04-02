@@ -27,6 +27,7 @@ export class UserForm extends Component {
         takeLog: false,
         // bnf output (from API)
         cycle: [],
+        dispCycleCI: false,
         cycleCI: [],
         cycleCILB: [],
         cycleCIUB: [],
@@ -40,6 +41,8 @@ export class UserForm extends Component {
     static confIntZip = (cycle, ci, bound) => cycle.map((x, i) => bound === "lb" ? x - ci[i] : x + ci[i] /* ub */);
 
     static colsToRows = (...columns) => {
+
+        columns = columns.filter(x => x !== undefined)
 
         // Invariant: All arrays are same length
         const
@@ -170,6 +173,7 @@ export class UserForm extends Component {
             pCode,
             takeLog,
             cycle,
+            dispCycleCI,
             cycleCILB,
             cycleCIUB,
         } = this.state;
@@ -186,9 +190,10 @@ export class UserForm extends Component {
             dCode,
             pCode,
             takeLog,
+            dispCycleCI,
         };
 
-        const plotPageValues = {y, cycle, cycleCILB, cycleCIUB, periodicity, dateObj}
+        const plotPageValues = {y, cycle, dispCycleCI, cycleCILB, cycleCIUB, periodicity, dateObj}
 
 
         return (

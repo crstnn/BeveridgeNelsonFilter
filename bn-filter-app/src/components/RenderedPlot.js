@@ -16,14 +16,16 @@ export class RenderedPlot extends Component {
 
         return UserForm.colsToRows(
             ["cycle"].concat(plotPageValues.cycle),
-            ["conf_int_lower_bound"].concat(plotPageValues.cycleCILB),
-            ["conf_int_upper_bound"].concat(plotPageValues.cycleCIUB));
+            plotPageValues.dispCycleCI ? ["conf_int_lower_bound"].concat(plotPageValues.cycleCILB) : undefined,
+            plotPageValues.dispCycleCI ? ["conf_int_upper_bound"].concat(plotPageValues.cycleCIUB) : undefined);
     }
 
 
     getPlot() {
         const {plotPageValues} = this.props;
         const xAxis = Array.from({length: plotPageValues.cycle.length}, (_, i) => i + 1);
+
+        console.log(this.props);
 
         return (
             <Plot layout={{autosize: true}}
@@ -38,7 +40,8 @@ export class RenderedPlot extends Component {
                           name: "cycle",
                           showlegend: false,
                       },
-                      { // confint lower bound: enclosing line (which is hidden) hence 0 opacity (using properties of 'tonexty')
+                      plotPageValues.dispCycleCI ? {
+                      // confint lower bound: enclosing line (which is hidden) hence 0 opacity (using properties of 'tonexty')
                           x: xAxis,
                           y: plotPageValues.cycleCILB,
                           fill: "tonexty",
@@ -47,8 +50,8 @@ export class RenderedPlot extends Component {
                           showlegend: false,
                           type: "scatter",
                           hoverinfo: 'skip',
-                      },
-                      { // confint upper bound
+                      } : {},
+                      plotPageValues.dispCycleCI ? { // confint upper bound
                           x: xAxis,
                           y: plotPageValues.cycleCIUB,
                           fill: "tonexty",
@@ -57,7 +60,7 @@ export class RenderedPlot extends Component {
                           showlegend: false,
                           type: "scatter",
                           hoverinfo: 'skip',
-                      },
+                      } : {},
                   ]}
             />
         )
