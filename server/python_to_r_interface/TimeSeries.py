@@ -4,8 +4,7 @@ from pathlib import Path
 from rpy2.robjects.vectors import FloatVector
 
 
-# ABSTRACT CLASS
-class TimeSeries(ABC):
+class TimeSeries:
     # transformation types
     d_code_types = ("nd", "d1", "d4", "d12")
     p_code_types = ("np", "p1", "p4", "p12")

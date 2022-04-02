@@ -3,4 +3,3 @@ flask_cors
 gunicorn
 requests
 rpy2
-dicttoxml

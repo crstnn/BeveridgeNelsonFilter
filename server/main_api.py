@@ -1,11 +1,7 @@
 from GLOBAL_imp import *
-import gc
 from python_to_r_interface.TestTimeSeries import *
 from python_to_r_interface.FREDTimeSeries import *
-from python_to_r_interface.UserTimeSeries import *
 from python_to_r_interface.Bnf import *
-from pathlib import Path
-import dicttoxml
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
@@ -54,7 +50,7 @@ def user_specified_time_series():
 
     R = robj.r
     R.source(FILTER_FILEPATH + BNF_FUNCTIONS)
-    user_series = UserTimeSeries(R, user_y)
+    user_series = TimeSeries(R, user_y)
 
     if request.args.get("transform") == "true":
         user_series.d_code = request.args.get("d_code")
