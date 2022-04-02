@@ -19,4 +19,9 @@ class FREDTimeSeries(TimeSeries):
             'limit': 100000,  # arbitrary limit
             'sort_order': 'asc'
         }
-        return requests.get(FREDTimeSeries.FRED_API_BASE_URL, params=parameters)
+        self.FRED_response = requests.get(FREDTimeSeries.FRED_API_BASE_URL, params=parameters)
+
+    def _get_obs_list(self):
+        d = list(map(lambda o: o.json()['observations'], self.FRED_response))
+        get_curr_FRED_obs_list = lambda o: lambda ob_idx: o[ob_idx]['value'] \
+            if ob_idx < len(o) and o[ob_idx]['value'] != '.' else ''
