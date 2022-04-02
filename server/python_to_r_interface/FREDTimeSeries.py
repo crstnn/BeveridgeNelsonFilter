@@ -3,7 +3,7 @@ from python_to_r_interface.TimeSeries import *
 
 
 class FREDTimeSeries(TimeSeries):
-    FRED_API_KEY = os.environ['FRED_API_KEY']
+    FRED_API_KEY = os.environ['FRED_API_KEY'] if 'FRED_API_KEY' in os.environ else ''
     FRED_API_BASE_URL = 'https://api.stlouisfed.org/fred/series/observations'
     FRED_FREQUENCIES = ('d', 'w', 'bw', 'm', 'q', 'sa', 'a')
 
