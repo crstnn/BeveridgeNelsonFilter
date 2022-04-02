@@ -55,13 +55,13 @@ export class UserData extends Component {
                             InputLabelProps={{
                                 shrink: true
                             }}
-                            // Hacky newline fix that works across all browsers
+                            // Hacky newline fix that works for all browsers
                             // (newline or line break not functioning in Safari)
                             placeholder={"e.g." + (new Array(100).join(" ")) +
-                                        "101.2" + (new Array(100).join(" ")) +
-                                        "104.8" + (new Array(100).join(" ")) +
-                                        "102.4" + (new Array(100).join(" ")) +
-                                        "..."}
+                                "101.2" + (new Array(100).join(" ")) +
+                                "104.8" + (new Array(100).join(" ")) +
+                                "102.4" + (new Array(100).join(" ")) +
+                                "..."}
                             defaultValue={values.unprocessedY}
                         />
                     </FormControl>
@@ -71,13 +71,15 @@ export class UserData extends Component {
                         display: "inline-block",
                     }}>
                         <Divider light
-                                 title="This option does not make alterations to the data but changes the display on the x-axis"
-                                 style={{fontSize: 'large'}}>X-Axis Display</Divider>
-                        <Grid container direction="column" sx={{minHeight: 200}} justifyContent="space-evenly"
+                                 title="This option does not make alterations to the data but changes the display of the graph output"
+                                 style={{fontSize: 'large'}}>Axis Display</Divider>
+                        <Grid container direction="column" sx={{minHeight: 250, paddingTop:4}} justifyContent="space-evenly"
                               alignItems="center">
-
-                            <Grid item xs={6}>
-                                <FormControl variant="standard" sx={{minWidth: 300}}>
+                            <Grid item xs={4}>
+                                <CustomDatePicker isDisabled={getState("periodicity") === 0}/>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <FormControl variant="standard" sx={{minWidth: 220}}>
                                     <InputLabel>Data Frequency</InputLabel>
                                     <Select
                                         title="Time-series frequency"
@@ -92,10 +94,20 @@ export class UserData extends Component {
                                     </Select>
                                 </FormControl>
                             </Grid>
-                            <Grid item xs={6}>
-                                <CustomDatePicker isDisabled={getState("periodicity") === 0}/>
+
+                            <Grid item xs={4}>
+                                <FormControl sx={{marginBottom: 3, marginTop: 2}} variant="standard">
+                                    <FormControlLabel label="Display Confidence Intervals"
+                                                      title="Choose to display 95% confidence intervals in graph output"
+                                                      control={<Checkbox
+                                                          size="small"
+                                                          onChange={handleCheckboxChange('dispCycleCI')}
+                                                          checked={values.dispCycleCI}/>}
+                                    />
+                                </FormControl>
                             </Grid>
                         </Grid>
+
 
                         <Divider light><FormControl variant="standard">
                             <FormControlLabel

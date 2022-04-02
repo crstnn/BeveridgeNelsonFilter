@@ -4,7 +4,7 @@ import FormFilterParameters from "./FormFilterParameters";
 import UserData from "./UserData";
 import RenderedPlot from "./RenderedPlot";
 import {Circles} from "react-loader-spinner";
-import { Alert } from '@mui/material';
+import {Alert} from '@mui/material';
 
 export class UserForm extends Component {
     state = {

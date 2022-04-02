@@ -41,7 +41,7 @@ export class RenderedPlot extends Component {
                           showlegend: false,
                       },
                       plotPageValues.dispCycleCI ? {
-                      // confint lower bound: enclosing line (which is hidden) hence 0 opacity (using properties of 'tonexty')
+                          // confint lower bound: enclosing line (which is hidden) hence 0 opacity (using properties of 'tonexty')
                           x: xAxis,
                           y: plotPageValues.cycleCILB,
                           fill: "tonexty",

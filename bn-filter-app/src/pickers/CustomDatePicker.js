@@ -19,6 +19,7 @@ function CustomDatePicker(props) {
                     label="Time Series Start Date"
                     inputFormat="dd/MM/yyyy"
                     value={value}
+                    InputProps={{style: {width: 220}}}
                     onChange={handleChange}
                     disabled={props.isDisabled}
                     renderInput={(params) => <TextField {...params} />}

@@ -64,7 +64,6 @@ export class FormFilterParameters extends Component {
                             <FormControl variant="standard" sx={{minWidth: 50}}>
                                 <TextField
                                     label="Fixed Delta"
-                                    type="number"
                                     title="Only necessary when Signal-to-noise ratio is set to 'Fixed Delta'"
                                     onChange={handleChange('fixedDelta')}
                                     defaultValue={values.fixedDelta}
@@ -86,17 +85,6 @@ export class FormFilterParameters extends Component {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        {/*<Grid item xs={6}>*/}
-                        {/*    <FormControl variant="standard" sx={{minWidth: 240}}>*/}
-                        {/*        <FormControlLabel label="Automatic Rolling Window or"*/}
-                        {/*                          title="An algorithm is applied to make this automatic selection"*/}
-                        {/*                          disabled={values.demean === "sm"}*/}
-                        {/*                          control={<Checkbox*/}
-                        {/*                              onChange={handleCheckboxChange('isAutomaticWindow')}*/}
-                        {/*                              checked={values.isAutomaticWindow}/>}*/}
-                        {/*        />*/}
-                        {/*    </FormControl>*/}
-                        {/*</Grid>*/}
                         <Grid item xs={5}>
                             <FormControl variant="standard" sx={{minWidth: 100}}>
                                 <TextField
@@ -117,16 +105,6 @@ export class FormFilterParameters extends Component {
                                                   control={<Checkbox
                                                       onChange={handleCheckboxChange('iterativeBackcasting')}
                                                       checked={values.iterativeBackcasting}/>}
-                                />
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <FormControl variant="standard" sx={{minWidth: 450}}>
-                                <FormControlLabel label="Display Confidence Intervals"
-                                                  title="Choose to display 95% confidence intervals in graph output"
-                                                  control={<Checkbox
-                                                      onChange={handleCheckboxChange('dispCycleCI')}
-                                                      checked={values.dispCycleCI}/>}
                                 />
                             </FormControl>
                         </Grid>

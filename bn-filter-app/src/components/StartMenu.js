@@ -19,19 +19,13 @@ export class StartMenu extends Component {
                         when hovering over the options in the subsequent pages. The cycle is reported and can be
                         downloaded as a CSV.
                     </p>
-                    <p>Choose the source of the time series you would like to proceed with:</p>
                 </div>
 
-                {/*<Button*/}
-                {/*    variant="contained"*/}
-                {/*    style={styles.button}*/}
-                {/*    onClick={this.continue}*/}
-                {/*>Proceed with FRED mnemonic</Button>*/}
                 <Button
                     variant="contained"
                     style={styles.button}
                     onClick={this.continue}
-                >Proceed with my own time series</Button>
+                >Continue</Button>
                 <br/>
 
 
