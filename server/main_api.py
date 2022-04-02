@@ -26,7 +26,7 @@ def fred_time_series():
     R.source(FILTER_FILEPATH + BNF_FUNCTIONS)
     fred_series = FREDTimeSeries(R)
 
-    bnf = BNF(fred_series, R)
+    bnf = BNF(fred_series, R, window, delta_select, fixed_delta, ib, demean)
 
     return jsonify(bnf.run())
 
@@ -58,8 +58,6 @@ def user_specified_time_series():
         user_series.take_log = request.args.get("take_log") == "true"
 
     bnf = BNF(user_series, R, window, delta_select, fixed_delta, ib, demean)
-
-    print(bnf.run())
 
     return jsonify(bnf.run())
 
