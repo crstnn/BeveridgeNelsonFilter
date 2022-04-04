@@ -38,7 +38,7 @@ export class UserForm extends Component {
 
     baseBackendURL = 'https://bn-filtering.herokuapp.com';
 
-    static confIntZip = (cycle, ci, bound) => cycle.map((x, i) => bound === "lb" ? x - ci[i] : x + ci[i] /* ub */);
+    static confIntZip = (cycle, ci, bound) => cycle.map((x, i) => bound === "lb" ? x - ci[i] : /* ub */ x + ci[i]);
 
     static colsToRows = (...columns) => {
 
@@ -96,7 +96,7 @@ export class UserForm extends Component {
 
     getResults = async () => {
 
-        const processedY = this.state.unprocessedY.replace(/(,?(\r\n|\n|\r))|(,\s)/gm, ",")
+        const processedY = this.state.unprocessedY.replace(/(,?(\r\n|\n))|(,\s)/gm, ",")
             .split(",")
             .filter(x => x !== "")
 
