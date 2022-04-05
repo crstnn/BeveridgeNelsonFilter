@@ -160,8 +160,8 @@ export class UserData extends Component {
                                     >
                                         <MenuItem value={'np'}>No Change</MenuItem>
                                         <MenuItem value={'p1'}>Multiply by 100</MenuItem>
-                                        <MenuItem value={'p4'}>Multiply by 400 (Annualised Quarterly Rate)</MenuItem>
-                                        <MenuItem value={'p12'}>Multiply by 1200 (Annualised Monthly Rate)</MenuItem>
+                                        <MenuItem value={'p4'}>Multiply by 400 (Annualized Quarterly Rate)</MenuItem>
+                                        <MenuItem value={'p12'}>Multiply by 1200 (Annualized Monthly Rate)</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>
