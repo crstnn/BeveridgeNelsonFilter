@@ -108,20 +108,23 @@ export class UserForm extends Component {
 
         console.log(processedY)
 
-        const bnfParamStr = [['window', this.state.window],
-            ['delta_select', this.state.deltaSelect],
-            ['fixed_delta', this.state.fixedDelta],
-            ['ib', this.state.iterativeBackcasting],
-            ['demean', this.state.demean],
-            ['processed_y', processedY]]
-            .reduce(statePairToParam, '?');
+        const bnfParamStr =
+            [['window', this.state.window],
+                ['delta_select', this.state.deltaSelect],
+                ['fixed_delta', this.state.fixedDelta],
+                ['ib', this.state.iterativeBackcasting],
+                ['demean', this.state.demean],
+                ['processed_y', processedY]]
+                .reduce(statePairToParam, '?');
 
-        const transformParamsStr = ([['transform', this.state.transform]].concat(
-                                    this.state.transform ? [
-                                        ['p_code', this.state.pCode],
-                                        ['d_code', this.state.dCode],
-                                        ['take_log', this.state.takeLog]] : []
-                                        )).reduce(statePairToParam, '?');
+        const transformParamsStr =
+            ([['transform', this.state.transform]].concat(
+                this.state.transform ? [
+                        ['p_code', this.state.pCode],
+                        ['d_code', this.state.dCode],
+                        ['take_log', this.state.takeLog]]
+                    : []
+            )).reduce(statePairToParam, '?');
 
         const finalURL = this.baseBackendURL + this.userSpecifiedDataSlug + bnfParamStr + transformParamsStr
 
@@ -143,16 +146,18 @@ export class UserForm extends Component {
                 .then((response) => response.json())
                 .then(result => {
                     console.log('Success:', result);
-                    this.setState({
-                        cycle: (result["cycle"].map(x => Number(x))),
-                        cycleCI: (result["ci"].map(x => Number(x))),
-                        deltaCalc: Number(result["delta"]),
-                    })
+
+                    const
+                        cycleRes = result["cycle"].map(x => Number(x)),
+                        ciRes = result["ci"].map(x => Number(x)),
+                        deltaRes = Number(result["delta"]);
 
                     this.setState({
-                        loading: false,
-                        cycleCILB: UserForm.confIntZip(this.state.cycle, this.state.cycleCI, "lb"),
-                        cycleCIUB: UserForm.confIntZip(this.state.cycle, this.state.cycleCI, "ub"),
+                        cycle: cycleRes,
+                        cycleCI: ciRes,
+                        deltaCalc: deltaRes,
+                        cycleCILB: UserForm.confIntZip(cycleRes, ciRes, "lb"),
+                        cycleCIUB: UserForm.confIntZip(cycleRes, ciRes, "ub"),
                     })
 
                 }).catch((error) => {
@@ -188,6 +193,7 @@ export class UserForm extends Component {
         const values = {
             y,
             unprocessedY,
+            periodicity,
             fixedDelta,
             deltaSelect,
             demean,

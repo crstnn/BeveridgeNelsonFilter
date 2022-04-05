@@ -134,7 +134,7 @@ export class UserData extends Component {
                                 </FormControl>
                             </Grid>
                             <Grid item xs={3}>
-                                <FormControl variant="standard" sx={{minWidth: 320}}>
+                                <FormControl variant="standard" sx={{minWidth: 330}}>
                                     <InputLabel>Differencing Method</InputLabel>
                                     <Select
                                         title="Differencing method applied"
@@ -150,7 +150,7 @@ export class UserData extends Component {
                                 </FormControl>
                             </Grid>
                             <Grid item xs={3}>
-                                <FormControl variant="standard" sx={{minWidth: 320}}>
+                                <FormControl variant="standard" sx={{minWidth: 330}}>
                                     <InputLabel>Computed Percentages</InputLabel>
                                     <Select
                                         title="Percentage multiple applied"
