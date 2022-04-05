@@ -19,8 +19,6 @@ class BNF:
         else:
             self.iterative = 0
 
-        # Iterative must be set to 0 if dynamic demeaning is selected (otherwise default of 100)
-
     def run(self):
         bnf_output = self.r_instance('bnf')(self.time_series,
                                             iterative=self.iterative,
