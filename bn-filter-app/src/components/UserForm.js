@@ -29,6 +29,7 @@ export class UserForm extends Component {
         cycle: [],
         dispCycleCI: false,
         cycleCI: [],
+        deltaCalc: undefined,
         cycleCILB: [],
         cycleCIUB: [],
         loading: true,
@@ -37,6 +38,7 @@ export class UserForm extends Component {
     loading = true;
 
     baseBackendURL = 'https://bn-filtering.herokuapp.com';
+    userSpecifiedDataSlug = "/user-specified-time-series";
 
     static confIntZip = (cycle, ci, bound) => cycle.map((x, i) => bound === "lb" ? x - ci[i] : /* ub */ x + ci[i]);
 
@@ -96,33 +98,38 @@ export class UserForm extends Component {
 
     getResults = async () => {
 
+        const statePairToParam = (paramName, currPair) =>
+            paramName + currPair[0].toString() + '=' + currPair[1].toString() + '&'
+
+        // dealing with all operating system's newline characters
         const processedY = this.state.unprocessedY.replace(/(,?(\r\n|\n|\r))|(,\s)/gm, ",")
             .split(",")
             .filter(x => x !== "")
 
         console.log(processedY)
 
-        const paramsStr = [['window', this.state.window],
+        const bnfParamStr = [['window', this.state.window],
             ['delta_select', this.state.deltaSelect],
             ['fixed_delta', this.state.fixedDelta],
             ['ib', this.state.iterativeBackcasting],
             ['demean', this.state.demean],
-            ['processed_y', processedY],
-            // dealing with all operating system's newline characters
-            ['transform', this.state.transform],
-            ['p_code', this.state.pCode],
-            ['d_code', this.state.dCode],
-            ['take_log', this.state.takeLog]]
-            .reduce((pStr, currA) => {
-                return pStr + currA[0].toString() + '=' + currA[1].toString() + '&'
-            }, '?');
+            ['processed_y', processedY]]
+            .reduce(statePairToParam, '?');
 
+        const transformParamsStr = ([['transform', this.state.transform]].concat(
+                                    this.state.transform ? [
+                                        ['p_code', this.state.pCode],
+                                        ['d_code', this.state.dCode],
+                                        ['take_log', this.state.takeLog]] : []
+                                        )).reduce(statePairToParam, '?');
 
-        console.log(this.baseBackendURL + "/user-specified-time-series" + paramsStr)
+        const finalURL = this.baseBackendURL + this.userSpecifiedDataSlug + bnfParamStr + transformParamsStr
+
+        console.log(finalURL)
 
 
         this.setState({loading: true}, async () => {
-            fetch(this.baseBackendURL + "/user-specified-time-series" + paramsStr)
+            fetch(finalURL)
                 .then((response) => {
                     if (response.status !== 200) {
                         this.setState({
@@ -139,6 +146,7 @@ export class UserForm extends Component {
                     this.setState({
                         cycle: (result["cycle"].map(x => Number(x))),
                         cycleCI: (result["ci"].map(x => Number(x))),
+                        deltaCalc: Number(result["delta"]),
                     })
 
                     this.setState({
