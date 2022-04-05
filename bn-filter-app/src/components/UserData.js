@@ -72,7 +72,7 @@ export class UserData extends Component {
                     }}>
                         <Divider light
                                  title="This option does not make alterations to the data but changes the display of the graph output"
-                                 style={{fontSize: 'large'}}>Axis Display</Divider>
+                                 style={{fontSize: 'large'}}>Display Options</Divider>
                         <Grid container direction="column" sx={{minHeight: 250, paddingTop:4}} justifyContent="space-evenly"
                               alignItems="center">
                             <Grid item xs={4}>
@@ -143,9 +143,9 @@ export class UserData extends Component {
                                         disabled={!values.transform}
                                     >
                                         <MenuItem value={'nd'}>No Differencing (Levels)</MenuItem>
-                                        <MenuItem value={'d1'}>1st Difference</MenuItem>
-                                        <MenuItem value={'d4'}>4th Difference (for Quarterly Data)</MenuItem>
-                                        <MenuItem value={'d12'}>12th Difference (for Monthly Data)</MenuItem>
+                                        <MenuItem value={'d1'}>1 Period Difference</MenuItem>
+                                        <MenuItem value={'d4'}>4 Period Difference (for Quarterly Data)</MenuItem>
+                                        <MenuItem value={'d12'}>12 Period Difference (for Monthly Data)</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>

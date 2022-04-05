@@ -44,7 +44,7 @@ export class UserForm extends Component {
 
         columns = columns.filter(x => x !== undefined)
 
-        // Invariant: All arrays are same length
+        // Pre-condition: All arrays are same length
         const
             rowLength = columns.length,
             colLength = columns[0].length;
@@ -96,7 +96,7 @@ export class UserForm extends Component {
 
     getResults = async () => {
 
-        const processedY = this.state.unprocessedY.replace(/(,?(\r\n|\n))|(,\s)/gm, ",")
+        const processedY = this.state.unprocessedY.replace(/(,?(\r\n|\n|\r))|(,\s)/gm, ",")
             .split(",")
             .filter(x => x !== "")
 
