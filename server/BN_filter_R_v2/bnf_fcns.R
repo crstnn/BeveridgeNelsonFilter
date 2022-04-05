@@ -222,7 +222,7 @@ olsvar <- function(y, p, nc = FALSE)
     # df is total sample-lags-number of regressors
     SIGMA <- sum(square(U)) / (tobs - nrow(A))
 
-    invXX <- qr.solve(crossprod(x = X, y = NULL),tol = 1e-17)
+    invXX <- qr.solve(crossprod(x = X, y = NULL),tol = 1e-40)
 
     # Collect results as a list object
     olsvar <- list()
@@ -287,7 +287,7 @@ olsvar_df <- function(y, p, nc = FALSE)
     # df is total sample-lags-number of regressors
     SIGMA <- sum(square(U)) / (tobs - nrow(A));
 
-    invXX <- qr.solve(crossprod(x = X, y = NULL),tol = 1e-17)
+    invXX <- qr.solve(crossprod(x = X, y = NULL),tol = 1e-40)
 
     # Collect results as a list object
     olsvar_df <- list()
@@ -507,8 +507,8 @@ BN_Filter <- function(y, p, delta, dynamic_bands, ib, window, compute_stderr = T
     V_prior <- diag(drop(repmat(0.5, 1, p - 1) / (square(seq(from = 1, to = p - 1, by = 1)))))
 
     # Calculate Posteriors
-    V_post <- qr.solve(qr.solve(V_prior,tol = 1e-17) + (1.0 / sig2_ols) * crossprod(x = X, y = NULL))
-    A_post <- V_post %*% (qr.solve(V_post,tol = 1e-17) %*% A_prior + t((1.0 / sig2_ols) * X) %*% Y)
+    V_post <- qr.solve(qr.solve(V_prior,tol = 1e-40) + (1.0 / sig2_ols) * crossprod(x = X, y = NULL))
+    A_post <- V_post %*% (qr.solve(V_post,tol = 1e-40) %*% A_prior + t((1.0 / sig2_ols) * X) %*% Y)
     
     # Add rho back into the posterior of estimated parameters
     A_post <- rbind(rho, A_post)
