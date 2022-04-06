@@ -108,25 +108,24 @@ export class UserForm extends Component {
 
         console.log(processedY)
 
-        const bnfParamStr =
+        const paramStr =
             [['window', this.state.window],
                 ['delta_select', this.state.deltaSelect],
                 ['fixed_delta', this.state.fixedDelta],
                 ['ib', this.state.iterativeBackcasting],
                 ['demean', this.state.demean],
-                ['processed_y', processedY]]
+                ['processed_y', processedY]].concat(
+                [['transform', this.state.transform]].concat(
+                    this.state.transform ? [
+                            ['p_code', this.state.pCode],
+                            ['d_code', this.state.dCode],
+                            ['take_log', this.state.takeLog]]
+                        : []
+                )
+            )
                 .reduce(statePairToParam, '?');
 
-        const transformParamsStr =
-            ([['transform', this.state.transform]].concat(
-                this.state.transform ? [
-                        ['p_code', this.state.pCode],
-                        ['d_code', this.state.dCode],
-                        ['take_log', this.state.takeLog]]
-                    : []
-            )).reduce(statePairToParam, '?');
-
-        const finalURL = this.baseBackendURL + this.userSpecifiedDataSlug + bnfParamStr + transformParamsStr
+        const finalURL = this.baseBackendURL + this.userSpecifiedDataSlug + paramStr
 
         console.log(finalURL)
 
