@@ -186,6 +186,7 @@ export class UserForm extends Component {
             pCode,
             takeLog,
             cycle,
+            deltaCalc,
             dispCycleCI,
             cycleCILB,
             cycleCIUB,
@@ -207,7 +208,7 @@ export class UserForm extends Component {
             dispCycleCI,
         };
 
-        const plotPageValues = {y, cycle, dispCycleCI, cycleCILB, cycleCIUB, periodicity, dateObj}
+        const plotPageValues = {y, cycle, deltaCalc, dispCycleCI, cycleCILB, cycleCIUB, periodicity, dateObj}
 
 
         return (

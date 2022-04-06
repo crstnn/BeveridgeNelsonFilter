@@ -5,6 +5,7 @@ import {CSVLink} from "react-csv";
 import UserForm from "./UserForm";
 
 export class RenderedPlot extends Component {
+
     back = e => {
         e.preventDefault();
         this.props.prevStep();
@@ -23,6 +24,7 @@ export class RenderedPlot extends Component {
 
     getPlot() {
         const {plotPageValues} = this.props;
+
         const xAxis = Array.from({length: plotPageValues.cycle.length}, (_, i) => i + 1);
 
         console.log(this.props);
@@ -67,12 +69,13 @@ export class RenderedPlot extends Component {
     }
 
     render() {
-
+        const {plotPageValues} = this.props;
         return (
             <div>
                 <div>
                     <div>
                         {this.getPlot()}
+                        Delta: {plotPageValues.plotPageValues}
                     </div>
                     <CSVLink
                         filename={"BNF_cycle.csv"}
