@@ -38,7 +38,9 @@ export class UserForm extends Component {
     loading = true;
 
     baseBackendURL = 'https://bn-filtering.herokuapp.com';
-    userSpecifiedDataSlug = "/user-specified-time-series";
+    bnfUserSpecifiedDataSlug = "/bnf/user-specified-time-series";
+    bnfFredDataSlug = "/bnf/fred-time-series";
+    fredDataSlug = "/fred-time-series";
 
     static confIntZip = (cycle, ci, bound) => cycle.map((x, i) => bound === "lb" ? x - ci[i] : /* ub */ x + ci[i]);
 

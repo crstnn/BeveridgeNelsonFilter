@@ -11,7 +11,7 @@ class FREDTimeSeries(TimeSeries):
         self.time_series_name_abbr = time_series_name_abbr
         self.frequency = frequency
         self.obs_start = obs_start
-        self.set_defaults()
+        self.set_transformation_defaults()
 
     def set_R_instance(self, r_instance):
         self.r_instance = r_instance

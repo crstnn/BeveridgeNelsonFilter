@@ -15,6 +15,32 @@ cors = CORS(app, resources={
 })
 
 
+# Design note: lightweight backend validation as the majority of validation is done in frontend
+
+def get_r_inst():
+    R = robj.r
+    R.source(FILTER_FILEPATH + BNF_FUNCTIONS)
+    return R
+
+
+def handle_params_bnf_args():
+    # empty string for 'window' occurs when set to 'static demeaning' so we set it to an arbitrary 40
+    window = 40 if request.args.get("window") else int(request.args.get("window"))
+    delta_select = int(request.args.get("delta_select"))
+    fixed_delta = float(request.args.get("fixed_delta")) if request.args.get("fixed_delta") else 0.05
+    ib = request.args.get("ib") == "true"
+    demean = request.args.get("demean")
+
+    return window, delta_select, fixed_delta, ib, demean
+
+
+def handle_params_series_transformation(series):
+    if request.args.get("transform") == "true":
+        series.d_code = request.args.get("d_code")
+        series.p_code = request.args.get("p_code")
+        series.take_log = request.args.get("take_log") == "true"
+
+
 @app.route('/')
 def index():
     return "alive"
@@ -22,52 +48,49 @@ def index():
 
 @app.route('/fred-time-series', methods=['GET'])
 def fred_time_series():
-    R = robj.r
-    R.source(FILTER_FILEPATH + BNF_FUNCTIONS)
-    fred_series = FREDTimeSeries(R)
+    ...
 
-    bnf = BNF(fred_series, R, window, delta_select, fixed_delta, ib, demean)
+
+@app.route('/bnf/fred-time-series', methods=['GET'])
+def bnf_fred_time_series():
+    R = get_r_inst()
+    fred_abbr = request.args.get("fred_abbr")
+    freq = request.args.get("freq")
+    obs_start = request.args.get("obs_start")
+
+    fred_series = FREDTimeSeries(fred_abbr, freq, obs_start)
+
+    fred_series.set_R_instance(R)
+    fred_series.conv_series_to_R_vec()
+    handle_params_series_transformation(fred_series)
+
+    bnf = BNF(fred_series, R, *handle_params_bnf_args())
 
     return jsonify(bnf.run())
 
 
-@app.route('/user-specified-time-series', methods=['GET'])
-def user_specified_time_series():
-    # lightweight backend validation as the majority of validation is done in frontend
-
-    window = 40 if request.args.get("window") == "" else int(request.args.get("window"))
-    # empty string for 'window' occurs when set to 'static demeaning' so we set it to an arbitrary 40
-    delta_select = int(request.args.get("delta_select"))
-    fixed_delta = float(request.args.get("fixed_delta")) if request.args.get("fixed_delta") else 0.05
-    ib = request.args.get("ib") == "true"
-    demean = request.args.get("demean")
-
+@app.route('/bnf/user-specified-time-series', methods=['GET'])
+def bnf_user_specified_time_series():
     # Design Note: Time series data is a comma delimited string in the URL parameters
     # for huge time series this may be problematic due to URL length limits (as we cannot send
     # this data in the body because GET requests do not have bodies).
     # May need to change to POST if this poses a problem in the future.
     user_y = request.args.get("processed_y").split(",")
 
-    R = robj.r
-    R.source(FILTER_FILEPATH + BNF_FUNCTIONS)
+    R = get_r_inst()
     user_series = TimeSeries(R, user_y)
+    handle_params_series_transformation(user_series)
 
-    if request.args.get("transform") == "true":
-        user_series.d_code = request.args.get("d_code")
-        user_series.p_code = request.args.get("p_code")
-        user_series.take_log = request.args.get("take_log") == "true"
-
-    bnf = BNF(user_series, R, window, delta_select, fixed_delta, ib, demean)
+    bnf = BNF(user_series, R, *handle_params_bnf_args())
 
     return jsonify(bnf.run())
 
 
-@app.route('/test-time-series', methods=['GET'])
-def test_time_series():
-    R = robj.r
-    R.source(FILTER_FILEPATH + BNF_FUNCTIONS)
+@app.route('/bnf/test-time-series', methods=['GET'])
+def bnf_test_time_series():
+    R = get_r_inst()
     us_gdp = TestTimeSeries(R)  # default GDPC1
-    us_gdp.set_default_transformation()
+    us_gdp.set_transformation_defaults()
     bnf = BNF(us_gdp,
               R,
               window=40,
@@ -76,5 +99,7 @@ def test_time_series():
               ib=True,
               demean="dm"
               )
+
+    print(bnf)
 
     return jsonify(bnf.run())

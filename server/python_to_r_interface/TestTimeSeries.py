@@ -18,10 +18,10 @@ class TestTimeSeries(TimeSeries):
                     t_s.append(float(row.split(',')[time_series_name_abbr.index(time_series_name_abbr) + 1]))
                     # + 1 to skip date column
                 except:
-                    pass
+                    ...
         self.y = FloatVector(t_s)
 
-    def set_default_transformation(self):
+    def set_transformation_defaults(self):
         self.p_code = "p1"
         self.d_code = "nd"
         self.take_log = True

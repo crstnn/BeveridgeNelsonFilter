@@ -12,11 +12,10 @@ class TimeSeries:
     def __init__(self, r_instance, time_series):
         self.r_instance = r_instance
 
-        # defaults
-        self.set_defaults()
+        self.set_transformation_defaults()
         self.y = FloatVector(time_series)
 
-    def set_defaults(self):
+    def set_transformation_defaults(self):
         self.d_code = TimeSeries.d_code_types[0]
         self.p_code = TimeSeries.p_code_types[0]
         self.transform = self.take_log = False
