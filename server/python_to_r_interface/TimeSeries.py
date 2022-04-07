@@ -13,11 +13,13 @@ class TimeSeries:
         self.r_instance = r_instance
 
         # defaults
+        self.set_defaults()
+        self.y = FloatVector(time_series)
+
+    def set_defaults(self):
         self.d_code = TimeSeries.d_code_types[0]
         self.p_code = TimeSeries.p_code_types[0]
-        self.take_log = False
-        self.transform = False
-        self.y = FloatVector(time_series)
+        self.transform = self.take_log = False
 
     @property
     def y(self):

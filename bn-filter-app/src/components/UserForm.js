@@ -98,15 +98,15 @@ export class UserForm extends Component {
 
     getResults = async () => {
 
-        const statePairToParam = (paramName, currPair) =>
-            paramName + currPair[0].toString() + '=' + currPair[1].toString() + '&'
-
         // dealing with all operating system's newline characters
         const processedY = this.state.unprocessedY.replace(/(,?(\r\n|\n|\r))|(,\s)/gm, ",")
             .split(",")
             .filter(x => x !== "")
 
         console.log(processedY)
+
+        const statePairToParam = (paramName, currPair) =>
+            paramName + currPair[0].toString() + '=' + currPair[1].toString() + '&'
 
         const paramStr =
             [['window', this.state.window],

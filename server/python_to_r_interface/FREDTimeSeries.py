@@ -7,11 +7,17 @@ class FREDTimeSeries(TimeSeries):
     FRED_API_BASE_URL = 'https://api.stlouisfed.org/fred/series/observations'
     FRED_FREQUENCIES = ('d', 'w', 'bw', 'm', 'q', 'sa', 'a')
 
-    def __init__(self, r_instance, time_series_name_abbr, frequency, obs_start):
-        super().__init__(r_instance, [])
+    def __init__(self, time_series_name_abbr, frequency, obs_start):
         self.time_series_name_abbr = time_series_name_abbr
         self.frequency = frequency
         self.obs_start = obs_start
+        self.set_defaults()
+
+    def set_R_instance(self, r_instance):
+        self.r_instance = r_instance
+
+    def conv_series_to_R_vec(self):
+        self.y = FloatVector(self.y)
 
     @property
     def frequency(self):
