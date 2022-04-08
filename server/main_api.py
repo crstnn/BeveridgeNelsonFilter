@@ -91,15 +91,6 @@ def bnf_test_time_series():
     R = get_r_inst()
     us_gdp = TestTimeSeries(R)  # default GDPC1
     us_gdp.set_transformation_defaults()
-    bnf = BNF(us_gdp,
-              R,
-              window=40,
-              delta_select=2,
-              fixed_delta=0.05,
-              ib=True,
-              demean="dm"
-              )
-
-    print(bnf)
+    bnf = BNF(us_gdp, R, window=40, delta_select=2, fixed_delta=0.05, ib=True, demean="dm")
 
     return jsonify(bnf.run())
