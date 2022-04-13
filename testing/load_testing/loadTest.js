@@ -7,7 +7,7 @@ Very simple load test on the default GDPC1 entry
 
 export let options = {
     noConnectionReuse: true,
-    vus: 5,
+    vus: 20,
     duration: '60s'
 };
 
