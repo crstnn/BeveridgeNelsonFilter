@@ -127,7 +127,7 @@ export class UserForm extends Component {
             )
                 .reduce(statePairToParam, '?');
 
-        const finalURL = this.baseBackendURL + this.userSpecifiedDataSlug + paramStr
+        const finalURL = this.baseBackendURL + this.bnfUserSpecifiedDataSlug + paramStr
 
         console.log(finalURL)
 
