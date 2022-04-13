@@ -36,9 +36,6 @@ class FREDTimeSeries(TimeSeries):
         }
         self.FRED_response = requests.get(FREDTimeSeries.FRED_API_BASE_URL, params=parameters)
 
-    def get_raw_untransformed_time_series(self):
-        return self._y
-
     def _get_obs_list(self):
         d = list(map(lambda o: o.json()['observations'], self.FRED_response))
         get_curr_FRED_obs_list = lambda o: lambda ob_idx: o[ob_idx]['value'] \

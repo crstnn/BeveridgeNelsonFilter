@@ -17,7 +17,7 @@ class TimeSeries:
     def set_transformation_defaults(self):
         self.d_code = TimeSeries.d_code_types[0]
         self.p_code = TimeSeries.p_code_types[0]
-        self.transform = self.take_log = False
+        self._transform = self.take_log = False
 
     def set_transformation(self, d_code, p_code, take_log):
         self.d_code = d_code
@@ -57,13 +57,8 @@ class TimeSeries:
         self._take_log = l
         self._transform = True
 
-    @property
-    def transform(self):
-        return self._transform
-
-    @transform.setter
-    def transform(self, value):
-        self._transform = value
+    def get_raw_untransformed_time_series(self):
+        return self._y
 
     def get_time_series_float_vec(self, r_instance):
         if not (self.d_code is None or self.p_code is None or self.take_log is None):
