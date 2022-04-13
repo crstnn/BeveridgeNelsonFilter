@@ -5,7 +5,7 @@ class BNF:
     def __init__(self, time_series,
                  r_instance, window, delta_select, fixed_delta, ib, demean):
         self.r_instance = r_instance
-        self.time_series = time_series.get_time_series(self.r_instance)
+        self.time_series_float_vec = time_series.get_time_series_float_vec(self.r_instance)
         self.window = window
         self.delta_select = delta_select
         self.fixed_delta = fixed_delta
@@ -20,7 +20,7 @@ class BNF:
             self.iterative = 0
 
     def run(self):
-        bnf_output = self.r_instance('bnf')(self.time_series,
+        bnf_output = self.r_instance('bnf')(self.time_series_float_vec,
                                             iterative=self.iterative,
                                             window=self.window,
                                             delta_select=self.delta_select,

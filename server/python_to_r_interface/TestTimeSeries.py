@@ -5,8 +5,8 @@ from python_to_r_interface.TimeSeries import *
 class TestTimeSeries(TimeSeries):
     test_data_series = ("DATE", "GDPC1", "cpiaucsl", "GDPDEF", "UNRATE")
 
-    def __init__(self, r_instance, time_series_name_abbr=test_data_series[0]):
-        super().__init__(r_instance, [])
+    def __init__(self, time_series_name_abbr=test_data_series[0]):
+        super().__init__(None)
 
         if time_series_name_abbr not in TestTimeSeries.test_data_series:
             raise ValueError("Invalid time series. Expected one of: %s" % (TestTimeSeries.test_data_series,))
@@ -19,7 +19,7 @@ class TestTimeSeries(TimeSeries):
                     # + 1 to skip date column
                 except:
                     ...
-        self.y = FloatVector(t_s)
+        self._y = t_s
 
     def set_transformation_defaults(self):
         self.p_code = "p1"
