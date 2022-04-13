@@ -27,10 +27,8 @@ export class RenderedPlot extends Component {
 
         const xAxis = Array.from({length: plotPageValues.cycle.length}, (_, i) => i + 1);
 
-        console.log(this.props);
-
         return (
-            <Plot layout={{autosize: true}}
+            <Plot layout={{autosize: true, margin: {b: 20}}}
                   data={[
 
                       {
