@@ -37,7 +37,7 @@ def handle_params_bnf_args():
 def handle_params_series_transformation(series):
     if request.args.get("transform") == "true":
         series.set_transformation(request.args.get("d_code"),
-                                  request.args.get("d_code"),
+                                  request.args.get("p_code"),
                                   request.args.get("take_log") == "true")
 
 
