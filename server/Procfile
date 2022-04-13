@@ -1,1 +1,1 @@
-web: gunicorn --workers=2 --threads=3 --limit-request-line 16384 wsgi:app
+web: gunicorn --workers=3 --threads=4 --limit-request-line 16384 wsgi:app

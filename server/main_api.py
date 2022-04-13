@@ -58,7 +58,6 @@ def bnf_fred_time_series():
     obs_start = request.args.get("obs_start")
 
     fred_series = FREDTimeSeries(fred_abbr, freq, obs_start)
-
     handle_params_series_transformation(fred_series)
 
     bnf = BNF(fred_series, get_r_inst(), *handle_params_bnf_args())
