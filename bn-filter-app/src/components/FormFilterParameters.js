@@ -1,10 +1,8 @@
 import React, {Component} from 'react';
 import {
     Button,
-    Checkbox,
     Divider,
     FormControl,
-    FormControlLabel,
     Grid,
     InputLabel,
     MenuItem,
@@ -31,7 +29,7 @@ export class FormFilterParameters extends Component {
 
 
     render() {
-        const {values, handleChange, handleCheckboxChange} = this.props;
+        const {values, handleChange} = this.props;
 
         return (
             <div>
