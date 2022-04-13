@@ -7,17 +7,12 @@ class FREDTimeSeries(TimeSeries):
     FRED_API_BASE_URL = 'https://api.stlouisfed.org/fred/series/observations'
     FRED_FREQUENCIES = ('d', 'w', 'bw', 'm', 'q', 'sa', 'a')
 
-    def __init__(self, time_series_name_abbr, frequency, obs_start):
+    def __init__(self, time_series_name_abbr, frequency, obs_start, time_series=None):
+        super().__init__(time_series)
         self.time_series_name_abbr = time_series_name_abbr
         self.frequency = frequency
         self.obs_start = obs_start
         self.set_transformation_defaults()
-
-    def set_R_instance(self, r_instance):
-        self.r_instance = r_instance
-
-    def conv_series_to_R_vec(self):
-        self.y = FloatVector(self.y)
 
     @property
     def frequency(self):
@@ -40,6 +35,9 @@ class FREDTimeSeries(TimeSeries):
             'sort_order': 'asc'
         }
         self.FRED_response = requests.get(FREDTimeSeries.FRED_API_BASE_URL, params=parameters)
+
+    def get_raw_untransformed_time_series(self):
+        return self._y
 
     def _get_obs_list(self):
         d = list(map(lambda o: o.json()['observations'], self.FRED_response))

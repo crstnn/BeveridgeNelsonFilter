@@ -9,24 +9,20 @@ class TimeSeries:
     d_code_types = ("nd", "d1", "d4", "d12")
     p_code_types = ("np", "p1", "p4", "p12")
 
-    def __init__(self, r_instance, time_series):
-        self.r_instance = r_instance
-
+    def __init__(self, time_series):
         self.set_transformation_defaults()
-        self.y = FloatVector(time_series)
+        self._y = time_series
+        self._y_float_vector = None
 
     def set_transformation_defaults(self):
         self.d_code = TimeSeries.d_code_types[0]
         self.p_code = TimeSeries.p_code_types[0]
         self.transform = self.take_log = False
 
-    @property
-    def y(self):
-        return self._y
-
-    @y.setter
-    def y(self, value):
-        self._y = value
+    def set_transformation(self, d_code, p_code, take_log):
+        self.d_code = d_code
+        self.p_code = p_code
+        self.take_log = take_log
 
     @property
     def d_code(self):
@@ -69,15 +65,15 @@ class TimeSeries:
     def transform(self, value):
         self._transform = value
 
-    def get_time_series(self):
+    def get_time_series_float_vec(self, r_instance):
         if not (self.d_code is None or self.p_code is None or self.take_log is None):
+            self._y_float_vector = FloatVector(self._y)
             # transformed series
-            ret_series = self.r_instance('transform_series')(y=self.y,
-                                                             take_log=self.take_log,
-                                                             dcode=self.d_code,
-                                                             pcode=self.p_code)
+            ret_series = r_instance('transform_series')(y=self._y_float_vector,
+                                                        take_log=self.take_log,
+                                                        dcode=self.d_code,
+                                                        pcode=self.p_code)
             gc.collect()  # using Python's garbage collector to free up unnecessary use of R memory space
             return ret_series
 
-        return self.y
-
+        return self._y_float_vector

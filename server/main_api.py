@@ -36,9 +36,9 @@ def handle_params_bnf_args():
 
 def handle_params_series_transformation(series):
     if request.args.get("transform") == "true":
-        series.d_code = request.args.get("d_code")
-        series.p_code = request.args.get("p_code")
-        series.take_log = request.args.get("take_log") == "true"
+        series.set_transformation(request.args.get("d_code"),
+                                  request.args.get("d_code"),
+                                  request.args.get("take_log") == "true")
 
 
 @app.route('/')
@@ -60,8 +60,6 @@ def bnf_fred_time_series():
 
     fred_series = FREDTimeSeries(fred_abbr, freq, obs_start)
 
-    fred_series.set_R_instance(R)
-    fred_series.conv_series_to_R_vec()
     handle_params_series_transformation(fred_series)
 
     bnf = BNF(fred_series, R, *handle_params_bnf_args())
@@ -78,7 +76,7 @@ def bnf_user_specified_time_series():
     user_y = request.args.get("processed_y").split(",")
 
     R = get_r_inst()
-    user_series = TimeSeries(R, user_y)
+    user_series = TimeSeries(user_y)
     handle_params_series_transformation(user_series)
 
     bnf = BNF(user_series, R, *handle_params_bnf_args())
