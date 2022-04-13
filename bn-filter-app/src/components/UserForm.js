@@ -159,6 +159,7 @@ export class UserForm extends Component {
                         deltaCalc: deltaRes,
                         cycleCILB: UserForm.confIntZip(cycleRes, ciRes, "lb"),
                         cycleCIUB: UserForm.confIntZip(cycleRes, ciRes, "ub"),
+                        loading: false,
                     })
 
                 }).catch((error) => {

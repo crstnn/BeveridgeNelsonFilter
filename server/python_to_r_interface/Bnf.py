@@ -4,8 +4,8 @@ import gc
 class BNF:
     def __init__(self, time_series,
                  r_instance, window, delta_select, fixed_delta, ib, demean):
-        self.time_series = time_series.get_time_series()
         self.r_instance = r_instance
+        self.time_series = time_series.get_time_series(self.r_instance)
         self.window = window
         self.delta_select = delta_select
         self.fixed_delta = fixed_delta

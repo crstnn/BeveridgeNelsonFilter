@@ -75,7 +75,7 @@ export class RenderedPlot extends Component {
                 <div>
                     <div>
                         {this.getPlot()}
-                        Delta: {plotPageValues.plotPageValues}
+                        <p> Delta: {plotPageValues.deltaCalc} </p>
                     </div>
                     <CSVLink
                         filename={"BNF_cycle.csv"}
