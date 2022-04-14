@@ -60,9 +60,14 @@ def bnf_fred_time_series():
     fred_series = FREDTimeSeries(fred_abbr, freq, obs_start)
     handle_params_series_transformation(fred_series)
 
-    bnf = BNF(fred_series, get_r_inst(), *handle_params_bnf_args())
+    R = get_r_inst()
+    bnf = BNF(fred_series, R, *handle_params_bnf_args())
+    res = jsonify(bnf.run())
 
-    return jsonify(bnf.run())
+    del fred_series, bnf, R
+    gc.collect()
+
+    return res
 
 
 @app.route('/bnf/user-specified-time-series', methods=['GET'])
@@ -76,15 +81,27 @@ def bnf_user_specified_time_series():
     user_series = TimeSeries(user_y)
     handle_params_series_transformation(user_series)
 
-    bnf = BNF(user_series, get_r_inst(), *handle_params_bnf_args())
+    R = get_r_inst()
+    bnf = BNF(user_series, R, *handle_params_bnf_args())
+    res = jsonify(bnf.run())
 
-    return jsonify(bnf.run())
+    del user_y, user_series, bnf, R
+    gc.collect()
+
+    return res
 
 
 @app.route('/bnf/test-time-series', methods=['GET'])
 def bnf_test_time_series():
     us_gdp = TestTimeSeries()  # default GDPC1
     us_gdp.set_transformation_defaults()
-    bnf = BNF(us_gdp, get_r_inst(), window=40, delta_select=2, fixed_delta=0.05, ib=True, demean="dm")
 
-    return jsonify(bnf.run())
+    R = get_r_inst()
+    bnf = BNF(us_gdp, R, window=40, delta_select=2, fixed_delta=0.05, ib=True, demean="dm")
+
+    res = jsonify(bnf.run())
+
+    del us_gdp, bnf, R
+    gc.collect()
+
+    return res
