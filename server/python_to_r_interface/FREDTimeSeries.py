@@ -1,6 +1,6 @@
 import os
 import requests
-from TimeSeries import *
+from python_to_r_interface.TimeSeries import *
 
 
 class FREDTimeSeries(TimeSeries):

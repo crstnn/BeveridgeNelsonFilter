@@ -1,4 +1,4 @@
-from TimeSeries import *
+from python_to_r_interface.TimeSeries import *
 
 
 # Use only for testing
