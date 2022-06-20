@@ -13,7 +13,6 @@ class FREDTimeSeries(TimeSeries):
         self.time_series_name_abbr = time_series_name_abbr
         self.frequency = frequency
         self.obs_start = obs_start
-        self.set_transformation_defaults()
 
     @property
     def frequency(self):

@@ -11,6 +11,10 @@ class TimeSeries:
         self.set_transformation_defaults()
         self._y = time_series
         self._y_float_vector = None
+        self.d_code = None
+        self.p_code = None
+        self.take_log = None
+        self._transform = False
 
     def set_transformation_defaults(self):
         self.d_code = TimeSeries.d_code_types[0]
@@ -22,8 +26,13 @@ class TimeSeries:
         self.p_code = p_code
         self.take_log = take_log
 
+    def check_for_transformation(self):
+        self._transform = self._d_code is not None or self._p_code is not None or self._take_log is not None
+
     @property
     def d_code(self):
+        if self._d_code is None:
+            return TimeSeries.d_code_types[0]
         return self._d_code
 
     @d_code.setter
@@ -31,10 +40,12 @@ class TimeSeries:
         if d not in TimeSeries.d_code_types and d is not None:
             raise ValueError("Invalid d_code type. Expected one of: %s" % (TimeSeries.d_code_types,))
         self._d_code = d
-        self._transform = True
+        self.check_for_transformation()
 
     @property
     def p_code(self):
+        if self._p_code is None:
+            return TimeSeries.p_code_types[0]
         return self._p_code
 
     @p_code.setter
@@ -42,10 +53,12 @@ class TimeSeries:
         if p not in TimeSeries.p_code_types and p is not None:
             raise ValueError("Invalid p_code type. Expected one of: %s" % (TimeSeries.p_code_types,))
         self._p_code = p
-        self._transform = True
+        self.check_for_transformation()
 
     @property
     def take_log(self):
+        if self._take_log is None:
+            return False
         return self._take_log
 
     @take_log.setter
@@ -53,13 +66,13 @@ class TimeSeries:
         if type(l) is not bool and l is not None:
             raise TypeError("Invalid take_log type, Expected type: Boolean or None")
         self._take_log = l
-        self._transform = True
+        self.check_for_transformation()
 
     def get_raw_untransformed_time_series(self):
         return self._y
 
     def get_time_series_float_vec(self, r_instance):
-        if not (self.d_code is None or self.p_code is None or self.take_log is None):
+        if self._transform and not self._y_float_vector:
             self._y_float_vector = FloatVector(self._y)
             # transformed series
             ret_series = r_instance('transform_series')(y=self._y_float_vector,
