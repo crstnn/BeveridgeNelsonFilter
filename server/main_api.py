@@ -23,7 +23,7 @@ def get_r_inst():
     return R
 
 
-def handle_params_bnf_args():
+def get_bnf_params():
     # empty string for 'window' occurs when set to 'static demeaning' so we set it to an arbitrary 40
     window = 40 if request.args.get("window") else int(request.args.get("window"))
     delta_select = int(request.args.get("delta_select"))
@@ -34,7 +34,7 @@ def handle_params_bnf_args():
     return window, delta_select, fixed_delta, ib, demean
 
 
-def handle_params_series_transformation(series):
+def handle_series_transformation_params(series):
     if request.args.get("transform") == "true":
         series.set_transformation(request.args.get("d_code"),
                                   request.args.get("p_code"),
@@ -56,15 +56,15 @@ def bnf_fred_time_series():
     fred_abbr = request.args.get("fred_abbr")
     freq = request.args.get("freq")
     obs_start = request.args.get("obs_start")
+    obs_end = request.args.get("obs_end")
 
     fred_series = FREDTimeSeries(fred_abbr, freq, obs_start)
-    handle_params_series_transformation(fred_series)
+    handle_series_transformation_params(fred_series)
 
     R = get_r_inst()
-    bnf = BNF(fred_series, R, *handle_params_bnf_args())
+    bnf = BNF(fred_series, R, *get_bnf_params())
     res = jsonify(bnf.run())
 
-    del fred_series, bnf, R
     gc.collect()
 
     return res
@@ -79,13 +79,12 @@ def bnf_user_specified_time_series():
     user_y = request.args.get("processed_y").split(",")
 
     user_series = TimeSeries(user_y)
-    handle_params_series_transformation(user_series)
+    handle_series_transformation_params(user_series)
 
     R = get_r_inst()
-    bnf = BNF(user_series, R, *handle_params_bnf_args())
+    bnf = BNF(user_series, R, *get_bnf_params())
     res = jsonify(bnf.run())
 
-    del user_y, user_series, bnf, R
     gc.collect()
 
     return res
@@ -101,7 +100,6 @@ def bnf_test_time_series():
 
     res = jsonify(bnf.run())
 
-    del us_gdp, bnf, R
     gc.collect()
 
     return res

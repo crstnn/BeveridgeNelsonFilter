@@ -1,5 +1,6 @@
+import os
 import requests
-from python_to_r_interface.TimeSeries import *
+from TimeSeries import *
 
 
 class FREDTimeSeries(TimeSeries):
@@ -37,7 +38,7 @@ class FREDTimeSeries(TimeSeries):
         self.FRED_response = requests.get(FREDTimeSeries.FRED_API_BASE_URL, params=parameters)
 
     def _get_obs_list(self):
-        d = list(map(lambda o: o.json()['observations'], self.FRED_response))
+        obs = list(map(lambda o: o.json()['observations'], self.FRED_response))
         get_curr_FRED_obs_list = lambda o: lambda ob_idx: o[ob_idx]['value'] \
             if ob_idx < len(o) and o[ob_idx]['value'] != '.' else ''
 

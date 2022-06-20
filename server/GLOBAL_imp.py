@@ -1,5 +1,4 @@
 import os
-import gc
 
 if 'ON_SERVER' in os.environ:
     print("flask_prod")
