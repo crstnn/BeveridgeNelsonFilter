@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import {
-    Button,
+    Button, Checkbox,
     Divider,
-    FormControl,
+    FormControl, FormControlLabel,
     Grid,
     InputLabel,
     MenuItem,
     Select,
-    TextField
+    TextField, Typography
 } from "@mui/material";
 import '../styles/App.css';
 
@@ -29,10 +29,69 @@ export class FormFilterParameters extends Component {
 
 
     render() {
-        const {values, handleChange} = this.props;
+        const {values, handleChange, handleCheckboxChange} = this.props;
 
         return (
             <div>
+                <div className="information">
+                    <Divider light><FormControl variant="standard">
+                        <FormControlLabel
+                            label={<Typography
+                                style={{fontSize: 'x-large'}}>Pre-Analysis Transformations</Typography>}
+                            title="Transformations are applied in the order below and are done prior to the BN Filter run"
+                            control={<Checkbox
+                                onChange={handleCheckboxChange('transform')}
+                                checked={values.transform}/>}
+                        />
+                    </FormControl></Divider>
+                </div>
+                <Grid container direction="column" justifyContent="space-evenly" spacing={4}
+                      alignItems="center">
+                    <Grid item xs={3}>
+                        <FormControl variant="standard">
+                            <FormControlLabel label="Natural Logarithm"
+                                              title="Logarithm to the base of Euler's number"
+                                              control={<Checkbox
+                                                  size="small"
+                                                  onChange={handleCheckboxChange('takeLog')}
+                                                  checked={values.takeLog}
+                                                  disabled={!values.transform}/>}
+                            />
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <FormControl variant="standard" sx={{minWidth: 330}}>
+                            <InputLabel>Differencing Method</InputLabel>
+                            <Select
+                                title="Differencing method applied"
+                                onChange={handleChange('dCode')}
+                                defaultValue={values.dCode}
+                                disabled={!values.transform}
+                            >
+                                <MenuItem value={'nd'}>No Differencing (Levels)</MenuItem>
+                                <MenuItem value={'d1'}>1 Period Difference</MenuItem>
+                                <MenuItem value={'d4'}>4 Period Difference (for Quarterly Data)</MenuItem>
+                                <MenuItem value={'d12'}>12 Period Difference (for Monthly Data)</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <FormControl variant="standard" sx={{minWidth: 330}}>
+                            <InputLabel>Computed Percentages</InputLabel>
+                            <Select
+                                title="Percentage multiple applied"
+                                onChange={handleChange('pCode')}
+                                defaultValue={values.pCode}
+                                disabled={!values.transform}
+                            >
+                                <MenuItem value={'np'}>No Change</MenuItem>
+                                <MenuItem value={'p1'}>Multiply by 100</MenuItem>
+                                <MenuItem value={'p4'}>Multiply by 400 (Annualized Quarterly Rate)</MenuItem>
+                                <MenuItem value={'p12'}>Multiply by 1200 (Annualized Monthly Rate)</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                </Grid>
                 <div className="information">
                     <Divider style={{fontSize: 'x-large'}}>BN Filter Parameters</Divider>
                 </div>
@@ -110,7 +169,7 @@ export class FormFilterParameters extends Component {
                 </div>
                 <br/>
                 <Button
-                    variant="contained"
+                    variant="outlined"
                     style={styles.button}
                     onClick={this.back}
                 >Back</Button>

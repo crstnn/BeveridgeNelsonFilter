@@ -80,7 +80,7 @@ export class RenderedPlot extends Component {
                         data={this.getCSVData()}>Download as CSV</CSVLink>
                 </div>
                 <Button
-                    variant="contained"
+                    variant="outlined"
                     style={styles.button}
                     onClick={this.back}
                 >Back</Button>
