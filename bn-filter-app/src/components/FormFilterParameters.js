@@ -47,7 +47,7 @@ export class FormFilterParameters extends Component {
                 </div>
                 <Grid container direction="column" justifyContent="space-evenly" spacing={4}
                       alignItems="center">
-                    <Grid item xs={3}>
+                    <Grid item xs={4}>
                         <FormControl variant="standard">
                             <FormControlLabel label="Natural Logarithm"
                                               title="Logarithm to the base of Euler's number"
@@ -60,7 +60,7 @@ export class FormFilterParameters extends Component {
                         </FormControl>
                     </Grid>
                     <Grid item xs={3}>
-                        <FormControl variant="standard" sx={{minWidth: 330}}>
+                        <FormControl variant="standard" sx={{minWidth: 350}}>
                             <InputLabel>Differencing Method</InputLabel>
                             <Select
                                 title="Differencing method applied"
@@ -75,8 +75,8 @@ export class FormFilterParameters extends Component {
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={3}>
-                        <FormControl variant="standard" sx={{minWidth: 330}}>
+                    <Grid item xs={4}>
+                        <FormControl variant="standard" sx={{minWidth: 350}}>
                             <InputLabel>Computed Percentages</InputLabel>
                             <Select
                                 title="Percentage multiple applied"
