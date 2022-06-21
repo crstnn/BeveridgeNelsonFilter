@@ -4,7 +4,7 @@ import FormFilterParameters from "./FormFilterParameters";
 import UserData from "./UserData";
 import RenderedPlot from "./RenderedPlot";
 import Loading from "./Loading";
-import ServerError from "./ServerError";
+import Error from "./Error";
 import validationConfig from "./../config.json";
 
 export class UserForm extends Component {
@@ -264,9 +264,8 @@ export class UserForm extends Component {
                             return (
                                 <>
                                     {this.state.loading === null ?
-                                        <ServerError close={() => {
-                                            this.setState({loading: false})
-                                        }}/>
+                                        <Error tagName={"During the running of the BN filter a problem occurred. Please check that the inputs are appropriate."}
+                                               close={() => {this.setState({loading: false})}}/>
                                         : null}
 
                                     <FormFilterParameters
