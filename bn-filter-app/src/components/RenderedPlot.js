@@ -30,7 +30,7 @@ export class RenderedPlot extends Component {
         console.log(plotPageValues.y)
 
         return (
-            <Plot layout={{autosize: true, margin: {b: 20}}}
+            <Plot layout={{autosize: true, xaxis: {automargin: true}, yaxis: {automargin: true}}}
                   data={[
                       {
                           x: plotPageValues.x,
