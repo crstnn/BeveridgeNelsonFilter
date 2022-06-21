@@ -5,7 +5,8 @@ import UserData from "./UserData";
 import RenderedPlot from "./RenderedPlot";
 import Loading from "./Loading";
 import Error from "./Error";
-import validationConfig from "../validationConfig.json";
+import {validation} from "../config.json";
+import {DateS} from "../utils/Date";
 
 export class UserForm extends Component {
     state = {
@@ -19,7 +20,7 @@ export class UserForm extends Component {
         isAutomaticWindow: false,
         rollingWindow: 40,
         periodicity: 'q', // periodicity
-        dateObj: Object(),
+        startDate: null,
         transform: false, // transforms to data before bnf
         dCode: 'nd',
         pCode: 'np',
@@ -90,6 +91,7 @@ export class UserForm extends Component {
         this.setState({[input]: e.target.value});
     }
 
+
     setErrorMessage = (input, message) => {
         this.setState({["errorMessage"]: {...this.state.errorMessage,
                 [input]: message
@@ -101,11 +103,11 @@ export class UserForm extends Component {
         if (isNaN(e.target.value)) {
             this.setErrorMessage(input, "must be numeric");
         }
-        else if (e.target.value < validationConfig[input].min){
-            this.setErrorMessage(input, `too small. must be ≥ ${validationConfig[input].min}`);
+        else if (e.target.value < validation[input].min){
+            this.setErrorMessage(input, `too small. must be ≥ ${validation[input].min}`);
         }
-        else if (e.target.value > validationConfig[input].max) {
-            this.setErrorMessage(input, `too large. must be ≤ ${validationConfig[input].max}`);
+        else if (e.target.value > validation[input].max) {
+            this.setErrorMessage(input, `too large. must be ≤ ${validation[input].max}`);
         }
         else{
             let state = {...this.state};
@@ -130,15 +132,12 @@ export class UserForm extends Component {
         return this.state[input];
     }
 
-
     getResults = async () => {
 
         // dealing with all operating system's newline characters
-        const processedY = this.state.unprocessedY.replace(/(,?(\r\n|\n|\r))|(,\s)/gm, ",")
+        this.state.y = this.state.unprocessedY.replace(/(,?(\r\n|\n|\r))|(,\s)/gm, ",")
             .split(",")
             .filter(x => x !== "")
-
-        console.log(processedY)
 
         const statePairToParam = (paramName, currPair) =>
             paramName + currPair[0].toString() + '=' + currPair[1].toString() + '&'
@@ -149,7 +148,7 @@ export class UserForm extends Component {
                 ['fixed_delta', this.state.fixedDelta],
                 ['ib', this.state.iterativeBackcasting],
                 ['demean', this.state.demean],
-                ['processed_y', processedY]].concat(
+                ['processed_y', this.state.y]].concat(
                 [['transform', this.state.transform]].concat(
                     this.state.transform ? [
                             ['p_code', this.state.pCode],
@@ -213,7 +212,7 @@ export class UserForm extends Component {
             isAutomaticWindow,
             rollingWindow,
             periodicity,
-            dateObj,
+            startDate,
             transform,
             dCode,
             pCode,
@@ -228,6 +227,7 @@ export class UserForm extends Component {
         const values = {
             y,
             unprocessedY,
+            startDate,
             periodicity,
             fixedDelta,
             deltaSelect,
@@ -242,7 +242,7 @@ export class UserForm extends Component {
             dispCycleCI,
         };
 
-        const plotPageValues = {y, cycle, deltaCalc, dispCycleCI, cycleCILB, cycleCIUB, periodicity, dateObj}
+        const plotPageValues = {y, cycle, deltaCalc, dispCycleCI, cycleCILB, cycleCIUB, periodicity, startDate}
 
 
         return (

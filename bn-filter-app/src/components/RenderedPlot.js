@@ -3,6 +3,7 @@ import Plot from 'react-plotly.js';
 import {Button} from "@mui/material";
 import {CSVLink} from "react-csv";
 import UserForm from "./UserForm";
+import {DateS} from "../utils/Date";
 
 export class RenderedPlot extends Component {
 
@@ -25,12 +26,18 @@ export class RenderedPlot extends Component {
     getPlot() {
         const {plotPageValues} = this.props;
 
-        const xAxis = Array.from({length: plotPageValues.cycle.length}, (_, i) => i + 1);
+        console.log(plotPageValues.periodicity)
+        console.log(DateS.createDate(plotPageValues.periodicity, plotPageValues.startDate).getDateArray(plotPageValues.y.length))
+
+        const xAxis = plotPageValues.periodicity !== null ?
+            DateS.createDate(plotPageValues.periodicity, plotPageValues.startDate).getDateArray(plotPageValues.y.length)
+            : Array.from({length: plotPageValues.cycle.length}, (_, i) => i + 1)
+
+        console.log(xAxis)
 
         return (
             <Plot layout={{autosize: true, margin: {b: 20}}}
                   data={[
-
                       {
                           x: xAxis,
                           y: plotPageValues.cycle,

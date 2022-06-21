@@ -13,6 +13,8 @@ import {
 } from "@mui/material";
 import '../styles/App.css';
 import CustomDatePicker from "../pickers/CustomDatePicker";
+import createMenuItems from "../utils/CreateMenuItem";
+import {options} from "../config.json";
 
 export class UserData extends Component {
 
@@ -76,7 +78,10 @@ export class UserData extends Component {
                               justifyContent="space-evenly"
                               alignItems="center">
                             <Grid item xs={4}>
-                                <CustomDatePicker isDisabled={getState("periodicity") === 0}/>
+                                <CustomDatePicker startDate={values.startDate}
+                                                  periodicity={values.periodicity}
+                                                  updateDate={handleChange("startDate")}
+                                                  isDisabled={getState("periodicity") === 0}/>
                             </Grid>
                             <Grid item xs={4}>
                                 <FormControl variant="standard" sx={{minWidth: 220}}>
@@ -85,13 +90,7 @@ export class UserData extends Component {
                                         title="Time-series frequency"
                                         onChange={handleChange('periodicity')}
                                         defaultValue={values.periodicity}
-                                    >
-                                        <MenuItem value={'y'}>Yearly</MenuItem>
-                                        <MenuItem value={'q'}>Quarterly</MenuItem>
-                                        <MenuItem value={'m'}>Monthly</MenuItem>
-                                        <MenuItem value={'w'}>Weekly</MenuItem>
-                                        <MenuItem value={0}>Undated/Unspecified</MenuItem>
-                                    </Select>
+                                    >{createMenuItems(options.periodicityManual)}</Select>
                                 </FormControl>
                             </Grid>
 

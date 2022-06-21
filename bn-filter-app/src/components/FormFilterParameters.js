@@ -13,7 +13,8 @@ import {
     Typography
 } from "@mui/material";
 import '../styles/App.css';
-
+import {options} from "../config.json";
+import createMenuItems from "../utils/CreateMenuItem";
 
 export class FormFilterParameters extends Component {
 
@@ -73,12 +74,7 @@ export class FormFilterParameters extends Component {
                         onChange={handleChange('dCode')}
                         defaultValue={values.dCode}
                         disabled={!values.transform}
-                    >
-                        <MenuItem value={'nd'}>No Differencing (Levels)</MenuItem>
-                        <MenuItem value={'d1'}>1 Period Difference</MenuItem>
-                        <MenuItem value={'d4'}>4 Period Difference (for Quarterly Data)</MenuItem>
-                        <MenuItem value={'d12'}>12 Period Difference (for Monthly Data)</MenuItem>
-                    </Select>
+                    >{createMenuItems(options.dCode)}</Select>
                 </FormControl>
             </Grid>
             <Grid item xs={4}>
@@ -89,12 +85,7 @@ export class FormFilterParameters extends Component {
                         onChange={handleChange('pCode')}
                         defaultValue={values.pCode}
                         disabled={!values.transform}
-                    >
-                        <MenuItem value={'np'}>No Change</MenuItem>
-                        <MenuItem value={'p1'}>Multiply by 100</MenuItem>
-                        <MenuItem value={'p4'}>Multiply by 400 (Annualized Quarterly Rate)</MenuItem>
-                        <MenuItem value={'p12'}>Multiply by 1200 (Annualized Monthly Rate)</MenuItem>
-                    </Select>
+                    >{createMenuItems(options.pCode)}</Select>
                 </FormControl>
             </Grid>
         </Grid>
@@ -129,11 +120,7 @@ export class FormFilterParameters extends Component {
                                     title="Signal-to-Noise Ratio according to benchmark KMW approach"
                                     onChange={handleChange('deltaSelect')}
                                     defaultValue={values.deltaSelect}
-                                >
-                                    <MenuItem value={0}>Fixed Delta</MenuItem>
-                                    <MenuItem value={1}>Maximize Amplitude-to-Noise Ratio</MenuItem>
-                                    <MenuItem value={2}>Minimize Stochastic Trend Volatility</MenuItem>
-                                </Select>
+                                >{createMenuItems(options.deltaSelect)}</Select>
                             </FormControl>
                         </Grid>
                         <Grid item xs={4}>
@@ -157,11 +144,7 @@ export class FormFilterParameters extends Component {
                                     label="Iterative Dynamic Demeaning"
                                     onChange={handleChange('demean')}
                                     defaultValue={values.demean}
-                                >
-                                    <MenuItem value={"sm"}>Constant (Static Demeaning)</MenuItem>
-                                    <MenuItem value={"dm"}>Dynamic Demeaning</MenuItem>
-                                    <MenuItem value={"idm"}>Iterative Dynamic Demeaning</MenuItem>
-                                </Select>
+                                >{createMenuItems(options.iterativeDynamicDemeaning)}</Select>
                             </FormControl>
                         </Grid>
                         <Grid item xs={5}>

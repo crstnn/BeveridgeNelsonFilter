@@ -1,0 +1,45 @@
+{
+  "validation": {
+    "fixedDelta": {
+      "min": 0.05,
+      "max": 1
+    },
+    "rollingWindow": {
+      "min": 26,
+      "max": 500
+    }
+  },
+  "options": {
+    "periodicityManual": [
+      {"value": "y", "text": "Yearly"},
+      {"value": "q", "text": "Quarterly"},
+      {"value": "m", "text": "Monthly"},
+      {"value": "w", "text": "Weekly"},
+      {"value": null, "text": "Undated/Unspecified"}
+    ],
+    "iterativeDynamicDemeaning": [
+      {"value": "sm", "text": "Constant (Static Demeaning)"},
+      {"value": "dm", "text": "Dynamic Demeaning"},
+      {"value": "idm", "text": "Iterative Dynamic Demeaning"}
+      ],
+    "deltaSelect": [
+      {"value": 0, "text": "Fixed Delta"},
+      {"value": 1, "text": "Maximize Amplitude-to-Noise Ratio"},
+      {"value": 2, "text": "Minimize Stochastic Trend Volatility"}
+      ],
+    "dCode": [
+      {"value": "nd", "text": "No Differencing (Levels)"},
+      {"value": "d1", "text": "1 Period Difference"},
+      {"value": "d4", "text": "4 Period Difference (for Quarterly Data)"},
+      {"value": "d12", "text": "12 Period Difference (for Monthly Data)"}
+    ],
+    "pCode": [
+      {"value": "np", "text": "No Change"},
+      {"value": "p1", "text": "Multiply by 100"},
+      {"value": "p4", "text": "Multiply by 400 (Annualized Quarterly Rate)"},
+      {"value": "p12", "text": "Multiply by 1200 (Annualized Monthly Rate)"}
+    ]
+  }
+}
+
+
