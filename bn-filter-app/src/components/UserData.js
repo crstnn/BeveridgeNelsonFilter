@@ -7,7 +7,6 @@ import {
     FormControlLabel,
     Grid,
     InputLabel,
-    MenuItem,
     Select,
     TextField
 } from "@mui/material";
@@ -32,7 +31,7 @@ export class UserData extends Component {
     }
 
     render() {
-        const {values, handleChange, handleCheckboxChange, getState} = this.props;
+        const {values, handleChange, handleCheckboxChange} = this.props;
 
         return (
             <>
@@ -81,7 +80,7 @@ export class UserData extends Component {
                                 <CustomDatePicker startDate={values.startDate}
                                                   periodicity={values.periodicity}
                                                   updateDate={handleChange("startDate")}
-                                                  isDisabled={getState("periodicity") === "n"}/>
+                                                  isDisabled={values.periodicity === "n"}/>
                             </Grid>
                             <Grid item xs={4}>
                                 <FormControl variant="standard" sx={{minWidth: 220}}>

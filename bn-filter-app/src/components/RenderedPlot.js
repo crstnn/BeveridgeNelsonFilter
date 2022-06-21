@@ -3,7 +3,6 @@ import Plot from 'react-plotly.js';
 import {Button} from "@mui/material";
 import {CSVLink} from "react-csv";
 import UserForm from "./UserForm";
-import {DateS} from "../utils/Date";
 
 export class RenderedPlot extends Component {
 
@@ -17,7 +16,8 @@ export class RenderedPlot extends Component {
         const {plotPageValues} = this.props;
 
         return UserForm.colsToRows(
-            ["cycle"].concat(plotPageValues.cycle),
+                ["date"].concat(plotPageValues.x),
+                ["cycle"].concat(plotPageValues.cycle),
             plotPageValues.dispCycleCI ? ["conf_int_lower_bound"].concat(plotPageValues.cycleCILB) : undefined,
             plotPageValues.dispCycleCI ? ["conf_int_upper_bound"].concat(plotPageValues.cycleCIUB) : undefined);
     }
@@ -26,17 +26,14 @@ export class RenderedPlot extends Component {
     getPlot() {
         const {plotPageValues} = this.props;
 
-        const xAxis = plotPageValues.periodicity !== "n" ? // dated axis or numbered axis
-            DateS.createDate(plotPageValues.periodicity, plotPageValues.startDate).getDateArray(plotPageValues.y.length)
-            : Array.from({length: plotPageValues.cycle.length}, (_, i) => i + 1)
-
-        console.log(xAxis)
+        console.log(plotPageValues.x)
+        console.log(plotPageValues.y)
 
         return (
             <Plot layout={{autosize: true, margin: {b: 20}}}
                   data={[
                       {
-                          x: xAxis,
+                          x: plotPageValues.x,
                           y: plotPageValues.cycle,
                           type: 'scatter',
                           mode: 'lines+markers',
@@ -46,7 +43,7 @@ export class RenderedPlot extends Component {
                       },
                       plotPageValues.dispCycleCI ? {
                           // confint lower bound: enclosing line (which is hidden) hence 0 opacity (using properties of 'tonexty')
-                          x: xAxis,
+                          x: plotPageValues.x,
                           y: plotPageValues.cycleCILB,
                           fill: "tonexty",
                           fillcolor: "rgba(0, 0, 0, 0)",
@@ -56,7 +53,7 @@ export class RenderedPlot extends Component {
                           hoverinfo: 'skip',
                       } : {},
                       plotPageValues.dispCycleCI ? { // confint upper bound
-                          x: xAxis,
+                          x: plotPageValues.x,
                           y: plotPageValues.cycleCIUB,
                           fill: "tonexty",
                           fillcolor: "rgba(0,100,80,0.2)",

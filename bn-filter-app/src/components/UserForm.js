@@ -12,7 +12,8 @@ export class UserForm extends Component {
     state = {
         step: 1,
         unprocessedY: '',
-        y: [], // time series
+        x: [], // dates
+        y: [], // processed time series
         fixedDelta: 0.1,
         deltaSelect: 2,
         demean: 'sm',
@@ -91,25 +92,28 @@ export class UserForm extends Component {
         this.setState({[input]: e.target.value});
     }
 
+    handleCheckboxChange = input => e => {
+        this.setState({[input]: e.target.checked});
+    }
 
     setErrorMessage = (input, message) => {
-        this.setState({["errorMessage"]: {...this.state.errorMessage,
+        this.setState({
+            ["errorMessage"]: {
+                ...this.state.errorMessage,
                 [input]: message
-            }});
+            }
+        });
     }
 
     handleNumberFieldChange = input => e => {
         console.log(e.target.value)
         if (isNaN(e.target.value)) {
             this.setErrorMessage(input, "must be numeric");
-        }
-        else if (e.target.value < validation[input].min){
+        } else if (e.target.value < validation[input].min) {
             this.setErrorMessage(input, `too small. must be ≥ ${validation[input].min}`);
-        }
-        else if (e.target.value > validation[input].max) {
+        } else if (e.target.value > validation[input].max) {
             this.setErrorMessage(input, `too large. must be ≤ ${validation[input].max}`);
-        }
-        else{
+        } else {
             let state = {...this.state};
             delete state["errorMessage"][input];
             this.setState(state);
@@ -119,17 +123,9 @@ export class UserForm extends Component {
 
     handleIntegerNumberFieldChange = input => e => {
         if (e.target.value % 1 !== 0) {
-            this.setErrorMessage(input,"must be an integer");
+            this.setErrorMessage(input, "must be an integer");
         }
         this.handleNumberFieldChange(input)(e);
-    }
-
-    handleCheckboxChange = input => e => {
-        this.setState({[input]: e.target.checked});
-    }
-
-    getState = input => {
-        return this.state[input];
     }
 
     getResults = async () => {
@@ -184,6 +180,9 @@ export class UserForm extends Component {
                         deltaRes = Number(result["delta"]);
 
                     this.setState({
+                        x: this.state.periodicity !== "n" ? // dated axis or numbered axis
+                            DateS.createDate(this.state.periodicity, this.state.startDate).getDateArray(cycleRes.length).map(DateS.getTruncatedDate)
+                            : Array.from({length: cycleRes.length}, (_, i) => i + 1),
                         cycle: cycleRes,
                         cycleCI: ciRes,
                         deltaCalc: deltaRes,
@@ -203,6 +202,7 @@ export class UserForm extends Component {
     render() {
         const {step} = this.state;
         const {
+            x,
             y,
             unprocessedY,
             fixedDelta,
@@ -242,7 +242,7 @@ export class UserForm extends Component {
             dispCycleCI,
         };
 
-        const plotPageValues = {y, cycle, deltaCalc, dispCycleCI, cycleCILB, cycleCIUB, periodicity, startDate}
+        const plotPageValues = {x, y, cycle, deltaCalc, dispCycleCI, cycleCILB, cycleCIUB, periodicity, startDate}
 
 
         return (
@@ -251,20 +251,22 @@ export class UserForm extends Component {
                     switch (step) {
                         case 2:
                             return <UserData
-                                    nextStep={this.nextStep}
-                                    prevStep={this.prevStep}
-                                    handleChange={this.handleChange}
-                                    handleCheckboxChange={this.handleCheckboxChange}
-                                    getState={this.getState}
-                                    values={values}
-                                    />
+                                nextStep={this.nextStep}
+                                prevStep={this.prevStep}
+                                handleChange={this.handleChange}
+                                handleCheckboxChange={this.handleCheckboxChange}
+                                values={values}
+                            />
 
                         case 3:
                             return (
                                 <>
                                     {this.state.loading === null ?
-                                        <Error tagName={"During the running of the BN filter a problem occurred. Please check that the inputs are appropriate."}
-                                               close={() => {this.setState({loading: false})}}/>
+                                        <Error
+                                            tagName={"During the running of the BN filter a problem occurred. Please check that the inputs are appropriate."}
+                                            close={() => {
+                                                this.setState({loading: false})
+                                            }}/>
                                         : null}
 
                                     <FormFilterParameters
@@ -291,7 +293,6 @@ export class UserForm extends Component {
                                             return (
                                                 <RenderedPlot
                                                     prevStep={this.prevStep}
-                                                    handleChange={this.handleChange}
                                                     plotPageValues={plotPageValues}
                                                 />)
                                         } else {
@@ -303,9 +304,9 @@ export class UserForm extends Component {
                             )
                         default: // case 1
                             return <StartMenu
-                                    nextStep={this.nextStep}
-                                    handleChange={this.handleChange}
-                                    />
+                                nextStep={this.nextStep}
+                                handleChange={this.handleChange}
+                            />
                     }
                 })()}
             </>

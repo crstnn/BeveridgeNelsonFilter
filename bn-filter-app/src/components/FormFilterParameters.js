@@ -7,7 +7,6 @@ import {
     FormControlLabel,
     Grid,
     InputLabel,
-    MenuItem,
     Select,
     TextField,
     Typography
@@ -38,57 +37,57 @@ export class FormFilterParameters extends Component {
     preAnalysisTransformations = () => {
         const {values, handleChange, handleCheckboxChange} = this.props;
 
-        return(
+        return (
             <>
-            <div className="information">
-                <Divider light><FormControl variant="standard">
-                    <FormControlLabel
-                        label={<Typography
-                            style={{fontSize: 'x-large'}}>Pre-Analysis Transformations</Typography>}
-                        title="Transformations are applied in the order below and are done prior to the BN Filter run"
-                        control={<Checkbox
-                            onChange={handleCheckboxChange('transform')}
-                            checked={values.transform}/>}
-                    />
-                </FormControl></Divider>
-            </div>
-        <Grid container direction="column" justifyContent="space-evenly" spacing={4}
-              alignItems="center">
-            <Grid item xs={4}>
-                <FormControl variant="standard">
-                    <FormControlLabel label="Natural Logarithm"
-                                      title="Logarithm to the base of Euler's number"
-                                      control={<Checkbox
-                                          size="small"
-                                          onChange={handleCheckboxChange('takeLog')}
-                                          checked={values.takeLog}
-                                          disabled={!values.transform}/>}
-                    />
-                </FormControl>
-            </Grid>
-            <Grid item xs={3}>
-                <FormControl variant="standard" sx={{minWidth: 350}}>
-                    <InputLabel>Differencing Method</InputLabel>
-                    <Select
-                        title="Differencing method applied"
-                        onChange={handleChange('dCode')}
-                        defaultValue={values.dCode}
-                        disabled={!values.transform}
-                    >{createMenuItems(options.dCode)}</Select>
-                </FormControl>
-            </Grid>
-            <Grid item xs={4}>
-                <FormControl variant="standard" sx={{minWidth: 350}}>
-                    <InputLabel>Computed Percentages</InputLabel>
-                    <Select
-                        title="Percentage multiple applied"
-                        onChange={handleChange('pCode')}
-                        defaultValue={values.pCode}
-                        disabled={!values.transform}
-                    >{createMenuItems(options.pCode)}</Select>
-                </FormControl>
-            </Grid>
-        </Grid>
+                <div className="information">
+                    <Divider light><FormControl variant="standard">
+                        <FormControlLabel
+                            label={<Typography
+                                style={{fontSize: 'x-large'}}>Pre-Analysis Transformations</Typography>}
+                            title="Transformations are applied in the order below and are done prior to the BN Filter run"
+                            control={<Checkbox
+                                onChange={handleCheckboxChange('transform')}
+                                checked={values.transform}/>}
+                        />
+                    </FormControl></Divider>
+                </div>
+                <Grid container direction="column" justifyContent="space-evenly" spacing={4}
+                      alignItems="center">
+                    <Grid item xs={4}>
+                        <FormControl variant="standard">
+                            <FormControlLabel label="Natural Logarithm"
+                                              title="Logarithm to the base of Euler's number"
+                                              control={<Checkbox
+                                                  size="small"
+                                                  onChange={handleCheckboxChange('takeLog')}
+                                                  checked={values.takeLog}
+                                                  disabled={!values.transform}/>}
+                            />
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <FormControl variant="standard" sx={{minWidth: 350}}>
+                            <InputLabel>Differencing Method</InputLabel>
+                            <Select
+                                title="Differencing method applied"
+                                onChange={handleChange('dCode')}
+                                defaultValue={values.dCode}
+                                disabled={!values.transform}
+                            >{createMenuItems(options.dCode)}</Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={4}>
+                        <FormControl variant="standard" sx={{minWidth: 350}}>
+                            <InputLabel>Computed Percentages</InputLabel>
+                            <Select
+                                title="Percentage multiple applied"
+                                onChange={handleChange('pCode')}
+                                defaultValue={values.pCode}
+                                disabled={!values.transform}
+                            >{createMenuItems(options.pCode)}</Select>
+                        </FormControl>
+                    </Grid>
+                </Grid>
             </>)
     }
 

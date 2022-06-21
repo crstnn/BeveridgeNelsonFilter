@@ -3,11 +3,11 @@ class DateS extends Date {
     nextTimePeriod = () => { throw new Error("Child class must implement this method"); };
 
     getDateArray = len => {
-        let currDate = this
+        let currDate = this, retDate = this;
         return Array.from({length: len}).map((_, idx) => {
-            const retDate = idx === 0 ? currDate : currDate.nextTimePeriod();
-            currDate = currDate.nextTimePeriod()
-            return retDate
+            retDate = currDate;
+            currDate = currDate.nextTimePeriod();
+            return retDate;
         })
     };
 
@@ -21,7 +21,7 @@ class DateS extends Date {
         }
     };
 
-    static getTruncatedDate = (date) => date.toJSON().slice(0, 10);
+    static getTruncatedDate = (date) => `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
 }
 
 class WeeklyDate extends DateS {
