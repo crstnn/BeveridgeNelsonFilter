@@ -41,7 +41,7 @@ class MonthlyDate extends DateS{
 class QuarterlyDate extends DateS {
     nextTimePeriod = () => {
         const oldDate = new QuarterlyDate(this);
-        return new QuarterlyDate(oldDate.setMonth(this.getMonth() + 4));
+        return new QuarterlyDate(oldDate.setMonth(this.getMonth() + 3));
     };
 }
 
