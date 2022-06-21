@@ -5,7 +5,7 @@ import UserData from "./UserData";
 import RenderedPlot from "./RenderedPlot";
 import Loading from "./Loading";
 import Error from "./Error";
-import validationConfig from "./../config.json";
+import validationConfig from "../validationConfig.json";
 
 export class UserForm extends Component {
     state = {
@@ -129,7 +129,6 @@ export class UserForm extends Component {
     getState = input => {
         return this.state[input];
     }
-
 
 
     getResults = async () => {
