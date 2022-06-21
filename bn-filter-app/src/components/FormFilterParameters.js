@@ -19,13 +19,10 @@ export class FormFilterParameters extends Component {
 
     continue = e => {
         const {getResults, cancelLoad, errors} = this.props;
-        console.log(Object.keys(errors).length)
         if (Object.keys(errors).length === 0) {
-            console.log("Object.keys(errors).length === 0");
             getResults();
         } else {
-            console.log("nullish");
-            cancelLoad()
+            cancelLoad();
         }
         e.preventDefault();
         this.props.nextStep();
