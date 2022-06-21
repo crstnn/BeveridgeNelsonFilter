@@ -15,7 +15,7 @@
       {"value": "q", "text": "Quarterly"},
       {"value": "m", "text": "Monthly"},
       {"value": "w", "text": "Weekly"},
-      {"value": null, "text": "Undated/Unspecified"}
+      {"value": "n", "text": "Undated/Unspecified"}
     ],
     "iterativeDynamicDemeaning": [
       {"value": "sm", "text": "Constant (Static Demeaning)"},

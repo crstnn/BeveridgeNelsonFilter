@@ -26,10 +26,7 @@ export class RenderedPlot extends Component {
     getPlot() {
         const {plotPageValues} = this.props;
 
-        console.log(plotPageValues.periodicity)
-        console.log(DateS.createDate(plotPageValues.periodicity, plotPageValues.startDate).getDateArray(plotPageValues.y.length))
-
-        const xAxis = plotPageValues.periodicity !== null ?
+        const xAxis = plotPageValues.periodicity !== "n" ? // dated axis or numbered axis
             DateS.createDate(plotPageValues.periodicity, plotPageValues.startDate).getDateArray(plotPageValues.y.length)
             : Array.from({length: plotPageValues.cycle.length}, (_, i) => i + 1)
 

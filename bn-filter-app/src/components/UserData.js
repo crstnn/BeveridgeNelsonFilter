@@ -81,7 +81,7 @@ export class UserData extends Component {
                                 <CustomDatePicker startDate={values.startDate}
                                                   periodicity={values.periodicity}
                                                   updateDate={handleChange("startDate")}
-                                                  isDisabled={getState("periodicity") === 0}/>
+                                                  isDisabled={getState("periodicity") === "n"}/>
                             </Grid>
                             <Grid item xs={4}>
                                 <FormControl variant="standard" sx={{minWidth: 220}}>
