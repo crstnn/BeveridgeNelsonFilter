@@ -9,8 +9,7 @@ import {
     InputLabel,
     MenuItem,
     Select,
-    TextField,
-    Typography
+    TextField
 } from "@mui/material";
 import '../styles/App.css';
 import CustomDatePicker from "../pickers/CustomDatePicker";
@@ -58,10 +57,10 @@ export class UserData extends Component {
                             // Hacky newline fix that works for all browsers
                             // (newline or line break not functioning in Safari)
                             placeholder={"e.g." + (new Array(100).join(" ")) +
-                                        "101.2" + (new Array(100).join(" ")) +
-                                        "104.8" + (new Array(100).join(" ")) +
-                                        "102.4" + (new Array(100).join(" ")) +
-                                        "..."}
+                                "101.2" + (new Array(100).join(" ")) +
+                                "104.8" + (new Array(100).join(" ")) +
+                                "102.4" + (new Array(100).join(" ")) +
+                                "..."}
                             defaultValue={values.unprocessedY}
                         />
                     </FormControl>
@@ -73,7 +72,8 @@ export class UserData extends Component {
                         <Divider light
                                  title="This option does not make alterations to the data but changes the display of the graph output"
                                  style={{fontSize: 'large'}}>Display Options</Divider>
-                        <Grid container direction="column" sx={{minHeight: 250, paddingTop:4}} justifyContent="space-evenly"
+                        <Grid container direction="column" sx={{minHeight: 250, paddingTop: 4}}
+                              justifyContent="space-evenly"
                               alignItems="center">
                             <Grid item xs={4}>
                                 <CustomDatePicker isDisabled={getState("periodicity") === 0}/>
@@ -107,7 +107,6 @@ export class UserData extends Component {
                                 </FormControl>
                             </Grid>
                         </Grid>
-
 
 
                         <Grid container direction="column" sx={{minHeight: 340}} justifyContent="space-evenly"

@@ -3,8 +3,8 @@ import StartMenu from './StartMenu';
 import FormFilterParameters from "./FormFilterParameters";
 import UserData from "./UserData";
 import RenderedPlot from "./RenderedPlot";
-import {Circles} from "react-loader-spinner";
-import {Alert} from '@mui/material';
+import Loading from "./Loading";
+import ServerError from "./ServerError";
 
 export class UserForm extends Component {
     state = {
@@ -88,10 +88,6 @@ export class UserForm extends Component {
 
     getState = input => {
         return this.state[input];
-    }
-
-    setCycle = input => d => {
-        this.setState({[input]: d});
     }
 
     handleCheckboxChange = input => e => {
@@ -218,34 +214,24 @@ export class UserForm extends Component {
                 {(() => {
                     switch (step) {
                         case 2:
-                            return (
-                                <UserData
+                            return <UserData
                                     nextStep={this.nextStep}
                                     prevStep={this.prevStep}
                                     handleChange={this.handleChange}
                                     handleCheckboxChange={this.handleCheckboxChange}
                                     getState={this.getState}
                                     values={values}
-                                />
-                            )
+                                    />
+
                         case 3:
                             return (
                                 <>
-                                    {(() => {
-                                        if (this.state.loading === null) {
-                                            return (
-                                                <div style={{margin: "2px 20%"}}>
-                                                    <Alert variant="filled" severity="error"
-                                                           onClose={() => {
-                                                               this.setState({loading: false})
-                                                           }}>
-                                                        During the running of the BN filter a problem occurred.
-                                                        Please check that the inputs are appropriate.
-                                                    </Alert>
-                                                </div>
-                                            )
-                                        }
-                                    })()}
+                                    {this.state.loading === null ?
+                                        <ServerError close={() => {
+                                            this.setState({loading: false})
+                                        }}/>
+                                        : null}
+
                                     <FormFilterParameters
                                         nextStep={this.nextStep}
                                         prevStep={this.prevStep}
@@ -261,15 +247,7 @@ export class UserForm extends Component {
                                 <>
                                     {(() => {
                                         if (this.state.loading === true) {
-                                            return (
-                                                <div style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-around",
-                                                    paddingTop: "30vh"
-                                                }}>
-                                                    <Circles height={75} width={75} color='grey'/>
-                                                </div>
-                                            )
+                                            return Loading();
                                         } else if (this.state.loading === false) {
                                             return (
                                                 <RenderedPlot
@@ -284,15 +262,11 @@ export class UserForm extends Component {
                                     })()}
                                 </>
                             )
-                        default: // also case 1
-                            return (
-
-                                <StartMenu
+                        default: // case 1
+                            return <StartMenu
                                     nextStep={this.nextStep}
                                     handleChange={this.handleChange}
-                                />
-
-                            )
+                                    />
                     }
                 })()}
             </>
