@@ -170,9 +170,7 @@ export class UserForm extends Component {
             fetch(finalURL)
                 .then((response) => {
                     if (response.status !== 200) {
-                        this.setState({
-                            loading: null,
-                        })
+                        this.cancelLoad();
                         throw new Error("bad status");
                     } else {
                         return response;
