@@ -21,12 +21,12 @@
       {"value": "sm", "text": "Constant (Static Demeaning)"},
       {"value": "dm", "text": "Dynamic Demeaning"},
       {"value": "idm", "text": "Iterative Dynamic Demeaning"}
-      ],
+    ],
     "deltaSelect": [
       {"value": 0, "text": "Fixed Delta"},
       {"value": 1, "text": "Maximize Amplitude-to-Noise Ratio"},
       {"value": 2, "text": "Minimize Stochastic Trend Volatility"}
-      ],
+    ],
     "dCode": [
       {"value": "nd", "text": "No Differencing (Levels)"},
       {"value": "d1", "text": "1 Period Difference"},

@@ -1,6 +1,25 @@
 class DateS extends Date {
 
-    nextTimePeriod = () => { throw new Error("Child class must implement this method"); };
+    static createDate = (key, date) => {
+        switch (key) {
+            case "y":
+                return new YearlyDate(date)
+            case "q":
+                return new QuarterlyDate(date)
+            case "m":
+                return new MonthlyDate(date)
+            case "w":
+                return new WeeklyDate(date)
+            default:
+                throw new Error("Non-existent key");
+        }
+    };
+
+    static getTruncatedDate = (date) => `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+
+    nextTimePeriod = () => {
+        throw new Error("Child class must implement this method");
+    };
 
     getDateArray = len => {
         let currDate = this, retDate = this;
@@ -10,18 +29,6 @@ class DateS extends Date {
             return retDate;
         })
     };
-
-    static createDate = (key, date) => {
-        switch (key) {
-            case "y": return new YearlyDate(date)
-            case "q": return new QuarterlyDate(date)
-            case "m": return new MonthlyDate(date)
-            case "w": return new WeeklyDate(date)
-            default: throw new Error("Non-existent key");
-        }
-    };
-
-    static getTruncatedDate = (date) => `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
 }
 
 class WeeklyDate extends DateS {
@@ -31,7 +38,7 @@ class WeeklyDate extends DateS {
     };
 }
 
-class MonthlyDate extends DateS{
+class MonthlyDate extends DateS {
     nextTimePeriod = () => {
         const oldDate = new MonthlyDate(this);
         return new MonthlyDate(oldDate.setMonth(this.getMonth() + 1));

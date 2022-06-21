@@ -77,7 +77,7 @@ export class UserData extends Component {
                               justifyContent="space-evenly"
                               alignItems="center">
                             <Grid item xs={4}>
-                                <CustomDatePicker startDate={values.startDate}
+                                <CustomDatePicker date={values.startDate}
                                                   periodicity={values.periodicity}
                                                   updateDate={handleChange("startDate")}
                                                   isDisabled={values.periodicity === "n"}/>

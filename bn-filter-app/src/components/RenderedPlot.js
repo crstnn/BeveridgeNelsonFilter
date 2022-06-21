@@ -16,8 +16,8 @@ export class RenderedPlot extends Component {
         const {plotPageValues} = this.props;
 
         return UserForm.colsToRows(
-                ["date"].concat(plotPageValues.x),
-                ["cycle"].concat(plotPageValues.cycle),
+            ["date"].concat(plotPageValues.x),
+            ["cycle"].concat(plotPageValues.cycle),
             plotPageValues.dispCycleCI ? ["conf_int_lower_bound"].concat(plotPageValues.cycleCILB) : undefined,
             plotPageValues.dispCycleCI ? ["conf_int_upper_bound"].concat(plotPageValues.cycleCIUB) : undefined);
     }
