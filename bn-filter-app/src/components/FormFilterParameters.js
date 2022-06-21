@@ -112,7 +112,7 @@ export class FormFilterParameters extends Component {
                     display: "inline-block",
                     paddingBottom: "50px"
                 }}>
-                    <Grid container alignItems="center" justifyContent="space-evenly" spacing={4}>
+                    <Grid container alignItems="flex-start" justifyContent="space-evenly" spacing={4}>
                         <Grid item xs={8}>
                             <FormControl variant="standard" sx={{minWidth: 300}}>
                                 <InputLabel>Signal-to-Noise Ratio (Delta)</InputLabel>
