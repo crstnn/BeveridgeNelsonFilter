@@ -5,6 +5,7 @@ import UserData from "./UserData";
 import RenderedPlot from "./RenderedPlot";
 import Loading from "./Loading";
 import ServerError from "./ServerError";
+import validationConfig from "./../config.json";
 
 export class UserForm extends Component {
     state = {
@@ -16,12 +17,10 @@ export class UserForm extends Component {
         demean: 'sm',
         iterativeBackcasting: true,
         isAutomaticWindow: false,
-        window: 40,
-        // periodicity
-        periodicity: 'q',
+        rollingWindow: 40,
+        periodicity: 'q', // periodicity
         dateObj: Object(),
-        // transforms to data before bnf
-        transform: false,
+        transform: false, // transforms to data before bnf
         dCode: 'nd',
         pCode: 'np',
         takeLog: false,
@@ -33,6 +32,7 @@ export class UserForm extends Component {
         cycleCILB: [],
         cycleCIUB: [],
         loading: true,
+        errorMessage: {},
     }
 
     loading = true;
@@ -82,17 +82,55 @@ export class UserForm extends Component {
         });
     }
 
+    cancelLoad = () => {
+        this.setState({loading: null});
+    }
+
     handleChange = input => e => {
         this.setState({[input]: e.target.value});
+    }
+
+    setErrorMessage = (input, message) => {
+        this.setState({["errorMessage"]: {...this.state.errorMessage,
+                [input]: message
+            }});
+    }
+
+    handleNumberFieldChange = input => e => {
+        console.log(e.target.value)
+        if (isNaN(e.target.value)) {
+            this.setErrorMessage(input, "must be numeric");
+        }
+        else if (e.target.value < validationConfig[input].min){
+            this.setErrorMessage(input, `too small. must be ≥ ${validationConfig[input].min}`);
+        }
+        else if (e.target.value > validationConfig[input].max) {
+            this.setErrorMessage(input, `too large. must be ≤ ${validationConfig[input].max}`);
+        }
+        else{
+            let state = {...this.state};
+            delete state["errorMessage"][input];
+            this.setState(state);
+        }
+        this.handleChange(input)(e);
+    }
+
+    handleIntegerNumberFieldChange = input => e => {
+        if (e.target.value % 1 !== 0) {
+            this.setErrorMessage(input,"must be an integer");
+        }
+        this.handleNumberFieldChange(input)(e);
+    }
+
+    handleCheckboxChange = input => e => {
+        this.setState({[input]: e.target.checked});
     }
 
     getState = input => {
         return this.state[input];
     }
 
-    handleCheckboxChange = input => e => {
-        this.setState({[input]: e.target.checked});
-    }
+
 
     getResults = async () => {
 
@@ -107,7 +145,7 @@ export class UserForm extends Component {
             paramName + currPair[0].toString() + '=' + currPair[1].toString() + '&'
 
         const paramStr =
-            [['window', this.state.window],
+            [['window', this.state.rollingWindow],
                 ['delta_select', this.state.deltaSelect],
                 ['fixed_delta', this.state.fixedDelta],
                 ['ib', this.state.iterativeBackcasting],
@@ -176,7 +214,7 @@ export class UserForm extends Component {
             demean,
             iterativeBackcasting,
             isAutomaticWindow,
-            window,
+            rollingWindow,
             periodicity,
             dateObj,
             transform,
@@ -188,6 +226,7 @@ export class UserForm extends Component {
             dispCycleCI,
             cycleCILB,
             cycleCIUB,
+            errorMessage,
         } = this.state;
         const values = {
             y,
@@ -198,7 +237,7 @@ export class UserForm extends Component {
             demean,
             iterativeBackcasting,
             isAutomaticWindow,
-            window,
+            rollingWindow,
             transform,
             dCode,
             pCode,
@@ -235,10 +274,14 @@ export class UserForm extends Component {
                                     <FormFilterParameters
                                         nextStep={this.nextStep}
                                         prevStep={this.prevStep}
+                                        cancelLoad={this.cancelLoad}
                                         handleChange={this.handleChange}
+                                        handleNumberFieldChange={this.handleNumberFieldChange}
+                                        handleIntegerNumberFieldChange={this.handleIntegerNumberFieldChange}
                                         handleCheckboxChange={this.handleCheckboxChange}
                                         getResults={this.getResults}
                                         values={values}
+                                        errors={errorMessage}
                                     />
                                 </>
                             )

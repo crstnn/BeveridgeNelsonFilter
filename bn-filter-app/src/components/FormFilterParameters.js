@@ -18,9 +18,16 @@ import '../styles/App.css';
 export class FormFilterParameters extends Component {
 
     continue = e => {
-        const {getResults} = this.props;
+        const {getResults, cancelLoad, errors} = this.props;
+        console.log(Object.keys(errors).length)
+        if (Object.keys(errors).length === 0) {
+            console.log("Object.keys(errors).length === 0");
+            getResults();
+        } else {
+            console.log("nullish");
+            cancelLoad()
+        }
         e.preventDefault();
-        getResults();
         this.props.nextStep();
 
     }
@@ -32,7 +39,11 @@ export class FormFilterParameters extends Component {
 
 
     render() {
-        const {values, handleChange, handleCheckboxChange} = this.props;
+        const {values, handleChange, handleNumberFieldChange, handleIntegerNumberFieldChange, handleCheckboxChange, errors} = this.props;
+
+        const
+            isRollingWindowDisabled = values.isAutomaticWindow || values.demean === "sm",
+            isFixedDeltaDisabled = values.deltaSelect !== 0;
 
         return (
             <div>
@@ -125,9 +136,12 @@ export class FormFilterParameters extends Component {
                                 <TextField
                                     label="Fixed Delta"
                                     title="Only necessary when Signal-to-noise ratio is set to 'Fixed Delta'"
-                                    onChange={handleChange('fixedDelta')}
+                                    onChange={handleNumberFieldChange('fixedDelta')}
                                     defaultValue={values.fixedDelta}
-                                    disabled={values.deltaSelect !== 0}
+                                    disabled={isFixedDeltaDisabled}
+                                    error={errors['fixedDelta'] !== undefined && !isFixedDeltaDisabled}
+                                    helperText={errors['fixedDelta'] !== undefined && !isFixedDeltaDisabled ?
+                                        errors['fixedDelta'] : ""}
                                 />
                             </FormControl>
                         </Grid>
@@ -149,11 +163,13 @@ export class FormFilterParameters extends Component {
                             <FormControl variant="standard" sx={{minWidth: 100}}>
                                 <TextField
                                     label="Rolling Window"
-                                    type="number"
                                     title="Only necessary when the demeaning method is dynamic. Must be an integer"
-                                    onChange={handleChange('window')}
-                                    defaultValue={values.window}
-                                    disabled={values.isAutomaticWindow || values.demean === "sm"}
+                                    onChange={handleIntegerNumberFieldChange('rollingWindow')}
+                                    defaultValue={values.rollingWindow}
+                                    disabled={isRollingWindowDisabled}
+                                    error={errors['rollingWindow'] !== undefined && !isRollingWindowDisabled}
+                                    helperText={errors['rollingWindow'] !== undefined && !isRollingWindowDisabled ?
+                                                errors['rollingWindow'] : ""}
                                 />
                             </FormControl>
                         </Grid>
