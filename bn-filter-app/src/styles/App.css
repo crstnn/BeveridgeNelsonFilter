@@ -38,3 +38,8 @@
     transition: all 1000ms;
 }
 
+.reactgrid-wrapper {
+    height: 100px;
+    overflow: scroll;
+}
+
