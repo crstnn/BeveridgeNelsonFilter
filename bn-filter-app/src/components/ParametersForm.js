@@ -15,7 +15,7 @@ import '../styles/App.css';
 import {options} from "../config.json";
 import createMenuItems from "../utils/CreateMenuItem";
 
-export class FormFilterParameters extends Component {
+export class ParametersForm extends Component {
 
     continue = e => {
         const {getResults, cancelLoad, errors} = this.props;
@@ -43,10 +43,11 @@ export class FormFilterParameters extends Component {
                     <Divider light><FormControl variant="standard">
                         <FormControlLabel
                             label={<Typography
-                                style={{fontSize: 'x-large'}}>Pre-Analysis Transformations</Typography>}
-                            title="Transformations are applied in the order below and are done prior to the BN Filter run"
+                                style={{fontSize: 'large'}}>Transformations</Typography>}
+                            title="Transformations are applied in the order below and are done prior to estimation"
                             control={<Checkbox
                                 onChange={handleCheckboxChange('transform')}
+                                style={{transform: "scale(1.25)"}}
                                 checked={values.transform}/>}
                         />
                     </FormControl></Divider>
@@ -102,7 +103,7 @@ export class FormFilterParameters extends Component {
         return (
             <>
                 <div className="information">
-                    <Divider style={{fontSize: 'x-large'}}>BN Filter Parameters</Divider>
+                    <Divider style={{fontSize: 'large'}}>Filter Parameters</Divider>
                 </div>
                 <div style={{
                     width: "450px",
@@ -207,4 +208,4 @@ const styles = {
     }
 }
 
-export default FormFilterParameters
+export default ParametersForm

@@ -15,7 +15,7 @@ import CustomDatePicker from "../pickers/CustomDatePicker";
 import createMenuItems from "../utils/CreateMenuItem";
 import {options} from "../config.json";
 
-export class UserData extends Component {
+export class DataForm extends Component {
 
 
     continue = e => {
@@ -37,7 +37,7 @@ export class UserData extends Component {
             <>
 
                 <div className="information">
-                    <Divider style={{fontSize: 'x-large'}}>Data and Transformations</Divider>
+                    <Divider style={{fontSize: 'x-large'}}>Data</Divider>
                     <p>Enter or paste in your chosen time series below.
                         <br/>
                         Each line must contain a numerical value. The next observation must start on the next line (and
@@ -143,4 +143,4 @@ const styles = {
 }
 
 
-export default UserData
+export default DataForm

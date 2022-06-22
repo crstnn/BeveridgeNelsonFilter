@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
 import StartMenu from './StartMenu';
-import FormFilterParameters from "./FormFilterParameters";
-import UserData from "./UserData";
+import ParametersForm from "./ParametersForm";
+import DataForm from "./DataForm";
 import RenderedPlot from "./RenderedPlot";
 import Loading from "./Loading";
 import Error from "./Error";
 import {validation} from "../config.json";
 import {DateS} from "../utils/Date";
 
-export class UserForm extends Component {
+export class BasePage extends Component {
     state = {
         step: 1,
         unprocessedY: '',
@@ -186,8 +186,8 @@ export class UserForm extends Component {
                         cycle: cycleRes,
                         cycleCI: ciRes,
                         deltaCalc: deltaRes,
-                        cycleCILB: UserForm.confIntZip(cycleRes, ciRes, "lb"),
-                        cycleCIUB: UserForm.confIntZip(cycleRes, ciRes, "ub"),
+                        cycleCILB: BasePage.confIntZip(cycleRes, ciRes, "lb"),
+                        cycleCIUB: BasePage.confIntZip(cycleRes, ciRes, "ub"),
                         loading: false,
                     })
 
@@ -250,7 +250,7 @@ export class UserForm extends Component {
                 {(() => {
                     switch (step) {
                         case 2:
-                            return <UserData
+                            return <DataForm
                                 nextStep={this.nextStep}
                                 prevStep={this.prevStep}
                                 handleChange={this.handleChange}
@@ -269,7 +269,7 @@ export class UserForm extends Component {
                                             }}/>
                                         : null}
 
-                                    <FormFilterParameters
+                                    <ParametersForm
                                         nextStep={this.nextStep}
                                         prevStep={this.prevStep}
                                         cancelLoad={this.cancelLoad}
@@ -315,4 +315,4 @@ export class UserForm extends Component {
     }
 }
 
-export default UserForm
+export default BasePage

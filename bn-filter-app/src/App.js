@@ -1,5 +1,5 @@
 import './styles/App.css';
-import UserForm from './components/UserForm';
+import BasePage from './components/BasePage';
 import React from "react";
 
 
@@ -20,7 +20,7 @@ function App() {
                 </p>
 
             </div>
-            <UserForm/>
+            <BasePage/>
         </div>
     );
 }

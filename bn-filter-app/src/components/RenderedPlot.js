@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import Plot from 'react-plotly.js';
 import {Button} from "@mui/material";
 import {CSVLink} from "react-csv";
-import UserForm from "./UserForm";
+import BasePage from "./BasePage";
 
 export class RenderedPlot extends Component {
 
@@ -15,7 +15,7 @@ export class RenderedPlot extends Component {
     getCSVData() {
         const {plotPageValues} = this.props;
 
-        return UserForm.colsToRows(
+        return BasePage.colsToRows(
             ["date"].concat(plotPageValues.x),
             ["cycle"].concat(plotPageValues.cycle),
             plotPageValues.dispCycleCI ? ["conf_int_lower_bound"].concat(plotPageValues.cycleCILB) : undefined,
