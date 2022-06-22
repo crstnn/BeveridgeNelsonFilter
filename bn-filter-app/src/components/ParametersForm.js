@@ -44,7 +44,7 @@ export class ParametersForm extends Component {
                         <FormControlLabel
                             label={<Typography
                                 style={{fontSize: 'x-large'}}>Transformations</Typography>}
-                            title="Transformations are applied in the order below and are done prior to estimation. Uncheck this box to apply them."
+                            title="Transformations are applied in the order below and are done prior to estimation. Check this box to apply them."
                             control={<Checkbox
                                 onChange={handleCheckboxChange('transform')}
                                 // style={{transform: "scale(1.25)"}}
