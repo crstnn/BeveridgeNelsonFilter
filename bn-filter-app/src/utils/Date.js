@@ -23,7 +23,7 @@ class DateS extends Date {
 
     getDateArray = len => {
         let currDate = this, retDate = this;
-        return Array.from({length: len}).map((_, idx) => {
+        return Array.from({length: len}).map(() => {
             retDate = currDate;
             currDate = currDate.nextTimePeriod();
             return retDate;

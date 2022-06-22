@@ -43,11 +43,11 @@ export class ParametersForm extends Component {
                     <Divider light><FormControl variant="standard">
                         <FormControlLabel
                             label={<Typography
-                                style={{fontSize: 'large'}}>Transformations</Typography>}
-                            title="Transformations are applied in the order below and are done prior to estimation"
+                                style={{fontSize: 'x-large'}}>Transformations</Typography>}
+                            title="Transformations are applied in the order below and are done prior to estimation. Uncheck this box to apply them."
                             control={<Checkbox
                                 onChange={handleCheckboxChange('transform')}
-                                style={{transform: "scale(1.25)"}}
+                                // style={{transform: "scale(1.25)"}}
                                 checked={values.transform}/>}
                         />
                     </FormControl></Divider>
@@ -81,7 +81,7 @@ export class ParametersForm extends Component {
                         <FormControl variant="standard" sx={{minWidth: 350}}>
                             <InputLabel>Computed Percentages</InputLabel>
                             <Select
-                                title="Percentage multiple applied"
+                                title="Multiple applied"
                                 onChange={handleChange('pCode')}
                                 defaultValue={values.pCode}
                                 disabled={!values.transform}
@@ -103,7 +103,7 @@ export class ParametersForm extends Component {
         return (
             <>
                 <div className="information">
-                    <Divider style={{fontSize: 'large'}}>Filter Parameters</Divider>
+                    <Divider style={{fontSize: 'x-large'}}>Filter Parameters</Divider>
                 </div>
                 <div style={{
                     width: "450px",
@@ -151,7 +151,7 @@ export class ParametersForm extends Component {
                             <FormControl variant="standard" sx={{minWidth: 100}}>
                                 <TextField
                                     label="Rolling Window"
-                                    title="Only necessary when the demeaning method is dynamic. Must be an integer"
+                                    title="Only necessary when the demeaning method is dynamic. Must be an integer."
                                     onChange={handleIntegerNumberFieldChange('rollingWindow')}
                                     defaultValue={values.rollingWindow}
                                     disabled={isRollingWindowDisabled}
