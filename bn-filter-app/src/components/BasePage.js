@@ -105,15 +105,16 @@ export class BasePage extends Component {
         });
     }
 
+
     handleNumberFieldChange = input => e => {
-        console.log(e.target.value)
-        if (isNaN(e.target.value)) {
-            this.setErrorMessage(input, "must be numeric");
-        } else if (e.target.value < validation[input].min) {
-            this.setErrorMessage(input, `too small. must be ≥ ${validation[input].min}`);
-        } else if (e.target.value > validation[input].max) {
-            this.setErrorMessage(input, `too large. must be ≤ ${validation[input].max}`);
-        } else {
+         const v = e.target.value
+         if (v === "") this.setErrorMessage(input, "must not be empty");
+         else if (isNaN(v)) this.setErrorMessage(input, "must be numeric");
+         else if (v < validation[input].min)
+             this.setErrorMessage(input, `too small. must be ≥ ${validation[input].min}`);
+         else if (v > validation[input].max)
+             this.setErrorMessage(input, `too large. must be ≤ ${validation[input].max}`);
+         else {
             let state = {...this.state};
             delete state["errorMessage"][input];
             this.setState(state);
@@ -122,9 +123,10 @@ export class BasePage extends Component {
     }
 
     handleIntegerNumberFieldChange = input => e => {
-        if (e.target.value % 1 !== 0) {
-            this.setErrorMessage(input, "must be an integer");
-        }
+        const v = e.target.value
+        if (v === "") this.setErrorMessage(input, "must not be empty");
+        else if (v % 1 !== 0) this.setErrorMessage(input, "must be an integer");
+
         this.handleNumberFieldChange(input)(e);
     }
 
