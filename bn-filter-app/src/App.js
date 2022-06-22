@@ -49,6 +49,7 @@ const styles = {
         textAlign: "center",
         padding: "10px",
         position: "fixed",
+        overflowX: "hidden",
         left: "0",
         bottom: "0",
         width: "100%",
