@@ -124,7 +124,7 @@ export class ParametersForm extends Component {
                             </FormControl>
                         </Grid>
                         <Grid item xs={4}>
-                            <FormControl variant="standard" sx={{minWidth: 180}}>
+                            <FormControl variant="standard" sx={{minWidth: 170}}>
                                 <TextField
                                     label="Fixed Delta"
                                     title="Only necessary when Signal-to-noise ratio is set to 'Fixed Delta'"
@@ -148,7 +148,7 @@ export class ParametersForm extends Component {
                             </FormControl>
                         </Grid>
                         <Grid item xs={4}>
-                            <FormControl variant="standard" sx={{minWidth: 180}}>
+                            <FormControl variant="standard" sx={{minWidth: 170}}>
                                 <TextField
                                     label="Rolling Window"
                                     title="Only necessary when the demeaning method is dynamic. Must be an integer."

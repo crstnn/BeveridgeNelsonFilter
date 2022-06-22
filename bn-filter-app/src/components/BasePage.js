@@ -140,11 +140,11 @@ export class BasePage extends Component {
 
     isExceedsMinMax = (v, input) => {
         if (v < validation[input].min) {
-            this.setErrorMessage(input, `too small. must be ≥ ${validation[input].min}`);
+            this.setErrorMessage(input, `must be ≥ ${validation[input].min}`);
             return true;
         }
         if (v > validation[input].max) {
-            this.setErrorMessage(input, `too large. must be ≤ ${validation[input].max}`);
+            this.setErrorMessage(input, `must be ≤ ${validation[input].max}`);
             return true;
         }
         return false;

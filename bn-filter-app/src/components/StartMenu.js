@@ -28,7 +28,6 @@ export class StartMenu extends Component {
                 >Continue</Button>
                 <br/>
 
-
             </div>
         )
     }
