@@ -1,7 +1,13 @@
+html, body, #app, #app>div {
+    overflow-x: hidden;
+    min-height: 100%;
+}
+
 .App {
     text-align: center;
     min-width: 600px;
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+
 }
 
 .appHeader {

@@ -6,6 +6,7 @@ import React from "react";
 function App() {
 
     return (
+        <>
         <div className="App">
             <header className="appHeader">
                 BN Filter Trend-Cycle Decomposition
@@ -22,22 +23,21 @@ function App() {
 
             </div>
             <BasePage/>
-            <div>
-                <div style={styles.footer}>
-                    <a href="https://sites.google.com/site/guneskamber" rel="noopener noreferrer" target="_blank">
-                        Gunes Kamber</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="https://sites.google.com/site/jamescmorley" rel="noopener noreferrer" target="_blank">
-                        James Morley</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="https://sites.google.com/site/benjaminwongshijie" rel="noopener noreferrer"
-                       target="_blank">
-                        Benjamin Wong</a>
-                    <br/>
-                    <div style={styles.feature}>
-                        <a href="https://github.com/crstnn" rel="noopener noreferrer" target="_blank">@cristian</a>
-                    </div>
-                </div>
+        </div>
+        <div style={styles.footer}>
+            <a href="https://sites.google.com/site/guneskamber" rel="noopener noreferrer" target="_blank">
+                Gunes Kamber</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="https://sites.google.com/site/jamescmorley" rel="noopener noreferrer" target="_blank">
+                James Morley</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="https://sites.google.com/site/benjaminwongshijie" rel="noopener noreferrer"
+               target="_blank">
+                Benjamin Wong</a>
+            <br/>
+            <div style={styles.feature}>
+                <a href="https://github.com/crstnn" rel="noopener noreferrer" target="_blank">@cristian</a>
             </div>
         </div>
+        </>
     );
 }
 
@@ -51,7 +51,6 @@ const styles = {
         position: "fixed",
         left: "0",
         bottom: "0",
-        height: "30px",
         width: "100%",
     },
     feature: {
