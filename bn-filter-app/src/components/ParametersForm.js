@@ -111,7 +111,7 @@ export class ParametersForm extends Component {
                     display: "inline-block",
                     paddingBottom: "50px"
                 }}>
-                    <Grid container alignItems="flex-start" justifyContent="space-evenly" spacing={4}>
+                    <Grid container alignItems="flex-start" justifyContent="space-evenly" spacing={2}>
                         <Grid item xs={8}>
                             <FormControl variant="standard" sx={{minWidth: 300}}>
                                 <InputLabel>Signal-to-Noise Ratio (Delta)</InputLabel>
@@ -124,7 +124,7 @@ export class ParametersForm extends Component {
                             </FormControl>
                         </Grid>
                         <Grid item xs={4}>
-                            <FormControl variant="standard" sx={{minWidth: 50}}>
+                            <FormControl variant="standard" sx={{minWidth: 180}}>
                                 <TextField
                                     label="Fixed Delta"
                                     title="Only necessary when Signal-to-noise ratio is set to 'Fixed Delta'"
@@ -133,12 +133,12 @@ export class ParametersForm extends Component {
                                     disabled={isFixedDeltaDisabled}
                                     error={errors['fixedDelta'] !== undefined && !isFixedDeltaDisabled}
                                     helperText={errors['fixedDelta'] !== undefined && !isFixedDeltaDisabled ?
-                                        errors['fixedDelta'] : ""}
+                                        errors['fixedDelta'] : "​"}
                                 />
                             </FormControl>
                         </Grid>
-                        <Grid item xs={7}>
-                            <FormControl variant="standard" sx={{minWidth: 250}}>
+                        <Grid item xs={8}>
+                            <FormControl variant="standard" sx={{minWidth: 290}}>
                                 <InputLabel>Demeaning</InputLabel>
                                 <Select
                                     label="Iterative Dynamic Demeaning"
@@ -147,8 +147,8 @@ export class ParametersForm extends Component {
                                 >{createMenuItems(options.iterativeDynamicDemeaning)}</Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={5}>
-                            <FormControl variant="standard" sx={{minWidth: 100}}>
+                        <Grid item xs={4}>
+                            <FormControl variant="standard" sx={{minWidth: 180}}>
                                 <TextField
                                     label="Rolling Window"
                                     title="Only necessary when the demeaning method is dynamic. Must be an integer."
@@ -157,7 +157,7 @@ export class ParametersForm extends Component {
                                     disabled={isRollingWindowDisabled}
                                     error={errors['rollingWindow'] !== undefined && !isRollingWindowDisabled}
                                     helperText={errors['rollingWindow'] !== undefined && !isRollingWindowDisabled ?
-                                        errors['rollingWindow'] : ""}
+                                        errors['rollingWindow'] : "​"}
                                 />
                             </FormControl>
                         </Grid>
