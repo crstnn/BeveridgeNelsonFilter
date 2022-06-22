@@ -40,8 +40,8 @@ export class DataForm extends Component {
                     <Divider style={{fontSize: 'x-large'}}>Data</Divider>
                     <p>Enter or paste in your chosen time series below.
                         <br/>
-                        Each line must contain a numerical value. The next observation must start on the next line (and
-                        so on). For example, pasting a time series from a CSV will achieve the appropriate formatting.
+                        Each line must contain a numerical value. Each observation must start on the next line.
+                        Pasting a time series from a CSV will achieve the appropriate formatting.
                     </p>
                 </div>
                 <div>
