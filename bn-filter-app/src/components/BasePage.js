@@ -97,6 +97,7 @@ export class BasePage extends Component {
     }
 
     setErrorMessage = (input, message) => {
+        console.log("settingErrorMessage")
         this.setState({
             ["errorMessage"]: {
                 ...this.state.errorMessage,
@@ -105,29 +106,66 @@ export class BasePage extends Component {
         });
     }
 
+    deleteErrorMessage = input => {
+        console.log("deletingErrorMessage")
+        let state = {...this.state};
+        delete state["errorMessage"][input];
+        this.setState(state);
+    }
 
-    handleNumberFieldChange = input => e => {
-         const v = e.target.value
-         if (v === "") this.setErrorMessage(input, "must not be empty");
-         else if (isNaN(v)) this.setErrorMessage(input, "must be numeric");
-         else if (v < validation[input].min)
-             this.setErrorMessage(input, `too small. must be ≥ ${validation[input].min}`);
-         else if (v > validation[input].max)
-             this.setErrorMessage(input, `too large. must be ≤ ${validation[input].max}`);
-         else {
-            let state = {...this.state};
-            delete state["errorMessage"][input];
-            this.setState(state);
+    isEmptyString = (v, input) => {
+        if (v === "") {
+            this.setErrorMessage(input, "must not be empty");
+            return true;
         }
+        return false;
+    }
+
+    isNotANum = (v, input) => {
+        if (isNaN(v)) {
+            this.setErrorMessage(input, "must be numeric");
+            return true;
+        }
+        return false;
+    }
+
+    isNotAnInt = (v, input) => {
+        if ((v % 1) != 0) {
+            this.setErrorMessage(input, "must be an integer");
+            return true;
+        }
+        return false;
+    }
+
+
+    isExceedsMinMax = (v, input) => {
+        if (v < validation[input].min) {
+            this.setErrorMessage(input, `too small. must be ≥ ${validation[input].min}`);
+            return true;
+        }
+        if (v > validation[input].max) {
+            this.setErrorMessage(input, `too large. must be ≤ ${validation[input].max}`);
+            return true;
+        }
+        return false;
+    }
+
+    validateField = (arr, input, e) => {
+        // functions later in the array take precedence
+        // input must pass all function without causing errors
+        const v = e.target.value
+        const isIncorrectEntry = arr.reduce((total, currentValue) => currentValue(v, input) || total, false)
+        console.log(isIncorrectEntry)
+        if (!isIncorrectEntry) this.deleteErrorMessage(input);
         this.handleChange(input)(e);
     }
 
-    handleIntegerNumberFieldChange = input => e => {
-        const v = e.target.value
-        if (v === "") this.setErrorMessage(input, "must not be empty");
-        else if (v % 1 !== 0) this.setErrorMessage(input, "must be an integer");
+    handleNumberFieldChange = input => e => {
+        this.validateField([this.isExceedsMinMax, this.isNotANum, this.isEmptyString], input, e);
+    }
 
-        this.handleNumberFieldChange(input)(e);
+    handleIntegerNumberFieldChange = input => e => {
+        this.validateField([this.isExceedsMinMax, this.isNotANum, this.isNotAnInt, this.isEmptyString], input, e);
     }
 
     getResults = async () => {
