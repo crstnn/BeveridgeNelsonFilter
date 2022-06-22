@@ -35,7 +35,7 @@ export class StartMenu extends Component {
 
 const styles = {
     button: {
-        margin: 20
+        margin: "30px 0 100px",
     }
 }
 

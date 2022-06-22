@@ -106,7 +106,6 @@ export class DataForm extends Component {
                             </Grid>
                         </Grid>
 
-
                         <Grid container direction="column" sx={{minHeight: 340}} justifyContent="space-evenly"
                               alignItems="center">
 
@@ -136,8 +135,7 @@ export class DataForm extends Component {
 
 const styles = {
     button: {
-        margin: 30
-
+        margin: "0 30px 100px",
     },
     headingFormControlLabel: {fontSize: 'large'}
 }

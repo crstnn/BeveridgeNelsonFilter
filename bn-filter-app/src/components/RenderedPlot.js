@@ -92,7 +92,7 @@ export class RenderedPlot extends Component {
 
 const styles = {
     button: {
-        margin: 40
+        margin: "20px 30px 100px",
     }
 }
 

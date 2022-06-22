@@ -48,6 +48,7 @@ const styles = {
         borderTop: "1px solid #E7E7E7",
         textAlign: "center",
         padding: "10px",
+        marginTop: "10px",
         position: "fixed",
         overflowX: "hidden",
         left: "0",

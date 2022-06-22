@@ -204,7 +204,7 @@ export class ParametersForm extends Component {
 
 const styles = {
     button: {
-        margin: 20
+        margin: "0 30px 100px",
     }
 }
 
