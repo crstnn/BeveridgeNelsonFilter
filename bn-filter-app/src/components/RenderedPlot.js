@@ -76,9 +76,8 @@ export class RenderedPlot extends Component {
                         {this.getPlot()}
                         <p> Delta: {plotPageValues.deltaCalc} </p>
                     </div>
-                    <CSVLink
-                        filename={"BNF_cycle.csv"}
-                        data={this.getCSVData()}>Download as CSV</CSVLink>
+                    <CSVLink style= {{textDecoration: "underline"}}
+                             filename={"BNF_cycle.csv"} data={this.getCSVData()}>Download as CSV</CSVLink>
                 </div>
                 <Button
                     variant="outlined"

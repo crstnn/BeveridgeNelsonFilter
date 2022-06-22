@@ -27,6 +27,14 @@
     margin-bottom: 3vh;
 }
 
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
 .fade-appear, .fade-enter {
     opacity: 0;
     transform: scale(0.2);

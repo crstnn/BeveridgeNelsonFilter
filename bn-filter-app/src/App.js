@@ -16,13 +16,49 @@ function App() {
                     It is implemented using the Beveridge-Nelson filter method described in <a target="_blank"
                                                                                                rel="noopener noreferrer"
                                                                                                href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3434174">
-                        Kamber, Morley, and Wong</a>. Please note that this website is still in development so some features are yet to be implemented/completed.
+                        Kamber, Morley, and Wong</a>. Please note that this website is still in development so some
+                    features are yet to be implemented/completed.
                 </p>
 
             </div>
             <BasePage/>
+            <div>
+                <div style={styles.footer}>
+                    <a href="https://sites.google.com/site/guneskamber" rel="noopener noreferrer" target="_blank">
+                        Gunes Kamber</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="https://sites.google.com/site/jamescmorley" rel="noopener noreferrer" target="_blank">
+                        James Morley</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="https://sites.google.com/site/benjaminwongshijie" rel="noopener noreferrer"
+                       target="_blank">
+                        Benjamin Wong</a>
+                    <br/>
+                    <div style={styles.feature}>
+                        <a href="https://github.com/crstnn" rel="noopener noreferrer" target="_blank">@cristian</a>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
+
+const styles = {
+    footer: {
+        fontSize: "small",
+        backgroundColor: "#F7F7F7",
+        borderTop: "1px solid #E7E7E7",
+        textAlign: "center",
+        padding: "10px",
+        position: "fixed",
+        left: "0",
+        bottom: "0",
+        height: "30px",
+        width: "100%",
+    },
+    feature: {
+        marginTop: "5px",
+        fontSize: "x-small",
+    }
+};
+
 
 export default App;
