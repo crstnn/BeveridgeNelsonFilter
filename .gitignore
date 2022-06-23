@@ -4,4 +4,4 @@
 *.Rproj
 *.Rhistory
 *.RData
-/server/BN_filter_R_v2/us_cycle_R_bnf.csv
+**/us_cycle_R_bnf.csv

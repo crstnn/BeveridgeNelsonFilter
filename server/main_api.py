@@ -23,6 +23,15 @@ def get_r_inst():
     return R
 
 
+def get_fred_params():
+    fred_abbr = request.args.get("fred_abbr")
+    freq = request.args.get("freq")
+    obs_start = request.args.get("obs_start")
+    obs_end = request.args.get("obs_end")
+
+    return fred_abbr, freq, obs_start, obs_end
+
+
 def get_bnf_params():
     # empty string for 'window' occurs when set to 'static demeaning' so we set it to an arbitrary 40
     window = 40 if request.args.get("window") else int(request.args.get("window"))
@@ -53,12 +62,7 @@ def fred_time_series():
 
 @app.route('/bnf/fred-time-series', methods=['GET'])
 def bnf_fred_time_series():
-    fred_abbr = request.args.get("fred_abbr")
-    freq = request.args.get("freq")
-    obs_start = request.args.get("obs_start")
-    obs_end = request.args.get("obs_end")
-
-    fred_series = FREDTimeSeries(fred_abbr, freq, obs_start)
+    fred_series = FREDTimeSeries(*get_fred_params())
     handle_series_transformation_params(fred_series)
 
     R = get_r_inst()

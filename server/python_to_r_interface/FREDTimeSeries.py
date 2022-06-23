@@ -1,10 +1,11 @@
-import os
 import requests
+
+from GLOBAL_imp import FRED_API_KEY
 from python_to_r_interface.TimeSeries import *
 
 
 class FREDTimeSeries(TimeSeries):
-    FRED_API_KEY = os.environ['FRED_API_KEY'] if 'FRED_API_KEY' in os.environ else ''
+
     FRED_API_BASE_URL = 'https://api.stlouisfed.org/fred/series/observations'
     FRED_FREQUENCIES = ('d', 'w', 'bw', 'm', 'q', 'sa', 'a')
 
@@ -27,7 +28,7 @@ class FREDTimeSeries(TimeSeries):
     def _FRED_API_GET(self):
         parameters = {
             'series_id': self.time_series_name_abbr,
-            'api_key': FREDTimeSeries.FRED_API_KEY,
+            'api_key': FRED_API_KEY,
             'file_type': 'json',
             'frequency': self.frequency,
             'observation_start': self.obs_start,
