@@ -17,7 +17,7 @@ export class RenderedPlot extends Component {
 
         return BasePage.colsToRows(
             ["date"].concat(plotPageValues.x),
-            ["original_y"].concat(plotPageValues.y)
+            ["original_y"].concat(plotPageValues.y),
             ["cycle"].concat(plotPageValues.cycle),
             plotPageValues.dispCycleCI ? ["conf_int_lower_bound"].concat(plotPageValues.cycleCILB) : undefined,
             plotPageValues.dispCycleCI ? ["conf_int_upper_bound"].concat(plotPageValues.cycleCIUB) : undefined);
