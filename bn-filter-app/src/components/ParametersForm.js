@@ -133,7 +133,7 @@ export class ParametersForm extends Component {
                                     disabled={isFixedDeltaDisabled}
                                     error={errors['fixedDelta'] !== undefined && !isFixedDeltaDisabled}
                                     helperText={errors['fixedDelta'] !== undefined && !isFixedDeltaDisabled ?
-                                        errors['fixedDelta'] : "​"}
+                                        errors['fixedDelta'] : "​" /* zero whitespace to prevent height difference when error displays*/}
                                 />
                             </FormControl>
                         </Grid>
@@ -157,7 +157,7 @@ export class ParametersForm extends Component {
                                     disabled={isRollingWindowDisabled}
                                     error={errors['rollingWindow'] !== undefined && !isRollingWindowDisabled}
                                     helperText={errors['rollingWindow'] !== undefined && !isRollingWindowDisabled ?
-                                        errors['rollingWindow'] : "​"}
+                                        errors['rollingWindow'] : "​" /* zero whitespace to prevent height difference when error displays*/}
                                 />
                             </FormControl>
                         </Grid>

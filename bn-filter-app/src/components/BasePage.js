@@ -99,7 +99,7 @@ export class BasePage extends Component {
     setErrorMessage = (input, message) => {
         console.log("settingErrorMessage")
         this.setState({
-            ["errorMessage"]: {
+            errorMessage: {
                 ...this.state.errorMessage,
                 [input]: message
             }
