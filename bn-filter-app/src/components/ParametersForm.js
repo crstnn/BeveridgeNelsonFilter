@@ -12,21 +12,33 @@ import {
     Typography
 } from "@mui/material";
 import '../styles/App.css';
-import {options} from "../config.json";
+import {field} from "../config.json";
 import createMenuItems from "../utils/CreateMenuItem";
 
 export class ParametersForm extends Component {
 
+    isDisabled = {
+        rollingWindow: () => this.props.values.demean === "sm",
+        fixedDelta: () => this.props.values.deltaSelect !== 0,
+    };
+
+    isError = field => this.props.values.errorMessage[field] !== undefined;
+
+    isErrorDisplaying = field => this.isError(field) && !this.isDisabled[field]();
+
+    errorsDisplayedCount = () => Object.keys(this.props.errors).map(key => this.isErrorDisplaying(key)).filter(x=>x).length
+
     continue = e => {
-        const {getResults, cancelLoad, errors} = this.props;
-        if (Object.keys(errors).length === 0) {
+        e.preventDefault();
+        const {getResults, cancelLoad} = this.props;
+
+        if (this.errorsDisplayedCount() === 0)
             getResults();
-        } else {
+        else
             cancelLoad();
-        }
+
         e.preventDefault();
         this.props.nextStep();
-
     }
 
     back = e => {
@@ -34,8 +46,15 @@ export class ParametersForm extends Component {
         this.props.prevStep();
     }
 
+    // resetFreeTextField = (f) => {
+    //     this.props.handlers.handleChange(field)({target: {value: field.freeText[f].default}})
+    // }
+    //
+    // handleLinkedField = (linkedField) => {if (this.isDisabled[linkedField]()) this.resetFreeTextField(linkedField);}
+
     preAnalysisTransformations = () => {
-        const {values, handleChange, handleCheckboxChange} = this.props;
+        const {values, handlers} = this.props;
+        const {handleChange, handleCheckboxChange} = handlers;
 
         return (
             <>
@@ -74,7 +93,7 @@ export class ParametersForm extends Component {
                                 onChange={handleChange('dCode')}
                                 defaultValue={values.dCode}
                                 disabled={!values.transform}
-                            >{createMenuItems(options.dCode)}</Select>
+                            >{createMenuItems(field.optionField.dCode.option)}</Select>
                         </FormControl>
                     </Grid>
                     <Grid item xs={4}>
@@ -85,7 +104,7 @@ export class ParametersForm extends Component {
                                 onChange={handleChange('pCode')}
                                 defaultValue={values.pCode}
                                 disabled={!values.transform}
-                            >{createMenuItems(options.pCode)}</Select>
+                            >{createMenuItems(field.optionField.pCode.option)}</Select>
                         </FormControl>
                     </Grid>
                 </Grid>
@@ -94,11 +113,10 @@ export class ParametersForm extends Component {
 
     bnFilterParameters = () => {
 
-        const {values, handleChange, handleNumberFieldChange, handleIntegerNumberFieldChange, errors} = this.props;
-
         const
-            isRollingWindowDisabled = values.isAutomaticWindow || values.demean === "sm",
-            isFixedDeltaDisabled = values.deltaSelect !== 0;
+            {values, handlers} = this.props,
+            {handleChange, handleNumberFieldChange, handleIntegerNumberFieldChange} = handlers,
+            errors = values.errorMessage;
 
         return (
             <>
@@ -120,7 +138,7 @@ export class ParametersForm extends Component {
                                     title="Signal-to-Noise Ratio according to benchmark KMW approach"
                                     onChange={handleChange('deltaSelect')}
                                     defaultValue={values.deltaSelect}
-                                >{createMenuItems(options.deltaSelect)}</Select>
+                                >{createMenuItems(field.optionField.deltaSelect.option)}</Select>
                             </FormControl>
                         </Grid>
                         <Grid item xs={4}>
@@ -130,9 +148,9 @@ export class ParametersForm extends Component {
                                     title="Only necessary when Signal-to-noise ratio is set to 'Fixed Delta'"
                                     onChange={handleNumberFieldChange('fixedDelta')}
                                     defaultValue={values.fixedDelta}
-                                    disabled={isFixedDeltaDisabled}
-                                    error={errors['fixedDelta'] !== undefined && !isFixedDeltaDisabled}
-                                    helperText={errors['fixedDelta'] !== undefined && !isFixedDeltaDisabled ?
+                                    disabled={this.isDisabled['fixedDelta']()}
+                                    error={this.isErrorDisplaying('fixedDelta')}
+                                    helperText={this.isErrorDisplaying('fixedDelta') ?
                                         errors['fixedDelta'] : "​" /* zero whitespace to prevent height difference when error displays*/}
                                 />
                             </FormControl>
@@ -141,10 +159,10 @@ export class ParametersForm extends Component {
                             <FormControl variant="standard" sx={{minWidth: 290}}>
                                 <InputLabel>Demeaning</InputLabel>
                                 <Select
-                                    label="Iterative Dynamic Demeaning"
+                                    label="Demeaning method"
                                     onChange={handleChange('demean')}
                                     defaultValue={values.demean}
-                                >{createMenuItems(options.iterativeDynamicDemeaning)}</Select>
+                                >{createMenuItems(field.optionField.iterativeDynamicDemeaning.option)}</Select>
                             </FormControl>
                         </Grid>
                         <Grid item xs={4}>
@@ -154,9 +172,9 @@ export class ParametersForm extends Component {
                                     title="Only necessary when the demeaning method is dynamic. Must be an integer."
                                     onChange={handleIntegerNumberFieldChange('rollingWindow')}
                                     defaultValue={values.rollingWindow}
-                                    disabled={isRollingWindowDisabled}
-                                    error={errors['rollingWindow'] !== undefined && !isRollingWindowDisabled}
-                                    helperText={errors['rollingWindow'] !== undefined && !isRollingWindowDisabled ?
+                                    disabled={this.isDisabled['rollingWindow']()}
+                                    error={this.isErrorDisplaying('rollingWindow')}
+                                    helperText={this.isErrorDisplaying('rollingWindow') ?
                                         errors['rollingWindow'] : "​" /* zero whitespace to prevent height difference when error displays*/}
                                 />
                             </FormControl>

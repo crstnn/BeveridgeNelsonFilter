@@ -5,8 +5,9 @@ import DataForm from "./DataForm";
 import RenderedPlot from "./RenderedPlot";
 import Loading from "./Loading";
 import Error from "./Error";
-import {validation} from "../config.json";
+import {field} from "../config.json";
 import {DateS} from "../utils/Date";
+import {confIntZip} from "../utils/Utils";
 
 export class BasePage extends Component {
     state = {
@@ -14,17 +15,16 @@ export class BasePage extends Component {
         unprocessedY: '',
         x: [], // dates
         y: [], // processed time series
-        fixedDelta: 0.1,
+        fixedDelta: field.freeText.fixedDelta.default,
         deltaSelect: 2,
-        demean: 'sm',
+        demean: field.optionField.iterativeDynamicDemeaning.default,
         iterativeBackcasting: true,
-        isAutomaticWindow: false,
-        rollingWindow: 40,
-        periodicity: 'q', // periodicity
+        rollingWindow: field.freeText.rollingWindow.default,
+        periodicity: field.optionField.periodicityManual.default, // periodicity
         startDate: null,
         transform: false, // transforms to data before bnf
-        dCode: 'nd',
-        pCode: 'np',
+        dCode: field.optionField.dCode.default,
+        pCode: field.optionField.pCode.default,
         takeLog: false,
         // bnf output (from API)
         cycle: [],
@@ -37,38 +37,11 @@ export class BasePage extends Component {
         errorMessage: {},
     }
 
-    loading = true;
-
     baseBackendURL = 'https://bn-filtering.herokuapp.com';
     bnfUserSpecifiedDataSlug = "/bnf/user-specified-time-series";
     bnfFredDataSlug = "/bnf/fred-time-series";
     fredDataSlug = "/fred-time-series";
 
-    static confIntZip = (cycle, ci, bound) => cycle.map((x, i) => bound === "lb" ? x - ci[i] : /* ub */ x + ci[i]);
-
-    static colsToRows = (...columns) => {
-
-        columns = columns.filter(x => x !== undefined)
-
-        // Pre-condition: All arrays are same length
-        const
-            rowLength = columns.length,
-            colLength = columns[0].length;
-
-        const retArr = [];
-
-        for (let c = 0; c < colLength; c++) {
-            const row = [];
-            for (let r = 0; r < rowLength; r++) {
-                row.push(columns[r][c]);
-            }
-            retArr.push(row)
-        }
-
-        return retArr;
-
-
-    };
 
     nextStep = () => {
         const {step} = this.state;
@@ -97,7 +70,6 @@ export class BasePage extends Component {
     }
 
     setErrorMessage = (input, message) => {
-        console.log("settingErrorMessage")
         this.setState({
             errorMessage: {
                 ...this.state.errorMessage,
@@ -107,7 +79,6 @@ export class BasePage extends Component {
     }
 
     deleteErrorMessage = input => {
-        console.log("deletingErrorMessage")
         let state = {...this.state};
         delete state["errorMessage"][input];
         this.setState(state);
@@ -130,24 +101,28 @@ export class BasePage extends Component {
     }
 
     isNotAnInt = (v, input) => {
-        if ((v % 1) != 0) {
+        if ((v % 1) !== 0) {
             this.setErrorMessage(input, "must be an integer");
             return true;
         }
         return false;
     }
 
-
     isExceedsMinMax = (v, input) => {
-        if (v < validation[input].min) {
-            this.setErrorMessage(input, `must be ≥ ${validation[input].min}`);
+        if (v < field.freeText[input].min) {
+            this.setErrorMessage(input, `must be ≥ ${field.freeText[input].min}`);
             return true;
         }
-        if (v > validation[input].max) {
-            this.setErrorMessage(input, `must be ≤ ${validation[input].max}`);
+        if (v > field.freeText[input].max) {
+            this.setErrorMessage(input, `must be ≤ ${field.freeText[input].max}`);
             return true;
         }
         return false;
+    }
+
+    handleErrorField = isCorrectEntry => (input, v) => {
+        if (isCorrectEntry) this.deleteErrorMessage(input);
+        this.setState({[input]: v});
     }
 
     validateField = (arr, input, e) => {
@@ -155,9 +130,7 @@ export class BasePage extends Component {
         const v = e.target.value;
         const isIncorrectEntry = arr.reduce((total, currentValue) =>
                                                 total ? true : currentValue(v, input) || total, false)
-        console.log(isIncorrectEntry);
-        if (!isIncorrectEntry) this.deleteErrorMessage(input);
-        this.handleChange(input)(e);
+        this.handleErrorField(!isIncorrectEntry)(input, v)
     }
 
     handleNumberFieldChange = input => e => {
@@ -199,7 +172,6 @@ export class BasePage extends Component {
 
         console.log(finalURL)
 
-
         this.setState({loading: true}, async () => {
             fetch(finalURL)
                 .then((response) => {
@@ -226,8 +198,8 @@ export class BasePage extends Component {
                         cycle: cycleRes,
                         cycleCI: ciRes,
                         deltaCalc: deltaRes,
-                        cycleCILB: BasePage.confIntZip(cycleRes, ciRes, "lb"),
-                        cycleCIUB: BasePage.confIntZip(cycleRes, ciRes, "ub"),
+                        cycleCILB: confIntZip(cycleRes, ciRes, "lb"),
+                        cycleCIUB: confIntZip(cycleRes, ciRes, "ub"),
                         loading: false,
                     })
 
@@ -235,55 +207,53 @@ export class BasePage extends Component {
                 console.log(error)
             });
         });
-
     }
 
 
     render() {
-        const {step} = this.state;
+        const {unprocessedY, startDate, periodicity,} = this.state;
+        const dataFormPageValues = {unprocessedY, startDate, periodicity,};
+
         const {
-            x,
-            y,
-            unprocessedY,
+            step,
             fixedDelta,
             deltaSelect,
             demean,
             iterativeBackcasting,
-            isAutomaticWindow,
             rollingWindow,
-            periodicity,
-            startDate,
             transform,
             dCode,
             pCode,
             takeLog,
             cycle,
             deltaCalc,
-            dispCycleCI,
-            cycleCILB,
-            cycleCIUB,
             errorMessage,
+            loading,
+            serverError,
         } = this.state;
-        const values = {
-            y,
+        const parametersFormPageValues = {
             unprocessedY,
-            startDate,
-            periodicity,
             fixedDelta,
             deltaSelect,
             demean,
             iterativeBackcasting,
-            isAutomaticWindow,
             rollingWindow,
             transform,
             dCode,
             pCode,
             takeLog,
-            dispCycleCI,
+            errorMessage,
+            loading,
+            serverError,
         };
 
-        const plotPageValues = {x, y, cycle, deltaCalc, dispCycleCI, cycleCILB, cycleCIUB, periodicity, startDate}
+        const {handleChange, handleNumberFieldChange, handleIntegerNumberFieldChange,
+            handleCheckboxChange, handleErrorField} = this;
+        const handlers = {handleChange, handleNumberFieldChange, handleIntegerNumberFieldChange,
+                        handleCheckboxChange, handleErrorField};
 
+        const {x, y, dispCycleCI, cycleCILB, cycleCIUB,} = this.state;
+        const plotPageValues = {x, y, cycle, deltaCalc, dispCycleCI, cycleCILB, cycleCIUB, periodicity, startDate,};
 
         return (
             <>
@@ -295,9 +265,8 @@ export class BasePage extends Component {
                                 prevStep={this.prevStep}
                                 handleChange={this.handleChange}
                                 handleCheckboxChange={this.handleCheckboxChange}
-                                values={values}
+                                values={dataFormPageValues}
                             />
-
                         case 3:
                             return (
                                 <>
@@ -313,12 +282,9 @@ export class BasePage extends Component {
                                         nextStep={this.nextStep}
                                         prevStep={this.prevStep}
                                         cancelLoad={this.cancelLoad}
-                                        handleChange={this.handleChange}
-                                        handleNumberFieldChange={this.handleNumberFieldChange}
-                                        handleIntegerNumberFieldChange={this.handleIntegerNumberFieldChange}
-                                        handleCheckboxChange={this.handleCheckboxChange}
+                                        handlers={handlers}
                                         getResults={this.getResults}
-                                        values={values}
+                                        values={parametersFormPageValues}
                                         errors={errorMessage}
                                     />
                                 </>

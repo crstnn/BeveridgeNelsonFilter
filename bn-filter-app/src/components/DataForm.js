@@ -76,7 +76,7 @@ export class DataForm extends Component {
                             <Grid item xs={4}>
                                 <CustomDatePicker date={values.startDate}
                                                   periodicity={values.periodicity}
-                                                  updateDate={d => this.setState({"startDate": d})}
+                                                  updateDate={d => this.props.handleChange('startDate')(d)}
                                                   isDisabled={values.periodicity === "n"}/>
                             </Grid>
                             <Grid item xs={4}>
@@ -86,7 +86,7 @@ export class DataForm extends Component {
                                         title="Time-series frequency"
                                         onChange={handleChange('periodicity')}
                                         defaultValue={values.periodicity}
-                                    >{createMenuItems(field.option.periodicityManual)}</Select>
+                                    >{createMenuItems(field.optionField.periodicityManual.option)}</Select>
                                 </FormControl>
                             </Grid>
 

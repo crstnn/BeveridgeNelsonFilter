@@ -1,37 +1,52 @@
 {
   "field": {
-    "option": {
-      "periodicityManual": [
-        {"value": "y", "text": "Yearly"},
-        {"value": "q", "text": "Quarterly"},
-        {"value": "m", "text": "Monthly"},
-        {"value": "w", "text": "Weekly"},
-        {"value": "n", "text": "Undated/Unspecified"}
-      ],
-      "iterativeDynamicDemeaning": [
-        {"value": "sm", "text": "Constant (Static Demeaning)"},
-        {"value": "dm", "text": "Dynamic Demeaning"},
-        {"value": "idm", "text": "Iterative Dynamic Demeaning"}
-      ],
-      "deltaSelect": [
-        {"value": 0, "text": "Fixed Delta"},
-        {"value": 1, "text": "Maximize Amplitude-to-Noise Ratio"},
-        {"value": 2, "text": "Minimize Stochastic Trend Volatility"}
-      ],
-      "dCode": [
-        {"value": "nd", "text": "No Differencing (Levels)"},
-        {"value": "d1", "text": "1 Period Difference"},
-        {"value": "d4", "text": "4 Period Difference (for Quarterly Data)"},
-        {"value": "d12", "text": "12 Period Difference (for Monthly Data)"}
-      ],
-      "pCode": [
-        {"value": "np", "text": "No Change"},
-        {"value": "p1", "text": "Multiply by 100"},
-        {"value": "p4", "text": "Multiply by 400 (Annualized Quarterly Rate)"},
-        {"value": "p12", "text": "Multiply by 1200 (Annualized Monthly Rate)"}
-      ]
-    },
-    "freeText":{
+    "optionField": {
+      "periodicityManual": {
+        "option": [
+          {"value": "y", "text": "Yearly"},
+          {"value": "q", "text": "Quarterly"},
+          {"value": "m", "text": "Monthly"},
+          {"value": "w", "text": "Weekly"},
+          {"value": "n", "text": "Undated/Unspecified"}
+        ],
+        "default": "q"
+        },
+        "iterativeDynamicDemeaning": {
+          "option": [
+            {"value": "sm", "text": "Constant (Static Demeaning)"},
+            {"value": "dm", "text": "Dynamic Demeaning"},
+            {"value": "idm", "text": "Iterative Dynamic Demeaning"}
+          ],
+          "default": "sm"
+        },
+        "deltaSelect": {
+          "option": [
+            {"value": 0, "text": "Fixed Delta"},
+            {"value": 1, "text": "Maximize Amplitude-to-Noise Ratio"},
+            {"value": 2, "text": "Minimize Stochastic Trend Volatility"}
+          ],
+          "default": 0
+        },
+        "dCode": {
+          "option": [
+            {"value": "nd", "text": "No Differencing (Levels)"},
+            {"value": "d1", "text": "1 Period Difference"},
+            {"value": "d4", "text": "4 Period Difference (for Quarterly Data)"},
+            {"value": "d12", "text": "12 Period Difference (for Monthly Data)"}
+          ],
+          "default": "nd"
+        },
+        "pCode": {
+          "option":[
+            {"value": "np", "text": "No Change"},
+            {"value": "p1", "text": "Multiply by 100"},
+            {"value": "p4", "text": "Multiply by 400 (Annualized Quarterly Rate)"},
+            {"value": "p12", "text": "Multiply by 1200 (Annualized Monthly Rate)"}
+          ],
+          "default": "np"
+        }
+      },
+    "freeText": {
       "fixedDelta": {
         "default": 0.1,
         "min": 0.05,
