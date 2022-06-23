@@ -33,12 +33,16 @@ def get_fred_params():
 
 
 def get_bnf_params():
-    # empty string for 'window' occurs when set to 'static demeaning' so we set it to an arbitrary 40
-    window = 40 if request.args.get("window") else int(request.args.get("window"))
     delta_select = int(request.args.get("delta_select"))
-    fixed_delta = float(request.args.get("fixed_delta")) if request.args.get("fixed_delta") else 0.05
+
+    fixed_delta_arg = request.args.get("fixed_delta", None)
+    fixed_delta = float(fixed_delta_arg) if fixed_delta_arg is not None and delta_select == 0 else 0.05
+
     ib = request.args.get("ib") == "true"
     demean = request.args.get("demean")
+
+    window_arg = request.args.get("window", None)
+    window = 40 if window_arg is None or demean == 'sm' else int(window_arg)
 
     return window, delta_select, fixed_delta, ib, demean
 
