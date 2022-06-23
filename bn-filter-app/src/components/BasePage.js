@@ -151,21 +151,21 @@ export class BasePage extends Component {
     }
 
     validateField = (arr, input, e) => {
-        // functions later in the array take precedence
-        // input must pass all function without causing errors
-        const v = e.target.value
-        const isIncorrectEntry = arr.reduce((total, currentValue) => currentValue(v, input) || total, false)
-        console.log(isIncorrectEntry)
+        // functions earlier in the array take precedence. [first_validated...last_validated]
+        const v = e.target.value;
+        const isIncorrectEntry = arr.reduce((total, currentValue) =>
+                                                total ? true : currentValue(v, input) || total, false)
+        console.log(isIncorrectEntry);
         if (!isIncorrectEntry) this.deleteErrorMessage(input);
         this.handleChange(input)(e);
     }
 
     handleNumberFieldChange = input => e => {
-        this.validateField([this.isExceedsMinMax, this.isNotANum, this.isEmptyString], input, e);
+        this.validateField([this.isEmptyString, this.isNotANum, this.isExceedsMinMax, ], input, e);
     }
 
     handleIntegerNumberFieldChange = input => e => {
-        this.validateField([this.isExceedsMinMax, this.isNotANum, this.isNotAnInt, this.isEmptyString], input, e);
+        this.validateField([this.isEmptyString, this.isNotAnInt, this.isNotANum, this.isExceedsMinMax, ], input, e);
     }
 
     getResults = async () => {
