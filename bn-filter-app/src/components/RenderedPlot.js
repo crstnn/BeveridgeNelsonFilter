@@ -2,9 +2,11 @@ import React, {Component} from "react";
 import Plot from 'react-plotly.js';
 import {Button} from "@mui/material";
 import {CSVLink} from "react-csv";
-import BasePage from "./BasePage";
+import {colsToRows} from "../utils/utils";
 
 export class RenderedPlot extends Component {
+
+    fileName = "BNF_cycle.csv"
 
     back = e => {
         e.preventDefault();
@@ -15,7 +17,7 @@ export class RenderedPlot extends Component {
     getCSVData() {
         const {plotPageValues} = this.props;
 
-        return BasePage.colsToRows(
+        return colsToRows(
             ["date"].concat(plotPageValues.x),
             ["original_y"].concat(plotPageValues.y),
             ["cycle"].concat(plotPageValues.cycle),
@@ -78,7 +80,7 @@ export class RenderedPlot extends Component {
                         <p> Delta: {plotPageValues.deltaCalc} </p>
                     </div>
                     <CSVLink style= {{textDecoration: "underline"}}
-                             filename={"BNF_cycle.csv"} data={this.getCSVData()}>Download as CSV</CSVLink>
+                             filename={this.fileName} data={this.getCSVData()}>Download as CSV</CSVLink>
                 </div>
                 <Button
                     variant="outlined"
