@@ -15,7 +15,7 @@ class DateS extends Date {
         }
     };
 
-    static getTruncatedDate = (date) => `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+    static getTruncatedDate = (date) => `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 
     nextTimePeriod = () => {
         throw new Error("Child class must implement this method");
