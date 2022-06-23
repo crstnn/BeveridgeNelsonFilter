@@ -9,7 +9,7 @@ function CustomDatePicker(props) {
     // const [startDate, setStartDate] = React.useState(props.startDate);
 
     const handleChange = (newValue) => {
-        props.updateDate({target: {value: newValue}})
+        props.updateDate(newValue)
     };
 
     return (

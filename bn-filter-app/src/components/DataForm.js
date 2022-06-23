@@ -13,15 +13,13 @@ import {
 import '../styles/App.css';
 import CustomDatePicker from "../pickers/CustomDatePicker";
 import createMenuItems from "../utils/CreateMenuItem";
-import {options} from "../config.json";
+import {field} from "../config.json";
 
 export class DataForm extends Component {
 
 
     continue = e => {
-
         e.preventDefault();
-        // process form
         this.props.nextStep();
     }
 
@@ -35,7 +33,6 @@ export class DataForm extends Component {
 
         return (
             <>
-
                 <div className="information">
                     <Divider style={{fontSize: 'x-large'}}>Data</Divider>
                     <p>Enter or paste in your chosen time series below.
@@ -79,7 +76,7 @@ export class DataForm extends Component {
                             <Grid item xs={4}>
                                 <CustomDatePicker date={values.startDate}
                                                   periodicity={values.periodicity}
-                                                  updateDate={handleChange("startDate")}
+                                                  updateDate={d => this.setState({"startDate": d})}
                                                   isDisabled={values.periodicity === "n"}/>
                             </Grid>
                             <Grid item xs={4}>
@@ -89,7 +86,7 @@ export class DataForm extends Component {
                                         title="Time-series frequency"
                                         onChange={handleChange('periodicity')}
                                         defaultValue={values.periodicity}
-                                    >{createMenuItems(options.periodicityManual)}</Select>
+                                    >{createMenuItems(field.option.periodicityManual)}</Select>
                                 </FormControl>
                             </Grid>
 
