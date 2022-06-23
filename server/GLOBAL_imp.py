@@ -22,3 +22,5 @@ from rpy2.robjects.vectors import FloatVector
 
 FILTER_FILEPATH = "./BN_filter_R_v2/"
 BNF_FUNCTIONS = "bnf_fcns.R"
+
+FRED_BASE_URL = 'https://api.stlouisfed.org/fred'
