@@ -19,7 +19,7 @@ else:  # ON LOCAL
     # must be set before rpy2 import
     # may be only necessary locally
 
-    FRED_API_KEY = localConfig['KEY']['FRED_API_KEY'] if 'FRED_API_KEY' in localConfig else ''
+    FRED_API_KEY = localConfig['KEY']['FRED_API_KEY']
 
 
 import rpy2.robjects as robj
@@ -30,3 +30,5 @@ BNF_FUNCTIONS = config['PATH']['BNF_FUNCTIONS']
 
 FRED_OBS_URL = config['URL']['FRED_OBS_URL']
 FRED_INFO_URL = config['URL']['FRED_INFO_URL']
+
+FRED_FREQUENCIES = ('d', 'w', 'bw', 'm', 'q', 'sa', 'a')

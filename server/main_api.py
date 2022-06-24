@@ -73,7 +73,7 @@ def bnf_fred_time_series():
     handle_series_transformation_params(fred_series)
 
     bnf = BNF(fred_series, R, *get_bnf_params())
-    res = jsonify(bnf.run())
+    res = jsonify(fred_series.dates | bnf.run())
 
     gc.collect()
 
