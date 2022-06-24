@@ -11,11 +11,14 @@ if 'ON_SERVER' in os.environ:
 
 else:  # ON LOCAL
     print("flask_dev")
-    os.environ['R_HOME'] = 'C:\\Program Files\\R\\R-4.0.2'  # adjust to local directory
-    # must be set before rpy2 import
-    # may be only necessary locally
+
     localConfig = configparser.ConfigParser()
     localConfig.read('local_config.ini')
+
+    os.environ['R_HOME'] = localConfig['PATH']['R_FOLDER']  # adjust to local R directory
+    # must be set before rpy2 import
+    # may be only necessary locally
+
     FRED_API_KEY = localConfig['KEY']['FRED_API_KEY'] if 'FRED_API_KEY' in localConfig else ''
 
 
