@@ -19,7 +19,7 @@ class FREDTimeSeriesInfo:
         self.min_freq = series_info['frequency_short']
 
     def get_available_freq(self):
-        FRED_FREQUENCIES.index(self.min_freq)
+        return FRED_FREQUENCIES[FRED_FREQUENCIES.index(self.min_freq):]
 
     def get_dates(self):
         return self.observation_start, self.observation_end
