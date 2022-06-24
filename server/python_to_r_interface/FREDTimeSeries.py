@@ -36,6 +36,9 @@ class FREDTimeSeries(TimeSeries):
             'limit': 100000,  # upper bound
             'sort_order': 'asc'
         }
+
+        # TODO: constrain dates either after or with request
+
         self.FRED_response = requests.get(FRED_OBS_URL, params=parameters).json()
 
     def _get_obs_list(self):
