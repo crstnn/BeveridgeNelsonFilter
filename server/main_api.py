@@ -23,6 +23,9 @@ def get_r_inst():
     return R
 
 
+R = get_r_inst()
+
+
 def get_fred_params():
     fred_abbr = request.args.get("fred_abbr")
     freq = request.args.get("freq")
@@ -69,7 +72,6 @@ def bnf_fred_time_series():
     fred_series = FREDTimeSeries(*get_fred_params())
     handle_series_transformation_params(fred_series)
 
-    R = get_r_inst()
     bnf = BNF(fred_series, R, *get_bnf_params())
     res = jsonify(bnf.run())
 
@@ -89,7 +91,6 @@ def bnf_user_specified_time_series():
     user_series = TimeSeries(user_y)
     handle_series_transformation_params(user_series)
 
-    R = get_r_inst()
     bnf = BNF(user_series, R, *get_bnf_params())
     res = jsonify(bnf.run())
 
@@ -103,7 +104,6 @@ def bnf_test_time_series():
     us_gdp = TestTimeSeries()  # default GDPC1
     us_gdp.set_transformation_defaults()
 
-    R = get_r_inst()
     bnf = BNF(us_gdp, R, window=40, delta_select=2, fixed_delta=0.05, ib=True, demean="dm")
 
     res = jsonify(bnf.run())
