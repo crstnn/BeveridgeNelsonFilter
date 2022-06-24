@@ -1,11 +1,10 @@
 import requests
 
-from GLOBAL_imp import FRED_API_KEY, FRED_BASE_URL
+from GLOBAL_imp import FRED_API_KEY, FRED_OBS_URL
 from python_to_r_interface.TimeSeries import *
 
 
 class FREDTimeSeries(TimeSeries):
-    FRED_OBS_URL = FRED_BASE_URL + '/series/observations'
     FRED_FREQUENCIES = ('d', 'w', 'bw', 'm', 'q', 'sa', 'a')
 
     def __init__(self, time_series_name_abbr, frequency, obs_start=None, obs_end=None, time_series=None):
@@ -35,7 +34,7 @@ class FREDTimeSeries(TimeSeries):
             'limit': 100000,  # upper bound
             'sort_order': 'asc'
         }
-        self.FRED_response = requests.get(FREDTimeSeries.FRED_OBS_URL, params=parameters)
+        self.FRED_response = requests.get(FRED_OBS_URL, params=parameters)
 
     def _get_obs_list(self):
         obs = list(map(lambda o: o.json()['observations'], self.FRED_response))

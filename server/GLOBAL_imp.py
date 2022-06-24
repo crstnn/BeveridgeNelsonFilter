@@ -1,6 +1,9 @@
 import os
 import configparser
 
+config = configparser.ConfigParser()
+config.read('config.ini')
+
 if 'ON_SERVER' in os.environ:
     print("flask_prod")
 
@@ -11,16 +14,16 @@ else:  # ON LOCAL
     os.environ['R_HOME'] = 'C:\\Program Files\\R\\R-4.0.2'  # adjust to local directory
     # must be set before rpy2 import
     # may be only necessary locally
-
-    config = configparser.ConfigParser()
-    config.read('config.ini')
-    FRED_API_KEY = config['KEY']['FRED_API_KEY'] if 'FRED_API_KEY' in config else ''
+    localConfig = configparser.ConfigParser()
+    localConfig.read('local_config.ini')
+    FRED_API_KEY = localConfig['KEY']['FRED_API_KEY'] if 'FRED_API_KEY' in localConfig else ''
 
 
 import rpy2.robjects as robj
 from rpy2.robjects.vectors import FloatVector
 
-FILTER_FILEPATH = "./BN_filter_R_v2/"
-BNF_FUNCTIONS = "bnf_fcns.R"
+FILTER_FILEPATH = config['PATH']['FILTER_FILEPATH']
+BNF_FUNCTIONS = config['PATH']['BNF_FUNCTIONS']
 
-FRED_BASE_URL = 'https://api.stlouisfed.org/fred'
+FRED_OBS_URL = config['URL']['FRED_OBS_URL']
+FRED_INFO_URL = config['URL']['FRED_INFO_URL']
