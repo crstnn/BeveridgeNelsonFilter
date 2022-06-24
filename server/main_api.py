@@ -18,9 +18,9 @@ cors = CORS(app, resources={
 # Design note: lightweight backend validation as the majority of validation is done in frontend
 
 def get_r_inst():
-    R = robj.r
-    R.source(FILTER_FILEPATH + BNF_FUNCTIONS)
-    return R
+    r = robj.r
+    r.source(FILTER_FILEPATH + BNF_FUNCTIONS)
+    return r
 
 
 R = get_r_inst()
