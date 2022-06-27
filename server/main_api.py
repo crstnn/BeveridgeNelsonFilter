@@ -52,6 +52,7 @@ def get_bnf_params():
 
 def handle_series_transformation_params(series):
     if request.args.get("transform") == "true":
+        print("heere")
         series.set_transformation(request.args.get("d_code"),
                                   request.args.get("p_code"),
                                   request.args.get("take_log") == "true")
@@ -75,8 +76,6 @@ def bnf_fred_time_series():
     bnf = BNF(fred_series, R, *get_bnf_params())
     res = jsonify(fred_series.dates | bnf.run())
 
-    gc.collect()
-
     return res
 
 
@@ -94,8 +93,6 @@ def bnf_user_specified_time_series():
     bnf = BNF(user_series, R, *get_bnf_params())
     res = jsonify(bnf.run())
 
-    gc.collect()
-
     return res
 
 
@@ -108,6 +105,5 @@ def bnf_test_time_series():
 
     res = jsonify(bnf.run())
 
-    gc.collect()
 
     return res

@@ -24,7 +24,10 @@ def func(time_series):
     y = FloatVector(time_series)
     transformed_y = R('transform_series')(y, take_log=True, pcode="p1")
     result = R('bnf')(transformed_y, demean="dm")
-    gc.collect()  # using Python's garbage collector to free up unnecessary use of R memory space
+
+    # using garbage collector to free up space that rpy2 hogs after running ops
+    gc.collect()
+
     return result
 
 

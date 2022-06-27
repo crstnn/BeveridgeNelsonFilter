@@ -72,14 +72,18 @@ class TimeSeries:
         return self._y
 
     def get_time_series_float_vec(self, r_instance):
+        self._y_float_vector = FloatVector(self._y)
         if self._transform and not self._y_float_vector:
-            self._y_float_vector = FloatVector(self._y)
-            # transformed series
+            # transform series
             ret_series = r_instance('transform_series')(y=self._y_float_vector,
                                                         take_log=self.take_log,
                                                         dcode=self.d_code,
                                                         pcode=self.p_code)
-            gc.collect()  # using Python's garbage collector to free up unnecessary use of R memory space
+
+            # using both garbage collectors to free up space that rpy2 hogs after running ops
+            r_instance('gc()')
+            gc.collect()
+
             return ret_series
 
         return self._y_float_vector
