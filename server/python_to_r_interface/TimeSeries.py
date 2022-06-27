@@ -8,9 +8,9 @@ class TimeSeries:
     P_CODES = ("np", "p1", "p4", "p12")
 
     def __init__(self, time_series):
-        self.set_transformation_defaults()
         self._y = time_series
         self._y_float_vector = None
+        self.set_transformation_defaults()
 
     def set_transformation_defaults(self):
         self.d_code = TimeSeries.D_CODES[0]
