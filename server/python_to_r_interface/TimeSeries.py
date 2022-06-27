@@ -11,10 +11,6 @@ class TimeSeries:
         self.set_transformation_defaults()
         self._y = time_series
         self._y_float_vector = None
-        self.d_code = None
-        self.p_code = None
-        self.take_log = None
-        self._transform = False
 
     def set_transformation_defaults(self):
         self.d_code = TimeSeries.D_CODES[0]
@@ -73,7 +69,7 @@ class TimeSeries:
 
     def get_time_series_float_vec(self, r_instance):
         self._y_float_vector = FloatVector(self._y)
-        if self._transform and not self._y_float_vector:
+        if self._transform and self._y:
             # transform series
             ret_series = r_instance('transform_series')(y=self._y_float_vector,
                                                         take_log=self.take_log,

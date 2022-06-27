@@ -52,7 +52,6 @@ def get_bnf_params():
 
 def handle_series_transformation_params(series):
     if request.args.get("transform") == "true":
-        print("heere")
         series.set_transformation(request.args.get("d_code"),
                                   request.args.get("p_code"),
                                   request.args.get("take_log") == "true")

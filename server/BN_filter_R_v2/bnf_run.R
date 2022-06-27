@@ -22,6 +22,7 @@ gdp <- ts(data = usdata$GDPC1, end = c(2016, 2), frequency = 4)
 #Take logs and multiply by 100
 y <- transform_series(y = gdp, take_log = T, pcode = "p1") # same as: log(raw_y) * 100.0
 
+print(y)
 
 # Example: Automatically determined delta and full sample mean demeaning method
 cat("Example: log US real GDP\n\n")
