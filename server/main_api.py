@@ -105,5 +105,4 @@ def bnf_test_time_series():
 
     res = jsonify(bnf.run())
 
-
     return res

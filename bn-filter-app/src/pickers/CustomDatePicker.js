@@ -16,13 +16,16 @@ function CustomDatePicker(props) {
         <div>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DesktopDatePicker
-                    label="Time Series Start Date"
+                    label="Start Date"
                     inputFormat="dd/MM/yyyy"
                     value={date}
                     InputProps={{style: {width: 220}}}
                     onChange={handleChange}
                     disabled={props.isDisabled}
-                    renderInput={(params) => <TextField {...params} />}
+                    renderInput={(params) =>
+                        <TextField {...params}
+                                   InputLabelProps={{shrink: true}}
+                                   inputProps={{...params.inputProps, placeholder: "DD/MM/YYYY"}}/>}
                 />
             </LocalizationProvider>
         </div>
