@@ -14,7 +14,7 @@ class FREDTimeSeries(TimeSeries):
         self.obs_end = obs_end
 
         self._FRED_API_GET()
-        self._get_obs_list()
+        self._create_obs_list()
 
     @property
     def frequency(self):
@@ -41,13 +41,10 @@ class FREDTimeSeries(TimeSeries):
 
         self.FRED_response = requests.get(FRED_OBS_URL, params=parameters).json()
 
-    def _get_obs_list(self):
+    def _create_obs_list(self):
         self._y = []
         self.dates = []
         for idx, o in enumerate(self.FRED_response['observations']):
             if o['value'] != '.':  # FRED occasionally has a bug where they return a '.' in a series
                 self._y.append(float(o['value']))
                 self.dates.append(o['date'])
-
-        print(self._y)
-        print(self.dates)

@@ -24,4 +24,9 @@ class FREDTimeSeriesInfo:
     def get_dates(self):
         return self.observation_start, self.observation_end
 
+    def get_information(self):
+        return {
+            'dates': self.get_dates(),
+            'available_frequencies': self.get_available_freq()
+        }
 

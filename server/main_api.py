@@ -1,4 +1,5 @@
 from GLOBAL_imp import *
+from python_to_r_interface.FREDTimeSeriesInfo import FREDTimeSeriesInfo
 from python_to_r_interface.TestTimeSeries import *
 from python_to_r_interface.FREDTimeSeries import *
 from python_to_r_interface.Bnf import *
@@ -26,8 +27,12 @@ def get_r_inst():
 R = get_r_inst()
 
 
+def get_fred_abbr():
+    return request.args.get("fred_abbr")
+
+
 def get_fred_params():
-    fred_abbr = request.args.get("fred_abbr")
+    fred_abbr = get_fred_abbr()
     freq = request.args.get("freq")
     obs_start = request.args.get("obs_start")
     obs_end = request.args.get("obs_end")
@@ -64,7 +69,11 @@ def index():
 
 @app.route('/fred-time-series', methods=['GET'])
 def fred_time_series():
-    ...
+    fred_series = FREDTimeSeriesInfo(get_fred_abbr())
+
+    res = jsonify(fred_series.get_information())
+
+    return res
 
 
 @app.route('/bnf/fred-time-series', methods=['GET'])
@@ -73,7 +82,7 @@ def bnf_fred_time_series():
     handle_series_transformation_params(fred_series)
 
     bnf = BNF(fred_series, R, *get_bnf_params())
-    res = jsonify(fred_series.dates | bnf.run())
+    res = jsonify({'dates': fred_series.dates} | bnf.run())
 
     return res
 
