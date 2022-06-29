@@ -12,6 +12,7 @@ import {confIntZip, pairArrayToParamStr} from "../utils/Utils";
 export class BasePage extends Component {
     state = {
         step: 1,
+        dataInputType: "FRED",
         unprocessedY: '',
         x: [], // dates
         y: [], // processed time series
@@ -141,7 +142,7 @@ export class BasePage extends Component {
         this.validateField([this.isEmptyString, this.isNotAnInt, this.isNotANum, this.isExceedsMinMax,], input, e);
     }
 
-    getResults = async () => {
+    getResultsForUserSpecifiedData = async () => {
 
         // dealing with all operating system's newline characters
         this.state.y = this.state.unprocessedY.replace(/(,?(\r\n|\n|\r))|(,\s)/gm, ",")
@@ -162,8 +163,9 @@ export class BasePage extends Component {
                             ['d_code', this.state.dCode],
                             ['take_log', this.state.takeLog]]
                         : []
+                    )
                 )
-            ));
+            );
 
         const finalURL = this.baseBackendURL + this.bnfUserSpecifiedDataSlug + paramStr
 
@@ -208,8 +210,8 @@ export class BasePage extends Component {
 
 
     render() {
-        const {unprocessedY, startDate, periodicity,} = this.state;
-        const dataFormPageValues = {unprocessedY, startDate, periodicity,};
+        const {unprocessedY, startDate, periodicity, dataInputType} = this.state;
+        const dataFormPageValues = {unprocessedY, startDate, periodicity, dataInputType};
 
         const {
             step,
@@ -284,7 +286,7 @@ export class BasePage extends Component {
                                         prevStep={this.prevStep}
                                         cancelLoad={this.cancelLoad}
                                         handlers={handlers}
-                                        getResults={this.getResults}
+                                        getResults={this.getResultsForUserSpecifiedData}
                                         values={parametersFormPageValues}
                                         errors={errorMessage}
                                     />

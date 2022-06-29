@@ -16,7 +16,7 @@ function CustomDatePicker(props) {
         <div>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DesktopDatePicker
-                    label="Start Date"
+                    label={props.label}
                     inputFormat="dd/MM/yyyy"
                     value={date}
                     InputProps={{style: {width: 220}}}
