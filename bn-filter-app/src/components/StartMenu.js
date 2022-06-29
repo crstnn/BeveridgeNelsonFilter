@@ -13,11 +13,12 @@ export class StartMenu extends Component {
         return (
             <div>
                 <div className="information">
-                    <p>You will be guided through the steps to perform trend-cycle decomposition on either:
+                    <p>You will be guided through the steps to perform trend-cycle decomposition on either:</p>
                         <ol>
                             <li>A time series of your choosing to be pasted into a field, or</li>
                             <li>A time series from the Federal Reserve Economic Database (FRED) using its mnemonic</li>
                         </ol>
+                    <p>
                         Note that there is additional information provided when hovering over the options in the
                         subsequent pages. The cycle is reported and can be downloaded as a CSV.
                     </p>

@@ -11,30 +11,91 @@ import {
     TextField,
 } from "@mui/material";
 import {withStyles} from "@mui/styles";
-
 import CustomDatePicker from "../pickers/CustomDatePicker";
 import createMenuItems from "../utils/CreateMenuItem";
-import {field} from "../config.json";
+import {field, URL} from "../config.json";
+import {pairArrayToParamStr} from "../utils/Utils";
+import Error from "./Error";
+import {ThreeDots} from "react-loader-spinner";
 
 export class FREDDataForm extends Component {
-    checkAvailability = () => {
+
+    state = {
+        mnemonic: "",
+        isBadMnemonic: true,
+        loading: false,
+        frequency: "",
+        startDate: null,
+        endDate: null,
+        availableFrequencies: [],
+    }
+
+    createFilteredFrequencies = () => {
+        const items = field.optionField.frequencyFRED.option.filter(x => this.state.availableFrequencies.includes(x.value));
+        return createMenuItems(items);
+    }
+
+    handleFREDMnemonicCheck = () => {
 
     }
 
+
+    checkAvailability = () => {
+        const
+            values = this.props.values,
+            paramStr = pairArrayToParamStr([['fred_abbr', this.state.mnemonic]]),
+            finalURL = URL.baseBackendURL + URL.fredDataSlug + paramStr;
+
+        this.setState({loading: true}, async () => {
+            fetch(finalURL)
+                .then((response) => {
+                    if (response.status !== 200) {
+                        this.setState(
+                            {
+                                isBadMnemonic: true,
+                                loading: false,
+                                });
+                        throw new Error("bad status");
+                    } else {
+                        return response;
+                    }
+                })
+                .then((response) => response.json())
+                .then(result => {
+                    console.log('Success:', result);
+
+                    this.setState({
+                        startDate: new Date(result["start_date"]),
+                        endDate: new Date(result["end_date"]),
+                        availableFrequencies: result["available_frequencies"],
+                        loading: false,
+                        isBadMnemonic: false,
+                    });
+
+                }).catch((error) => {
+                console.log(error);
+            });
+        });
+    }
+
     mnemonicInput = () => {
+
+        const mnemonicHelperText = () => {return this.state.isBadMnemonic ? "The mnemonic is not available" : "The mnemonic is available"}
+
         return (
-            <Grid container direction="column" sx={{minHeight: 100,}}
+            <Grid container direction="column" sx={{minHeight: 100}}
                   justifyContent="space-evenly"
                   alignItems="center">
                 <Grid item>
-                    <FormGroup column>
-                        <FormGroup row>
-                            <JoinedTextField variant="outlined" label="FRED mnemonic"
-                                             color="success" placeholder="e.g. GDPC1" />
-                            <JoinedButton onClick={this.checkAvailability()} variant="outlined">Check</JoinedButton>
-                        </FormGroup>
-                        <FormHelperText>Please check availability</FormHelperText>
+                    <FormGroup row>
+                        <JoinedTextField variant="outlined" label="FRED mnemonic"
+                                         color={this.state.isBadMnemonic ? "error" : "success"} placeholder="e.g. GDPC1" sx={{width: 250}}
+                                         onChange={(e) => this.setState({mnemonic: e.target.value}) }
+                                         InputProps={{
+                                             endAdornment: this.state.loading ? <ThreeDots height={30} width={30} color='grey'/> : null}}/>
+                        <JoinedButton onClick={this.checkAvailability} variant="outlined">Check</JoinedButton>
                     </FormGroup>
+                    <FormHelperText>{mnemonicHelperText()}</FormHelperText>
                 </Grid>
             </Grid>
         )
@@ -47,7 +108,10 @@ export class FREDDataForm extends Component {
         return (
             <div>
                 <div className="information">
-                    <p>Choose a FRED mnemonic and check its availability before continuing.</p>
+                    <p>Choose a <a target="_blank"
+                                                rel="noopener noreferrer"
+                                                href="https://fred.stlouisfed.org/tags/series">
+                        FRED mnemonic</a> and check its availability before continuing.</p>
                 </div>
                 <div style={{
                     width: "450px",
@@ -65,25 +129,27 @@ export class FREDDataForm extends Component {
                         <Grid item xs={2}>
                             <CustomDatePicker
                                               label={"Start Date"}
-                                              date={values.startDate}
-                                              periodicity={values.periodicity}
-                                              updateDate={d => this.props.handleChange('startDate')(d)}/>
+                                              date={this.state.startDate}
+                                              minDate={this.state.startDate}
+                                              maxDate={this.state.endDate}
+                                              updateDate={d => this.setState({startDate: d.target.value})}/>
                         </Grid>
                         <Grid item xs={2}>
                             <CustomDatePicker
                                               label={"End Date"}
-                                              date={values.startDate}
-                                              periodicity={values.periodicity}
-                                              updateDate={d => this.props.handleChange('endDate')(d)}/>
+                                              date={this.state.endDate}
+                                              minDate={this.state.startDate}
+                                              maxDate={this.state.endDate}
+                                              updateDate={d => this.setState({startDate: d.target.value})}/>
                         </Grid>
                         <Grid item xs={2}>
                             <FormControl variant="standard" sx={{minWidth: 220}}>
                                 <InputLabel>Frequency</InputLabel>
                                 <Select
                                     title="Time-series frequency"
-                                    onChange={handleChange('periodicity')}
-                                    defaultValue={values.periodicity}
-                                >{createMenuItems(field.optionField.periodicityManual.option)}</Select>
+                                    onChange={handleChange('frequency')}
+                                    defaultValue={this.state.frequency}
+                                >{this.createFilteredFrequencies()}</Select>
                             </FormControl>
                         </Grid>
 

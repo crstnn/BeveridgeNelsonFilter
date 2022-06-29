@@ -5,7 +5,7 @@ import DataForm from "./DataForm";
 import RenderedPlot from "./RenderedPlot";
 import Loading from "./Loading";
 import Error from "./Error";
-import {field} from "../config.json";
+import {field, URL} from "../config.json";
 import {DateS} from "../utils/Date";
 import {confIntZip, pairArrayToParamStr} from "../utils/Utils";
 
@@ -13,6 +13,7 @@ export class BasePage extends Component {
     state = {
         step: 1,
         dataInputType: "FRED",
+        mnemonic: "",
         unprocessedY: '',
         x: [], // dates
         y: [], // processed time series
@@ -21,7 +22,7 @@ export class BasePage extends Component {
         demean: field.optionField.iterativeDynamicDemeaning.default,
         iterativeBackcasting: true,
         rollingWindow: field.freeText.rollingWindow.default,
-        periodicity: field.optionField.periodicityManual.default, // periodicity
+        frequency: field.optionField.frequencyManual.default, // periodicity
         startDate: null,
         transform: false, // transforms to data before bnf
         dCode: field.optionField.dCode.default,
@@ -38,12 +39,6 @@ export class BasePage extends Component {
         errorMessage: {},
     }
 
-    baseBackendURL = 'https://bn-filtering.herokuapp.com';
-    bnfUserSpecifiedDataSlug = "/bnf/user-specified-time-series";
-    bnfFredDataSlug = "/bnf/fred-time-series";
-    fredDataSlug = "/fred-time-series";
-
-
     nextStep = () => {
         const {step} = this.state;
         this.setState({
@@ -58,7 +53,7 @@ export class BasePage extends Component {
         });
     }
 
-    cancelLoad = () => {
+    cancelLoading = () => {
         this.setState({loading: null});
     }
 
@@ -167,15 +162,15 @@ export class BasePage extends Component {
                 )
             );
 
-        const finalURL = this.baseBackendURL + this.bnfUserSpecifiedDataSlug + paramStr
+        const finalURL = URL.baseBackendURL + URL.bnfUserSpecifiedDataSlug + paramStr;
 
-        console.log(finalURL)
+        console.log(finalURL);
 
         this.setState({loading: true}, async () => {
             fetch(finalURL)
                 .then((response) => {
                     if (response.status !== 200) {
-                        this.cancelLoad();
+                        this.cancelLoading();
                         throw new Error("bad status");
                     } else {
                         return response;
@@ -191,8 +186,8 @@ export class BasePage extends Component {
                         deltaRes = Number(result["delta"]);
 
                     this.setState({
-                        x: this.state.periodicity !== "n" ? // dated axis or numbered axis
-                            DateS.createDate(this.state.periodicity, this.state.startDate).getDateArray(cycleRes.length).map(DateS.getTruncatedDate)
+                        x: this.state.frequency !== "n" ? // dated axis or numbered axis
+                            DateS.createDate(this.state.frequency, this.state.startDate).getDateArray(cycleRes.length).map(DateS.getTruncatedDate)
                             : Array.from({length: cycleRes.length}, (_, i) => i + 1),
                         cycle: cycleRes,
                         cycleCI: ciRes,
@@ -200,18 +195,18 @@ export class BasePage extends Component {
                         cycleCILB: confIntZip(cycleRes, ciRes, "lb"),
                         cycleCIUB: confIntZip(cycleRes, ciRes, "ub"),
                         loading: false,
-                    })
+                    });
 
                 }).catch((error) => {
-                console.log(error)
+                console.log(error);
             });
         });
     }
 
 
     render() {
-        const {unprocessedY, startDate, periodicity, dataInputType} = this.state;
-        const dataFormPageValues = {unprocessedY, startDate, periodicity, dataInputType};
+        const {unprocessedY, startDate, endDate, mnemonic, frequency, dataInputType} = this.state;
+        const dataFormPageValues = {unprocessedY, startDate, endDate, mnemonic, frequency, dataInputType};
 
         const {
             step,
@@ -256,7 +251,7 @@ export class BasePage extends Component {
         };
 
         const {x, y, dispCycleCI, cycleCILB, cycleCIUB,} = this.state;
-        const plotPageValues = {x, y, cycle, deltaCalc, dispCycleCI, cycleCILB, cycleCIUB, periodicity, startDate,};
+        const plotPageValues = {x, y, cycle, deltaCalc, dispCycleCI, cycleCILB, cycleCIUB, frequency, startDate,};
 
         return (
             <>
@@ -284,7 +279,7 @@ export class BasePage extends Component {
                                     <ParametersForm
                                         nextStep={this.nextStep}
                                         prevStep={this.prevStep}
-                                        cancelLoad={this.cancelLoad}
+                                        cancelLoad={this.cancelLoading}
                                         handlers={handlers}
                                         getResults={this.getResultsForUserSpecifiedData}
                                         values={parametersFormPageValues}

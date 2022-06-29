@@ -1,7 +1,7 @@
 {
   "field": {
     "optionField": {
-      "periodicityManual": {
+      "frequencyManual": {
         "option": [
           {"value": "y", "text": "Yearly"},
           {"value": "q", "text": "Quarterly"},
@@ -11,6 +11,18 @@
         ],
         "default": "q"
         },
+      "frequencyFRED": {
+        "option": [
+          {"value": "a", "text": "Yearly"},
+          {"value": "sa", "text": "Semi-Yearly"},
+          {"value": "q", "text": "Quarterly"},
+          {"value": "m", "text": "Monthly"},
+          {"value": "b", "text": "Bi-Weekly"},
+          {"value": "w", "text": "Weekly"},
+          {"value": "d", "text": "Daily"}
+        ],
+        "default": null
+      },
         "iterativeDynamicDemeaning": {
           "option": [
             {"value": "sm", "text": "Constant (Static Demeaning)"},
@@ -58,6 +70,12 @@
         "max": 500
       }
     }
+  },
+  "URL": {
+    "baseBackendURL": "https://bn-filtering.herokuapp.com",
+    "bnfUserSpecifiedDataSlug": "/bnf/user-specified-time-series",
+    "bnfFredDataSlug": "/bnf/fred-time-series",
+    "fredDataSlug": "/fred-time-series"
   }
 }
 
