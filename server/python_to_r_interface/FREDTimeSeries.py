@@ -34,10 +34,10 @@ class FREDTimeSeries(TimeSeries):
             'frequency': self.frequency,
             # get as many observations as possible
             'limit': 100000,  # upper bound
-            'sort_order': 'asc'
+            'sort_order': 'asc',
+            'observation_start': self.obs_start,
+            'observation_end': self.obs_end,
         }
-
-        # TODO: constrain dates either after or with request
 
         self.FRED_response = requests.get(FRED_OBS_URL, params=parameters).json()
 

@@ -11,12 +11,13 @@ class FREDTimeSeriesInfo:
         parameters = {
             'series_id': self.time_series_name_abbr,
             'api_key': FRED_API_KEY,
+            'file_type': 'json',
         }
-        series_info = requests.get(FRED_INFO_URL, params=parameters).json()['seriess']
+        series_info = requests.get(FRED_INFO_URL, params=parameters).json()['seriess'][0]
 
         self.observation_start = series_info['observation_start']
         self.observation_end = series_info['observation_end']
-        self.min_freq = series_info['frequency_short']
+        self.min_freq = series_info['frequency_short'].lower()
 
     def get_available_freq(self):
         return FRED_FREQUENCIES[FRED_FREQUENCIES.index(self.min_freq):]
@@ -26,7 +27,8 @@ class FREDTimeSeriesInfo:
 
     def get_information(self):
         return {
-            'dates': self.get_dates(),
+            'start_date': self.observation_start,
+            'end_date': self.observation_end,
             'available_frequencies': self.get_available_freq()
         }
 
