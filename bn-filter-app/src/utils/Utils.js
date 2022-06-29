@@ -21,4 +21,9 @@ const colsToRows = (...columns) => {
 
 const confIntZip = (cycle, ci, bound) => cycle.map((x, i) => bound === "lb" ? x - ci[i] : /* ub */ x + ci[i]);
 
-export {colsToRows, confIntZip}
+const pairToParam = (paramName, currPair) =>
+    paramName + currPair[0].toString() + '=' + currPair[1].toString() + '&'
+
+const pairArrayToParamStr = arr => arr.reduce(pairToParam, '?');
+
+export {colsToRows, confIntZip, pairArrayToParamStr}

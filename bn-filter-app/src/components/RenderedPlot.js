@@ -79,7 +79,7 @@ export class RenderedPlot extends Component {
                         {this.getPlot()}
                         <p> Delta: {plotPageValues.deltaCalc} </p>
                     </div>
-                    <CSVLink style= {{textDecoration: "underline"}}
+                    <CSVLink style={{textDecoration: "underline"}}
                              filename={this.fileName} data={this.getCSVData()}>Download as CSV</CSVLink>
                 </div>
                 <Button

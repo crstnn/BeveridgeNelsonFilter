@@ -26,7 +26,7 @@ export class ParametersForm extends Component {
 
     isErrorDisplaying = field => this.isError(field) && !this.isDisabled[field]();
 
-    errorsDisplayedCount = () => Object.keys(this.props.errors).map(key => this.isErrorDisplaying(key)).filter(x=>x).length
+    errorsDisplayedCount = () => Object.keys(this.props.errors).map(key => this.isErrorDisplaying(key)).filter(x => x).length
 
     continue = e => {
         e.preventDefault();
@@ -45,12 +45,6 @@ export class ParametersForm extends Component {
         e.preventDefault();
         this.props.prevStep();
     }
-
-    // resetFreeTextField = (f) => {
-    //     this.props.handlers.handleChange(field)({target: {value: field.freeText[f].default}})
-    // }
-    //
-    // handleLinkedField = (linkedField) => {if (this.isDisabled[linkedField]()) this.resetFreeTextField(linkedField);}
 
     preAnalysisTransformations = () => {
         const {values, handlers} = this.props;

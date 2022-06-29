@@ -7,7 +7,7 @@ import Loading from "./Loading";
 import Error from "./Error";
 import {field} from "../config.json";
 import {DateS} from "../utils/Date";
-import {confIntZip} from "../utils/Utils";
+import {confIntZip, pairArrayToParamStr} from "../utils/Utils";
 
 export class BasePage extends Component {
     state = {
@@ -129,16 +129,16 @@ export class BasePage extends Component {
         // functions earlier in the array take precedence. [first_validated...last_validated]
         const v = e.target.value;
         const isIncorrectEntry = arr.reduce((total, currentValue) =>
-                                                total ? true : currentValue(v, input) || total, false)
+            total ? true : currentValue(v, input) || total, false)
         this.handleErrorField(!isIncorrectEntry)(input, v)
     }
 
     handleNumberFieldChange = input => e => {
-        this.validateField([this.isEmptyString, this.isNotANum, this.isExceedsMinMax, ], input, e);
+        this.validateField([this.isEmptyString, this.isNotANum, this.isExceedsMinMax,], input, e);
     }
 
     handleIntegerNumberFieldChange = input => e => {
-        this.validateField([this.isEmptyString, this.isNotAnInt, this.isNotANum, this.isExceedsMinMax, ], input, e);
+        this.validateField([this.isEmptyString, this.isNotAnInt, this.isNotANum, this.isExceedsMinMax,], input, e);
     }
 
     getResults = async () => {
@@ -148,10 +148,8 @@ export class BasePage extends Component {
             .split(",")
             .filter(x => x !== "")
 
-        const statePairToParam = (paramName, currPair) =>
-            paramName + currPair[0].toString() + '=' + currPair[1].toString() + '&'
 
-        const paramStr =
+        const paramStr = pairArrayToParamStr(
             [['window', this.state.rollingWindow],
                 ['delta_select', this.state.deltaSelect],
                 ['fixed_delta', this.state.fixedDelta],
@@ -165,8 +163,7 @@ export class BasePage extends Component {
                             ['take_log', this.state.takeLog]]
                         : []
                 )
-            )
-                .reduce(statePairToParam, '?');
+            ));
 
         const finalURL = this.baseBackendURL + this.bnfUserSpecifiedDataSlug + paramStr
 
@@ -247,10 +244,14 @@ export class BasePage extends Component {
             serverError,
         };
 
-        const {handleChange, handleNumberFieldChange, handleIntegerNumberFieldChange,
-            handleCheckboxChange, handleErrorField} = this;
-        const handlers = {handleChange, handleNumberFieldChange, handleIntegerNumberFieldChange,
-                        handleCheckboxChange, handleErrorField};
+        const {
+            handleChange, handleNumberFieldChange, handleIntegerNumberFieldChange,
+            handleCheckboxChange, handleErrorField
+        } = this;
+        const handlers = {
+            handleChange, handleNumberFieldChange, handleIntegerNumberFieldChange,
+            handleCheckboxChange, handleErrorField
+        };
 
         const {x, y, dispCycleCI, cycleCILB, cycleCIUB,} = this.state;
         const plotPageValues = {x, y, cycle, deltaCalc, dispCycleCI, cycleCILB, cycleCIUB, periodicity, startDate,};
