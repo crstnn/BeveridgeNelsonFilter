@@ -1,6 +1,5 @@
 import React from "react";
-import {LocalizationProvider} from "@mui/lab";
-import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+import {LocalizationProvider, DesktopDatePicker} from '@mui/x-date-pickers';
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import {TextField} from "@mui/material";
 

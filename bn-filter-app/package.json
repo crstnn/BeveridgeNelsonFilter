@@ -11,6 +11,7 @@
     "@mui/lab": "^5.0.0-alpha.70",
     "@mui/material": "^5.4.3",
     "@mui/styles": "^5.8.6",
+    "@mui/x-date-pickers": "^5.0.0-alpha.7",
     "@silevis/reactgrid": "^4.0.3",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.3",
