@@ -30,10 +30,15 @@ export class ParametersForm extends Component {
 
     continue = e => {
         e.preventDefault();
-        const {getResults, cancelLoad} = this.props;
+        const {getResults, getFREDResults, values, cancelLoad} = this.props;
 
-        if (this.errorsDisplayedCount() === 0)
-            getResults();
+        if (this.errorsDisplayedCount() === 0) {
+            if (values.dataInputType === "FRED"){
+                getFREDResults();
+            } else if (values.dataInputType === "USER"){
+                getResults();
+            }
+        }
         else
             cancelLoad();
 

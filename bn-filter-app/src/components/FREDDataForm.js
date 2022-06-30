@@ -32,15 +32,18 @@ export class FREDDataForm extends Component {
         availableFrequencies: [],
     }
 
+    continue = e => {
+        this.props.handleChange('mnemonic')({target: {value: this.state.mnemonic}})
+        this.props.handleChange('frequency')({target: {value: this.state.frequency}})
+        this.props.handleChange('startDate')({target: {value: this.state.startDate}})
+        this.props.handleChange('endDate')({target: {value: this.state.endDate}})
+        this.props.nextStep(e);
+    }
+
     createFilteredFrequencies = () => {
         const items = field.optionField.frequencyFRED.option.filter(x => this.state.availableFrequencies.includes(x.value));
         return createMenuItems(items);
     }
-
-    handleFREDMnemonicCheck = () => {
-
-    }
-
 
     checkAvailability = () => {
         const
@@ -155,7 +158,7 @@ export class FREDDataForm extends Component {
                                 <InputLabel>Frequency</InputLabel>
                                 <Select
                                     title="Time-series frequency"
-                                    onChange={handleChange('frequency')}
+                                    onChange={d => this.setState({frequency: d.target.value})}
                                     defaultValue={this.state.frequency}
                                 >{this.createFilteredFrequencies()}</Select>
                             </FormControl>
@@ -182,7 +185,7 @@ export class FREDDataForm extends Component {
                             <Button
                                 variant="contained"
                                 style={styles.button}
-                                onClick={this.props.nextStep}
+                                onClick={this.continue}
                             >Continue</Button>
                         </Grid>
                     </Grid>

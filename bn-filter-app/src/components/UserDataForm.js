@@ -39,10 +39,10 @@ export class UserDataForm extends Component {
                     // Hacky newline fix that works for all browsers
                     // (newline or line break not functioning in Safari)
                     placeholder={"e.g." + (new Array(100).join(" ")) +
-                        "101.2" + (new Array(100).join(" ")) +
-                        "104.8" + (new Array(100).join(" ")) +
-                        "102.4" + (new Array(100).join(" ")) +
-                        "..."}
+                                "101.2" + (new Array(100).join(" ")) +
+                                "104.8" + (new Array(100).join(" ")) +
+                                "102.4" + (new Array(100).join(" ")) +
+                                "..."}
                     defaultValue={values.unprocessedY}
                 />
             </FormControl>

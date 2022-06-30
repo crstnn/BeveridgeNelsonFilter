@@ -24,6 +24,7 @@ export class BasePage extends Component {
         rollingWindow: field.freeText.rollingWindow.default,
         frequency: field.optionField.frequencyManual.default, // periodicity
         startDate: null,
+        endDate: null,
         transform: false, // transforms to data before bnf
         dCode: field.optionField.dCode.default,
         pCode: field.optionField.pCode.default,
@@ -54,6 +55,7 @@ export class BasePage extends Component {
     }
 
     cancelLoading = () => {
+        this.prevStep();
         this.setState({loading: null});
     }
 
@@ -137,30 +139,78 @@ export class BasePage extends Component {
         this.validateField([this.isEmptyString, this.isNotAnInt, this.isNotANum, this.isExceedsMinMax,], input, e);
     }
 
+    bnfParamArr = () => [['window', this.state.rollingWindow],
+        ['delta_select', this.state.deltaSelect],
+        ['fixed_delta', this.state.fixedDelta],
+        ['ib', this.state.iterativeBackcasting],
+        ['demean', this.state.demean],].concat(
+        [['transform', this.state.transform]].concat(
+            this.state.transform ? [
+                    ['p_code', this.state.pCode],
+                    ['d_code', this.state.dCode],
+                    ['take_log', this.state.takeLog]]
+                : []
+        )
+    )
+
+    getResultsForFREDData = async () => {
+
+        const paramStr = pairArrayToParamStr(
+            [['fred_abbr', this.state.mnemonic],
+                ['freq', this.state.frequency],
+                ['obs_start', DateS.getTruncatedDate(this.state.startDate)],
+                ['obs_end', DateS.getTruncatedDate(this.state.endDate)],
+                ].concat(this.bnfParamArr())
+            );
+
+        const finalURL = URL.baseBackendURL + URL.bnfFredDataSlug + paramStr;
+
+        console.log(finalURL);
+
+        this.setState({loading: true}, async () => {
+            fetch(finalURL)
+                .then((response) => {
+                    if (response.status !== 200) {
+                        this.cancelLoading();
+                        throw new Error("bad status");
+                    } else {
+                        return response;
+                    }
+                })
+                .then((response) => response.json())
+                .then(result => {
+                    console.log('Success:', result);
+
+                    const
+                        cycleRes = result["cycle"].map(x => Number(x)),
+                        ciRes = result["ci"].map(x => Number(x)),
+                        deltaRes = Number(result["delta"]);
+
+                    this.setState({
+                        x: result["dates"],
+                        y: result["y"],
+                        cycle: cycleRes,
+                        cycleCI: ciRes,
+                        deltaCalc: deltaRes,
+                        cycleCILB: confIntZip(cycleRes, ciRes, "lb"),
+                        cycleCIUB: confIntZip(cycleRes, ciRes, "ub"),
+                        loading: false,
+                    });
+
+                }).catch((error) => {
+                console.log(error);
+            });
+        });
+    }
+
     getResultsForUserSpecifiedData = async () => {
 
         // dealing with all operating system's newline characters
         this.state.y = this.state.unprocessedY.replace(/(,?(\r\n|\n|\r))|(,\s)/gm, ",")
             .split(",")
-            .filter(x => x !== "")
+            .filter(x => x !== "");
 
-
-        const paramStr = pairArrayToParamStr(
-            [['window', this.state.rollingWindow],
-                ['delta_select', this.state.deltaSelect],
-                ['fixed_delta', this.state.fixedDelta],
-                ['ib', this.state.iterativeBackcasting],
-                ['demean', this.state.demean],
-                ['processed_y', this.state.y]].concat(
-                [['transform', this.state.transform]].concat(
-                    this.state.transform ? [
-                            ['p_code', this.state.pCode],
-                            ['d_code', this.state.dCode],
-                            ['take_log', this.state.takeLog]]
-                        : []
-                    )
-                )
-            );
+        const paramStr = pairArrayToParamStr([['processed_y', this.state.y]].concat(this.bnfParamArr()));
 
         const finalURL = URL.baseBackendURL + URL.bnfUserSpecifiedDataSlug + paramStr;
 
@@ -239,6 +289,7 @@ export class BasePage extends Component {
             errorMessage,
             loading,
             serverError,
+            dataInputType
         };
 
         const {
@@ -282,6 +333,7 @@ export class BasePage extends Component {
                                         cancelLoad={this.cancelLoading}
                                         handlers={handlers}
                                         getResults={this.getResultsForUserSpecifiedData}
+                                        getFREDResults={this.getResultsForFREDData}
                                         values={parametersFormPageValues}
                                         errors={errorMessage}
                                     />
@@ -299,10 +351,7 @@ export class BasePage extends Component {
                                                     prevStep={this.prevStep}
                                                     plotPageValues={plotPageValues}
                                                 />)
-                                        } else {
-                                            // error
-                                            this.prevStep();
-                                        }
+                                        } else {/* error */}
                                     })()}
                                 </>
                             )
