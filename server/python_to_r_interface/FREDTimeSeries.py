@@ -48,3 +48,9 @@ class FREDTimeSeries(TimeSeries):
             if o['value'] != '.':  # FRED occasionally has a bug where they return a '.' in a series
                 self._y.append(float(o['value']))
                 self.dates.append(o['date'])
+
+    def get_series_dict(self):
+        return {
+            'dates': self.dates,
+            'y': self._y,
+        }

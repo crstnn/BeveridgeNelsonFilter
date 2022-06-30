@@ -71,7 +71,7 @@ def index():
 def fred_time_series():
     fred_series = FREDTimeSeriesInfo(get_fred_abbr())
 
-    res = jsonify(fred_series.get_information())
+    res = jsonify(fred_series.get_information_dict())
 
     return res
 
@@ -82,7 +82,7 @@ def bnf_fred_time_series():
     handle_series_transformation_params(fred_series)
 
     bnf = BNF(fred_series, R, *get_bnf_params())
-    res = jsonify({'dates': fred_series.dates} | bnf.run())
+    res = jsonify(fred_series.get_series_dict() | bnf.run())
 
     return res
 
