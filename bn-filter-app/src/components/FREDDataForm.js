@@ -78,6 +78,7 @@ export class FREDDataForm extends Component {
                         maxDate: endDate,
                         startDate: startDate,
                         endDate: endDate,
+                        frequency: result["available_frequencies"][0],
                         availableFrequencies: result["available_frequencies"],
                         loading: false,
                         isBadMnemonic: false,
