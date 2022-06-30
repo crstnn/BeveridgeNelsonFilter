@@ -21,14 +21,14 @@ import {ThreeDots} from "react-loader-spinner";
 export class FREDDataForm extends Component {
 
     state = {
-        mnemonic: "",
-        isBadMnemonic: true,
+        mnemonic: this.props.values.mnemonic,
+        isBadMnemonic: null,
         loading: false,
         frequency: "",
         minDate: null,
         maxDate: null,
-        startDate: null,
-        endDate: null,
+        startDate: this.props.values.mnemonic === "" ? null : this.props.values.startDate,
+        endDate: this.props.values.endDate,
         availableFrequencies: [],
     }
 
@@ -91,7 +91,15 @@ export class FREDDataForm extends Component {
 
     mnemonicInput = () => {
 
-        const mnemonicHelperText = () => {return this.state.isBadMnemonic ? "The mnemonic is not available" : "The mnemonic is available"}
+        const mnemonicHelperText = () => {
+            if (this.state.isBadMnemonic === null) {
+                return "​"
+            } else if (!this.state.isBadMnemonic) {
+                return "The mnemonic is available"
+            } else if (this.state.isBadMnemonic) {
+                return "The mnemonic is not available"
+            }
+        }
 
         return (
             <Grid container direction="column" sx={{minHeight: 100}}
@@ -102,6 +110,7 @@ export class FREDDataForm extends Component {
                         <JoinedTextField variant="outlined" label="FRED mnemonic"
                                          color={this.state.isBadMnemonic ? "error" : "success"} placeholder="e.g. GDPC1" sx={{width: 250}}
                                          onChange={(e) => this.setState({mnemonic: e.target.value}) }
+                                         defaultValue={this.state.mnemonic}
                                          InputProps={{
                                              endAdornment: this.state.loading ? <ThreeDots height={30} width={30} color='grey'/> : null}}/>
                         <JoinedButton onClick={this.checkAvailability} variant="outlined">Check</JoinedButton>
