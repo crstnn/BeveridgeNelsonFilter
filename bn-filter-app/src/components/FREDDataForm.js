@@ -24,8 +24,6 @@ export class FREDDataForm extends Component {
         mnemonic: this.props.values.mnemonic,
         isBadMnemonic: null,
         loading: false,
-        minDate: null,
-        maxDate: null,
     }
 
     createFilteredFrequencies = () => {
@@ -61,8 +59,6 @@ export class FREDDataForm extends Component {
                         endDate = new Date(result["end_date"]);
 
                     this.setState({
-                        minDate: startDate,
-                        maxDate: endDate,
                         loading: false,
                         isBadMnemonic: false,
                     });
@@ -70,6 +66,8 @@ export class FREDDataForm extends Component {
                     this.props.handleChange('mnemonic')({target: {value: this.state.mnemonic}});
                     this.props.handleChange('startDateFRED')({target: {value: startDate}});
                     this.props.handleChange('endDateFRED')({target: {value: endDate}});
+                    this.props.handleChange('minDate')({target: {value: startDate}});
+                    this.props.handleChange('maxDate')({target: {value: endDate}});
                     this.props.handleChange('availableFrequencies')({target: {value: result["available_frequencies"]}});
                     this.props.handleChange('frequencyFRED')({target: {value: result["available_frequencies"][0]}});
 
@@ -113,7 +111,7 @@ export class FREDDataForm extends Component {
 
 
     render() {
-        const {values, handleCheckboxChange} = this.props;
+        const {values, handleChange, handleCheckboxChange} = this.props;
 
         return (
             <div>
@@ -140,24 +138,24 @@ export class FREDDataForm extends Component {
                             <CustomDatePicker
                                               label={"Start Date"}
                                               date={values.startDateFRED}
-                                              minDate={this.state.minDate}
-                                              maxDate={this.state.maxDate}
-                                              updateDate={this.props.handleChange('startDateFRED')}/>
+                                              minDate={values.minDate}
+                                              maxDate={values.maxDate}
+                                              updateDate={handleChange('startDateFRED')}/>
                         </Grid>
                         <Grid item xs={2}>
                             <CustomDatePicker
                                               label={"End Date"}
                                               date={values.endDateFRED}
-                                              minDate={this.state.minDate}
-                                              maxDate={this.state.maxDate}
-                                              updateDate={this.props.handleChange('endDateFRED')}/>
+                                              minDate={values.minDate}
+                                              maxDate={values.maxDate}
+                                              updateDate={handleChange('endDateFRED')}/>
                         </Grid>
                         <Grid item xs={2}>
                             <FormControl variant="standard" sx={{minWidth: 220}}>
                                 <InputLabel>Frequency</InputLabel>
                                 <Select
                                     title="Time-series frequency"
-                                    onChange={this.props.handleChange('frequencyFRED')}
+                                    onChange={handleChange('frequencyFRED')}
                                     defaultValue={values.frequencyFRED}
                                 >{this.createFilteredFrequencies()}</Select>
                             </FormControl>

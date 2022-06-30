@@ -26,6 +26,8 @@ export class BasePage extends Component {
         startDate: null,
         endDate: null,
         startDateFRED: null,
+        minDate: null,
+        maxDate: null,
         endDateFRED: null,
         availableFrequencies: [],
         frequencyFRED: field.optionField.frequencyFRED.default,
@@ -259,9 +261,10 @@ export class BasePage extends Component {
 
 
     render() {
-        const {unprocessedY, startDate, endDate, startDateFRED, endDateFRED, mnemonic, frequency, frequencyFRED, dataInputType, availableFrequencies, dispCycleCI} = this.state;
+        const {unprocessedY, startDate, endDate, frequency, dataInputType, dispCycleCI} = this.state;
+        const {startDateFRED, endDateFRED, minDate, maxDate, mnemonic, frequencyFRED, availableFrequencies} = this.state;
         const dataUserFormPageValues = {unprocessedY, startDate, endDate, frequency, dataInputType, dispCycleCI};
-        const dataFREDFormPageValues = {startDateFRED, endDateFRED, mnemonic, frequencyFRED, dataInputType, availableFrequencies, dispCycleCI};
+        const dataFREDFormPageValues = {startDateFRED, endDateFRED, minDate, maxDate, mnemonic, frequencyFRED, dataInputType, availableFrequencies, dispCycleCI};
 
         const {
             step,
