@@ -35,23 +35,8 @@ a:hover {
     text-decoration: underline;
 }
 
-ol > li::marker {
-    font-weight: bold;
-}
-
-/*.fade-appear, .fade-enter {*/
-/*    opacity: 0;*/
-/*    transform: scale(0.2);*/
+/*ol > li::marker {*/
+/*    font-weight: bold;*/
 /*}*/
 
-/*.fade-appear-active, .fade-enter-active {*/
-/*    opacity: 1;*/
-/*    transform: scale(1);*/
-/*    transition: all 1000ms;*/
-/*}*/
-
-/*.reactgrid-wrapper {*/
-/*    height: 100px;*/
-/*    overflow: scroll;*/
-/*}*/
 

@@ -114,7 +114,7 @@ export class FREDDataForm extends Component {
 
 
     render() {
-        const {values, handleChange, handleCheckboxChange} = this.props;
+        const {values, handleCheckboxChange} = this.props;
 
         return (
             <div>
