@@ -25,6 +25,8 @@ export class FREDDataForm extends Component {
         isBadMnemonic: true,
         loading: false,
         frequency: "",
+        minDate: null,
+        maxDate: null,
         startDate: null,
         endDate: null,
         availableFrequencies: [],
@@ -64,9 +66,15 @@ export class FREDDataForm extends Component {
                 .then(result => {
                     console.log('Success:', result);
 
+                    const
+                        startDate = new Date(result["start_date"]),
+                        endDate = new Date(result["end_date"]);
+
                     this.setState({
-                        startDate: new Date(result["start_date"]),
-                        endDate: new Date(result["end_date"]),
+                        minDate: startDate,
+                        maxDate: endDate,
+                        startDate: startDate,
+                        endDate: endDate,
                         availableFrequencies: result["available_frequencies"],
                         loading: false,
                         isBadMnemonic: false,
@@ -130,16 +138,16 @@ export class FREDDataForm extends Component {
                             <CustomDatePicker
                                               label={"Start Date"}
                                               date={this.state.startDate}
-                                              minDate={this.state.startDate}
-                                              maxDate={this.state.endDate}
+                                              minDate={this.state.minDate}
+                                              maxDate={this.state.maxDate}
                                               updateDate={d => this.setState({startDate: d.target.value})}/>
                         </Grid>
                         <Grid item xs={2}>
                             <CustomDatePicker
                                               label={"End Date"}
                                               date={this.state.endDate}
-                                              minDate={this.state.startDate}
-                                              maxDate={this.state.endDate}
+                                              minDate={this.state.minDate}
+                                              maxDate={this.state.maxDate}
                                               updateDate={d => this.setState({startDate: d.target.value})}/>
                         </Grid>
                         <Grid item xs={2}>
