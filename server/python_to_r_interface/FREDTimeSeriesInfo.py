@@ -31,4 +31,3 @@ class FREDTimeSeriesInfo:
             'end_date': self.observation_end,
             'available_frequencies': self.get_available_freq()
         }
-

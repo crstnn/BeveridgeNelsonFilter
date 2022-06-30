@@ -21,7 +21,6 @@ else:  # ON LOCAL
 
     FRED_API_KEY = localConfig['KEY']['FRED_API_KEY']
 
-
 import rpy2.robjects as robj
 from rpy2.robjects.vectors import FloatVector
 
