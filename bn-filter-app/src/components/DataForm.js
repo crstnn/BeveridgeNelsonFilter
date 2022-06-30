@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import {
+    ToggleButton,
+    ToggleButtonGroup,
     Divider,
 } from "@mui/material";
 import '../styles/App.css';
-import {ToggleButton, ToggleButtonGroup} from "@mui/lab";
 import {FREDDataForm} from "./FREDDataForm";
 import {UserDataForm} from "./UserDataForm";
 
