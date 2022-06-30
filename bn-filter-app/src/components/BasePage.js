@@ -25,6 +25,10 @@ export class BasePage extends Component {
         frequency: field.optionField.frequencyManual.default, // periodicity
         startDate: null,
         endDate: null,
+        startDateFRED: null,
+        endDateFRED: null,
+        availableFrequencies: [],
+        frequencyFRED: field.optionField.frequencyFRED.default,
         transform: false, // transforms to data before bnf
         dCode: field.optionField.dCode.default,
         pCode: field.optionField.pCode.default,
@@ -157,9 +161,9 @@ export class BasePage extends Component {
 
         const paramStr = pairArrayToParamStr(
             [['fred_abbr', this.state.mnemonic],
-                ['freq', this.state.frequency],
-                ['obs_start', DateS.getTruncatedDate(this.state.startDate)],
-                ['obs_end', DateS.getTruncatedDate(this.state.endDate)],
+                ['freq', this.state.frequencyFRED],
+                ['obs_start', DateS.getTruncatedDate(this.state.startDateFRED)],
+                ['obs_end', DateS.getTruncatedDate(this.state.endDateFRED)],
                 ].concat(this.bnfParamArr())
             );
 
@@ -255,8 +259,9 @@ export class BasePage extends Component {
 
 
     render() {
-        const {unprocessedY, startDate, endDate, mnemonic, frequency, dataInputType} = this.state;
-        const dataFormPageValues = {unprocessedY, startDate, endDate, mnemonic, frequency, dataInputType};
+        const {unprocessedY, startDate, endDate, startDateFRED, endDateFRED, mnemonic, frequency, frequencyFRED, dataInputType, availableFrequencies, dispCycleCI} = this.state;
+        const dataUserFormPageValues = {unprocessedY, startDate, endDate, frequency, dataInputType, dispCycleCI};
+        const dataFREDFormPageValues = {startDateFRED, endDateFRED, mnemonic, frequencyFRED, dataInputType, availableFrequencies, dispCycleCI};
 
         const {
             step,
@@ -301,7 +306,7 @@ export class BasePage extends Component {
             handleCheckboxChange, handleErrorField
         };
 
-        const {x, y, dispCycleCI, cycleCILB, cycleCIUB,} = this.state;
+        const {x, y, cycleCILB, cycleCIUB,} = this.state;
         const plotPageValues = {x, y, cycle, deltaCalc, dispCycleCI, cycleCILB, cycleCIUB, frequency, startDate,};
 
         return (
@@ -314,7 +319,8 @@ export class BasePage extends Component {
                                 prevStep={this.prevStep}
                                 handleChange={this.handleChange}
                                 handleCheckboxChange={this.handleCheckboxChange}
-                                values={dataFormPageValues}
+                                valuesUserData={dataUserFormPageValues}
+                                valuesFREDData={dataFREDFormPageValues}
                             />
                         case 3:
                             return (

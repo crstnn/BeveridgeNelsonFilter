@@ -24,30 +24,17 @@ export class FREDDataForm extends Component {
         mnemonic: this.props.values.mnemonic,
         isBadMnemonic: null,
         loading: false,
-        frequency: "",
         minDate: null,
         maxDate: null,
-        startDate: this.props.values.mnemonic === "" ? null : this.props.values.startDate,
-        endDate: this.props.values.endDate,
-        availableFrequencies: [],
-    }
-
-    continue = e => {
-        this.props.handleChange('mnemonic')({target: {value: this.state.mnemonic}})
-        this.props.handleChange('frequency')({target: {value: this.state.frequency}})
-        this.props.handleChange('startDate')({target: {value: this.state.startDate}})
-        this.props.handleChange('endDate')({target: {value: this.state.endDate}})
-        this.props.nextStep(e);
     }
 
     createFilteredFrequencies = () => {
-        const items = field.optionField.frequencyFRED.option.filter(x => this.state.availableFrequencies.includes(x.value));
+        const items = field.optionField.frequencyFRED.option.filter(x => this.props.values.availableFrequencies.includes(x.value));
         return createMenuItems(items);
     }
 
     checkAvailability = () => {
         const
-            values = this.props.values,
             paramStr = pairArrayToParamStr([['fred_abbr', this.state.mnemonic]]),
             finalURL = URL.baseBackendURL + URL.fredDataSlug + paramStr;
 
@@ -76,13 +63,15 @@ export class FREDDataForm extends Component {
                     this.setState({
                         minDate: startDate,
                         maxDate: endDate,
-                        startDate: startDate,
-                        endDate: endDate,
-                        frequency: result["available_frequencies"][0],
-                        availableFrequencies: result["available_frequencies"],
                         loading: false,
                         isBadMnemonic: false,
                     });
+
+                    this.props.handleChange('mnemonic')({target: {value: this.state.mnemonic}});
+                    this.props.handleChange('startDateFRED')({target: {value: startDate}});
+                    this.props.handleChange('endDateFRED')({target: {value: endDate}});
+                    this.props.handleChange('availableFrequencies')({target: {value: result["available_frequencies"]}});
+                    this.props.handleChange('frequencyFRED')({target: {value: result["available_frequencies"][0]}});
 
                 }).catch((error) => {
                 console.log(error);
@@ -150,26 +139,26 @@ export class FREDDataForm extends Component {
                         <Grid item xs={2}>
                             <CustomDatePicker
                                               label={"Start Date"}
-                                              date={this.state.startDate}
+                                              date={values.startDateFRED}
                                               minDate={this.state.minDate}
                                               maxDate={this.state.maxDate}
-                                              updateDate={d => this.setState({startDate: d.target.value})}/>
+                                              updateDate={this.props.handleChange('startDateFRED')}/>
                         </Grid>
                         <Grid item xs={2}>
                             <CustomDatePicker
                                               label={"End Date"}
-                                              date={this.state.endDate}
+                                              date={values.endDateFRED}
                                               minDate={this.state.minDate}
                                               maxDate={this.state.maxDate}
-                                              updateDate={d => this.setState({startDate: d.target.value})}/>
+                                              updateDate={this.props.handleChange('endDateFRED')}/>
                         </Grid>
                         <Grid item xs={2}>
                             <FormControl variant="standard" sx={{minWidth: 220}}>
                                 <InputLabel>Frequency</InputLabel>
                                 <Select
                                     title="Time-series frequency"
-                                    onChange={d => this.setState({frequency: d.target.value})}
-                                    defaultValue={this.state.frequency}
+                                    onChange={this.props.handleChange('frequencyFRED')}
+                                    defaultValue={values.frequencyFRED}
                                 >{this.createFilteredFrequencies()}</Select>
                             </FormControl>
                         </Grid>
@@ -195,7 +184,7 @@ export class FREDDataForm extends Component {
                             <Button
                                 variant="contained"
                                 style={styles.button}
-                                onClick={this.continue}
+                                onClick={this.props.nextStep}
                             >Continue</Button>
                         </Grid>
                     </Grid>

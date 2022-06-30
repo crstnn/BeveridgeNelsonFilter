@@ -21,7 +21,7 @@ export class DataForm extends Component {
     }
 
     render() {
-        const {values, handleChange, handleCheckboxChange} = this.props;
+        const {valuesUserData, valuesFREDData, handleChange, handleCheckboxChange} = this.props;
 
         return (
             <>
@@ -29,7 +29,7 @@ export class DataForm extends Component {
                     <Divider style={{fontSize: 'x-large'}}>
                         <ToggleButtonGroup
                             color="primary"
-                            value={values.dataInputType}
+                            value={valuesUserData.dataInputType}
                             exclusive
                             onChange={handleChange('dataInputType')}
                         >
@@ -40,21 +40,21 @@ export class DataForm extends Component {
                 </div>
 
                 {(() => {
-                    switch (values.dataInputType) {
+                    switch (valuesUserData.dataInputType) {
                         case "USER":
                             return <UserDataForm
                                     nextStep={this.continue}
                                     prevStep={this.back}
                                     handleChange={handleChange}
                                     handleCheckboxChange={handleCheckboxChange}
-                                    values={values}/>
+                                    values={valuesUserData}/>
                         case "FRED":
                             return <FREDDataForm
                                 nextStep={this.continue}
                                 prevStep={this.back}
                                 handleChange={handleChange}
                                 handleCheckboxChange={handleCheckboxChange}
-                                values={values}/>
+                                values={valuesFREDData}/>
                     }
                 })()}
 
