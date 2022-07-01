@@ -3,7 +3,7 @@
     "optionField": {
       "frequencyManual": {
         "option": [
-          {"value": "y", "text": "Yearly"},
+          {"value": "a", "text": "Annual"},
           {"value": "q", "text": "Quarterly"},
           {"value": "m", "text": "Monthly"},
           {"value": "w", "text": "Weekly"},
@@ -13,8 +13,8 @@
         },
       "frequencyFRED": {
         "option": [
-          {"value": "a", "text": "Yearly"},
-          {"value": "sa", "text": "Semi-Yearly"},
+          {"value": "a", "text": "Annual"},
+          {"value": "sa", "text": "Semiannual"},
           {"value": "q", "text": "Quarterly"},
           {"value": "m", "text": "Monthly"},
           {"value": "b", "text": "Bi-Weekly"},

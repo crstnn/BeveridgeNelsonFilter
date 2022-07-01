@@ -2,7 +2,7 @@ class DateS extends Date {
 
     static createDate = (key, date) => {
         switch (key) {
-            case "y":
+            case "a":
                 return new YearlyDate(date)
             case "q":
                 return new QuarterlyDate(date)
