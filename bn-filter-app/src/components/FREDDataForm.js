@@ -22,7 +22,7 @@ export class FREDDataForm extends Component {
 
     state = {
         mnemonic: this.props.values.mnemonic,
-        isBadMnemonic: this.props.errors?.['mnemonic'],
+        isBadMnemonic: this.props.errors['mnemonic'],
         loading: false,
     }
 
@@ -83,12 +83,12 @@ export class FREDDataForm extends Component {
 
     mnemonicInput = () => {
 
-        const noText = () => this.props.errors?.["mnemonic"] === undefined && this.props.values.mnemonic === ""
+        const noText = () => this.props.errors["mnemonic"] === undefined && this.props.values.mnemonic === ""
         const mnemonicHelperText = () => {
             if (noText()) {
                 return "​"
             }
-            else if(this.props.errors?.['mnemonic'] !== undefined) {
+            else if(this.props.errors['mnemonic'] !== undefined) {
                 return this.props.errors['mnemonic']
             } else return "The mnemonic is available"
         }
@@ -101,8 +101,8 @@ export class FREDDataForm extends Component {
                 <Grid item>
                     <FormGroup row>
                         <JoinedTextField variant="outlined" label="FRED mnemonic"
-                                         color={this.props.errors?.["mnemonic"] === undefined && this.props.values.mnemonic !== "" ? "success" : null} placeholder="e.g. GDPC1" sx={{width: 250}}
-                                         error={this.props.errors?.["mnemonic"] !== undefined}
+                                         color={this.props.errors["mnemonic"] === undefined && this.props.values.mnemonic !== "" ? "success" : null} placeholder="e.g. GDPC1" sx={{width: 250}}
+                                         error={this.props.errors["mnemonic"] !== undefined}
                                          onChange={(e) => this.setState({mnemonic: e.target.value}) }
                                          defaultValue={this.state.mnemonic}
                                          InputProps={{
