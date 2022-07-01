@@ -120,7 +120,7 @@ export class FREDDataForm extends Component {
         const {values, handleChange, handleCheckboxChange} = this.props;
 
         return (
-            <div style={{minHeight: 530,}}>
+            <div>
                 <div className="information">
                     <p>Choose a <a target="_blank"
                                                 rel="noopener noreferrer"

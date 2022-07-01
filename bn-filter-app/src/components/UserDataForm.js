@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import {
-    Button,
     Checkbox,
     Divider,
     FormControl,
@@ -20,7 +19,7 @@ export class UserDataForm extends Component {
         const {values, handleChange, handleCheckboxChange} = this.props;
 
         return (
-        <div style={{minHeight: 530,}}>
+        <div>
             <div className="information">
                 <p>Enter or paste in your chosen time series below. Each observation must start on the next line. Pasting a time series from a CSV will achieve the appropriate formatting.
                 </p>
@@ -51,7 +50,7 @@ export class UserDataForm extends Component {
                 <Divider light
                          title="This option does not make alterations to the data but changes the display of the graph output"
                          style={{fontSize: 'large'}}>Display Options</Divider>
-                <Grid container direction="column" sx={{minHeight: 250, paddingTop: 4}}
+                <Grid container direction="column" sx={{minHeight: 400, paddingTop: 2}}
                       justifyContent="space-evenly"
                       alignItems="center">
                     <Grid item xs={4}>

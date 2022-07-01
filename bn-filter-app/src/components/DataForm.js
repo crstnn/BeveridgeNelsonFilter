@@ -28,7 +28,7 @@ export class DataForm extends Component {
 
         return (
             <>
-                <div style={{minHeight: 360,}}>
+                <div style={{minHeight: 600,}}>
                     <div className="information">
                         <Divider style={{fontSize: 'x-large'}}>
                             <ToggleButtonGroup
@@ -83,7 +83,7 @@ export default DataForm
 
 const styles = {
     button: {
-        margin: "0 30px 100px",
+        margin: "0 20px 100px",
     },
     headingFormControlLabel: {fontSize: 'large'}
 }

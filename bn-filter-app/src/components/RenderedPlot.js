@@ -73,8 +73,8 @@ export class RenderedPlot extends Component {
     render() {
         const {plotPageValues} = this.props;
         return (
-            <div>
-                <div>
+            <>
+                <div style={{minHeight: 600,}}>
                     <div>
                         {this.getPlot()}
                         <p> Delta: {plotPageValues.deltaCalc} </p>
@@ -87,7 +87,7 @@ export class RenderedPlot extends Component {
                     style={styles.button}
                     onClick={this.back}
                 >Back</Button>
-            </div>
+            </>
 
         );
     }
@@ -95,7 +95,7 @@ export class RenderedPlot extends Component {
 
 const styles = {
     button: {
-        margin: "20px 30px 100px",
+        margin: "0 20px 100px",
     }
 }
 

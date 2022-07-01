@@ -126,7 +126,6 @@ export class ParametersForm extends Component {
                     width: "450px",
                     alignItems: "center",
                     display: "inline-block",
-                    paddingBottom: "50px"
                 }}>
                     <Grid container alignItems="flex-start" justifyContent="space-evenly" spacing={2}>
                         <Grid item xs={8}>
@@ -198,9 +197,10 @@ export class ParametersForm extends Component {
     render() {
         return (
             <div>
-                {this.preAnalysisTransformations()}
-                {this.bnFilterParameters()}
-                <br/>
+                <div style={{minHeight: 600,}}>
+                    {this.preAnalysisTransformations()}
+                    {this.bnFilterParameters()}
+                </div>
                 <Button
                     variant="outlined"
                     style={styles.button}
@@ -211,7 +211,6 @@ export class ParametersForm extends Component {
                     style={styles.button}
                     onClick={this.continue}
                 >Get Trend Decomposition</Button>
-                <br/>
             </div>
         )
     }
@@ -220,7 +219,7 @@ export class ParametersForm extends Component {
 
 const styles = {
     button: {
-        margin: "0 30px 100px",
+        margin: "0 20px 100px",
     }
 }
 
