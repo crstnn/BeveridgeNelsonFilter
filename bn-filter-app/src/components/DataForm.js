@@ -41,22 +41,20 @@ export class DataForm extends Component {
                 </div>
 
                 {(() => {
-                    switch (valuesUserData.dataInputType) {
-                        case "USER":
-                            return <UserDataForm
+                    if (valuesUserData.dataInputType === "USER")
+                        return <UserDataForm
                                     nextStep={this.continue}
                                     prevStep={this.back}
                                     handleChange={handleChange}
                                     handleCheckboxChange={handleCheckboxChange}
                                     values={valuesUserData}/>
-                        case "FRED":
-                            return <FREDDataForm
+                    else if (valuesUserData.dataInputType === "FRED")
+                        return <FREDDataForm
                                 nextStep={this.continue}
                                 prevStep={this.back}
                                 handleChange={handleChange}
                                 handleCheckboxChange={handleCheckboxChange}
                                 values={valuesFREDData}/>
-                    }
                 })()}
 
             </>
