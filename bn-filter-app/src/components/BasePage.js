@@ -330,12 +330,6 @@ export class BasePage extends Component {
                         case 3:
                             return (
                                 <>
-                                    {this.state.loading === null ?
-                                        <Error
-                                            tagName={"During the running of the BN filter a problem occurred. Please check that the inputs are appropriate."}
-                                            close={() => {this.setState({loading: false})}}/>
-                                        : null}
-
                                     <ParametersForm
                                         nextStep={this.nextStep}
                                         prevStep={this.prevStep}

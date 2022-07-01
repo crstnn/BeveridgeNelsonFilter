@@ -14,6 +14,7 @@ import {
 import '../styles/App.css';
 import {field} from "../config.json";
 import createMenuItems from "../utils/CreateMenuItem";
+import Error from "./Error";
 
 export class ParametersForm extends Component {
 
@@ -70,8 +71,7 @@ export class ParametersForm extends Component {
                         />
                     </FormControl></Divider>
                 </div>
-                <Grid container direction="column" justifyContent="space-evenly" spacing={4}
-                      alignItems="center">
+                <Grid container direction="column" justifyContent="space-evenly" alignItems="center" spacing={3}>
                     <Grid item xs={4}>
                         <FormControl variant="standard">
                             <FormControlLabel label="Natural Logarithm"
@@ -127,7 +127,7 @@ export class ParametersForm extends Component {
                     alignItems: "center",
                     display: "inline-block",
                 }}>
-                    <Grid container alignItems="flex-start" justifyContent="space-evenly" spacing={2}>
+                    <Grid container alignItems="flex-start" justifyContent="space-evenly" spacing={3}>
                         <Grid item xs={8}>
                             <FormControl variant="standard" sx={{minWidth: 300}}>
                                 <InputLabel>Signal-to-Noise Ratio (Delta)</InputLabel>
@@ -196,8 +196,13 @@ export class ParametersForm extends Component {
 
     render() {
         return (
-            <div>
+            <>
                 <div style={{minHeight: 600,}}>
+                    {this.props.values.loading === null ?
+                        <Error
+                            tagName={"During the running of the BN filter a problem occurred. Please check that the inputs are appropriate."}
+                            close={() => {this.props.handlers.handleChange("loading")({target: {value: false}})}}/>
+                        : null}
                     {this.preAnalysisTransformations()}
                     {this.bnFilterParameters()}
                 </div>
@@ -211,7 +216,7 @@ export class ParametersForm extends Component {
                     style={styles.button}
                     onClick={this.continue}
                 >Get Trend Decomposition</Button>
-            </div>
+            </>
         )
     }
 }
