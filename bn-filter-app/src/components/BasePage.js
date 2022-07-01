@@ -294,7 +294,6 @@ export class BasePage extends Component {
             dCode,
             pCode,
             takeLog,
-            errorMessage,
             loading,
             serverError,
             dataInputType
@@ -320,10 +319,13 @@ export class BasePage extends Component {
                             return <DataForm
                                 nextStep={this.nextStep}
                                 prevStep={this.prevStep}
+                                setErrorMessage={this.setErrorMessage}
+                                deleteErrorMessage={this.deleteErrorMessage}
                                 handleChange={this.handleChange}
                                 handleCheckboxChange={this.handleCheckboxChange}
                                 valuesUserData={dataUserFormPageValues}
                                 valuesFREDData={dataFREDFormPageValues}
+                                errors={errorMessage}
                             />
                         case 3:
                             return (
@@ -331,9 +333,7 @@ export class BasePage extends Component {
                                     {this.state.loading === null ?
                                         <Error
                                             tagName={"During the running of the BN filter a problem occurred. Please check that the inputs are appropriate."}
-                                            close={() => {
-                                                this.setState({loading: false})
-                                            }}/>
+                                            close={() => {this.setState({loading: false})}}/>
                                         : null}
 
                                     <ParametersForm
@@ -351,17 +351,11 @@ export class BasePage extends Component {
                         case 4:
                             return (
                                 <>
-                                    {(() => {
-                                        if (this.state.loading === true) {
-                                            return Loading();
-                                        } else if (this.state.loading === false) {
-                                            return (
-                                                <RenderedPlot
-                                                    prevStep={this.prevStep}
-                                                    plotPageValues={plotPageValues}
-                                                />)
-                                        } else {/* error */}
-                                    })()}
+                                    {this.state.loading ? Loading() : <RenderedPlot
+                                                                            prevStep={this.prevStep}
+                                                                            plotPageValues={plotPageValues}
+                                                                        />
+                                    }
                                 </>
                             )
                         default: // case 1

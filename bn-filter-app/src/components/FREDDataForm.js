@@ -22,9 +22,11 @@ export class FREDDataForm extends Component {
 
     state = {
         mnemonic: this.props.values.mnemonic,
-        isBadMnemonic: null,
+        isBadMnemonic: this.props.errors?.['mnemonic'],
         loading: false,
     }
+
+
 
     createFilteredFrequencies = () => {
         const items = field.optionField.frequencyFRED.option.filter(x => this.props.values.availableFrequencies.includes(x.value));
@@ -45,6 +47,8 @@ export class FREDDataForm extends Component {
                                 isBadMnemonic: true,
                                 loading: false,
                                 });
+                        this.props.setErrorMessage("mnemonic", "The mnemonic is not available")
+
                         throw new Error("bad status");
                     } else {
                         return response;
@@ -62,7 +66,7 @@ export class FREDDataForm extends Component {
                         loading: false,
                         isBadMnemonic: false,
                     });
-
+                    this.props.deleteErrorMessage("mnemonic")
                     this.props.handleChange('mnemonic')({target: {value: this.state.mnemonic}});
                     this.props.handleChange('startDateFRED')({target: {value: startDate}});
                     this.props.handleChange('endDateFRED')({target: {value: endDate}});
@@ -79,15 +83,16 @@ export class FREDDataForm extends Component {
 
     mnemonicInput = () => {
 
+        const noText = () => this.props.errors?.["mnemonic"] === undefined && this.props.values.mnemonic === ""
         const mnemonicHelperText = () => {
-            if (this.state.isBadMnemonic === null) {
+            if (noText()) {
                 return "​"
-            } else if (!this.state.isBadMnemonic) {
-                return "The mnemonic is available"
-            } else if (this.state.isBadMnemonic) {
-                return "The mnemonic is not available"
             }
+            else if(this.props.errors?.['mnemonic'] !== undefined) {
+                return this.props.errors['mnemonic']
+            } else return "The mnemonic is available"
         }
+
 
         return (
             <Grid container direction="column" sx={{minHeight: 100}}
@@ -96,8 +101,8 @@ export class FREDDataForm extends Component {
                 <Grid item>
                     <FormGroup row>
                         <JoinedTextField variant="outlined" label="FRED mnemonic"
-                                         color={this.state.isBadMnemonic === false ? "success" : null} placeholder="e.g. GDPC1" sx={{width: 250}}
-                                         error={this.state.isBadMnemonic}
+                                         color={this.props.errors?.["mnemonic"] === undefined && this.props.values.mnemonic !== "" ? "success" : null} placeholder="e.g. GDPC1" sx={{width: 250}}
+                                         error={this.props.errors?.["mnemonic"] !== undefined}
                                          onChange={(e) => this.setState({mnemonic: e.target.value}) }
                                          defaultValue={this.state.mnemonic}
                                          InputProps={{
@@ -115,7 +120,7 @@ export class FREDDataForm extends Component {
         const {values, handleChange, handleCheckboxChange} = this.props;
 
         return (
-            <div>
+            <div style={{minHeight: 530,}}>
                 <div className="information">
                     <p>Choose a <a target="_blank"
                                                 rel="noopener noreferrer"
@@ -132,10 +137,10 @@ export class FREDDataForm extends Component {
                              title="This option does not make alterations to the data but changes the display of the graph output"
                              style={{fontSize: 'large'}}>Options</Divider>
 
-                    <Grid container direction="column" sx={{minHeight: 500,}}
+                    <Grid container direction="column" sx={{minHeight: 350,}}
                           justifyContent="space-evenly"
                           alignItems="center">
-                        <Grid item xs={2}>
+                        <Grid item xs={3}>
                             <CustomDatePicker
                                               label={"Start Date"}
                                               date={values.startDateFRED}
@@ -143,7 +148,7 @@ export class FREDDataForm extends Component {
                                               maxDate={values.maxDate}
                                               updateDate={handleChange('startDateFRED')}/>
                         </Grid>
-                        <Grid item xs={2}>
+                        <Grid item xs={3}>
                             <CustomDatePicker
                                               label={"End Date"}
                                               date={values.endDateFRED}
@@ -151,7 +156,7 @@ export class FREDDataForm extends Component {
                                               maxDate={values.maxDate}
                                               updateDate={handleChange('endDateFRED')}/>
                         </Grid>
-                        <Grid item xs={2}>
+                        <Grid item xs={3}>
                             <FormControl variant="standard" sx={{minWidth: 220}}>
                                 <InputLabel>Frequency</InputLabel>
                                 <Select
@@ -162,7 +167,7 @@ export class FREDDataForm extends Component {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={2}>
+                        <Grid item xs={3}>
                             <FormControl sx={{marginBottom: 3, marginTop: 2}} variant="standard">
                                 <FormControlLabel label="95% Confidence Intervals"
                                                   title="Choose to display 95% confidence intervals in graph output"
@@ -173,32 +178,11 @@ export class FREDDataForm extends Component {
                                 />
                             </FormControl>
                         </Grid>
-
-                        <Grid item xs={2}>
-                            <Button
-                                variant="outlined"
-                                style={styles.button}
-                                onClick={this.props.prevStep}
-                            >Back</Button>
-                            <Button
-                                variant="contained"
-                                style={styles.button}
-                                onClick={this.props.nextStep}
-                            >Continue</Button>
-                        </Grid>
                     </Grid>
-
                 </div>
             </div>
         )
     }
-}
-
-const styles = {
-    button: {
-        margin: "0 30px 100px",
-    },
-    headingFormControlLabel: {fontSize: 'large'}
 }
 
 const JoinedTextField = withStyles({

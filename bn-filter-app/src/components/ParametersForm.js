@@ -22,7 +22,7 @@ export class ParametersForm extends Component {
         fixedDelta: () => this.props.values.deltaSelect !== 0,
     };
 
-    isError = field => this.props.values.errorMessage[field] !== undefined;
+    isError = field => this.props.errors[field] !== undefined;
 
     isErrorDisplaying = field => this.isError(field) && !this.isDisabled[field]();
 
@@ -115,7 +115,7 @@ export class ParametersForm extends Component {
         const
             {values, handlers} = this.props,
             {handleChange, handleNumberFieldChange, handleIntegerNumberFieldChange} = handlers,
-            errors = values.errorMessage;
+            errors = this.props.errors;
 
         return (
             <>
@@ -212,7 +212,6 @@ export class ParametersForm extends Component {
                     onClick={this.continue}
                 >Get Trend Decomposition</Button>
                 <br/>
-
             </div>
         )
     }

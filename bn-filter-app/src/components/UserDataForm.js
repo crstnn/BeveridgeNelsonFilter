@@ -20,18 +20,15 @@ export class UserDataForm extends Component {
         const {values, handleChange, handleCheckboxChange} = this.props;
 
         return (
-        <div>
+        <div style={{minHeight: 530,}}>
             <div className="information">
-                <p>Enter or paste in your chosen time series below.
-                    <br/>
-                    Each line must contain a numerical value. Each observation must start on the next line.
-                    Pasting a time series from a CSV will achieve the appropriate formatting.
+                <p>Enter or paste in your chosen time series below. Each observation must start on the next line. Pasting a time series from a CSV will achieve the appropriate formatting.
                 </p>
             </div>
             <FormControl variant="standard" sx={{m: 1, minWidth: 300, paddingRight: 2}}>
                 <TextField
                     multiline
-                    rows={20}
+                    rows={16}
                     label="Time Series (y)"
                     title="Paste your chosen time series here"
                     onChange={handleChange('unprocessedY')}
@@ -87,32 +84,8 @@ export class UserDataForm extends Component {
                         </FormControl>
                     </Grid>
                 </Grid>
-
-                <Grid container direction="column" sx={{minHeight: 340}} justifyContent="space-evenly"
-                      alignItems="center">
-
-                    <Grid item xs={3}>
-                        <Button
-                            variant="outlined"
-                            style={styles.button}
-                            onClick={this.props.prevStep}
-                        >Back</Button>
-                        <Button
-                            variant="contained"
-                            style={styles.button}
-                            onClick={this.props.nextStep}
-                        >Continue</Button>
-                    </Grid>
-                </Grid>
             </div>
         </div>
         )
     }
-}
-
-const styles = {
-    button: {
-        margin: "0 30px 100px",
-    },
-    headingFormControlLabel: {fontSize: 'large'}
 }
