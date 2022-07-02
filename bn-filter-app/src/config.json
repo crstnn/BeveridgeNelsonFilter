@@ -16,8 +16,8 @@
           {"value": "d", "text": "Daily"},
           {"value": "w", "text": "Weekly"},
           {"value": "b", "text": "Bi-Weekly"},
-          {"value": "q", "text": "Quarterly"},
           {"value": "m", "text": "Monthly"},
+          {"value": "q", "text": "Quarterly"},
           {"value": "sa", "text": "Semiannual"},
           {"value": "a", "text": "Annual"}
         ],
