@@ -160,7 +160,7 @@ export class FREDDataForm extends Component {
                             <FormControl variant="standard" sx={{minWidth: 220}}>
                                 <InputLabel>Frequency</InputLabel>
                                 <Select
-                                    title="Time-series frequency (average default aggregation method)"
+                                    title="Time-series frequency (default aggregation method: average)"
                                     onChange={handleChange('frequencyFRED')}
                                     defaultValue={values.frequencyFRED}
                                 >{this.createFilteredFrequencies()}</Select>
