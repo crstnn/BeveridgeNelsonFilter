@@ -60,8 +60,8 @@
       },
     "freeText": {
       "fixedDelta": {
-        "default": 0.1,
-        "min": 0.05,
+        "default": 0.005,
+        "min": 0.0005,
         "max": 1
       },
       "rollingWindow": {
