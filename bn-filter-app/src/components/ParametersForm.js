@@ -143,7 +143,7 @@ export class ParametersForm extends Component {
                             <FormControl variant="standard" sx={{minWidth: 170}}>
                                 <TextField
                                     label={values.deltaSelect === 0 ? "Fixed Delta" : "Minimum Delta"}
-                                    title={values.deltaSelect === 0 ? "Fixed delta for estimation" : "Minimum threshold the grid search will start at"}
+                                    title={values.deltaSelect === 0 ? "Fixed delta for estimation" : "Minimum threshold start point for grid search"}
                                     onChange={handleNumberFieldChange('delta')}
                                     defaultValue={values.delta}
                                     disabled={this.isDisabled['delta']()}
