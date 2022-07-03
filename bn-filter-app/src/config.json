@@ -60,7 +60,7 @@
       },
     "freeText": {
       "delta": {
-        "default": 0.001,
+        "default": 0.01,
         "min": 0.0005,
         "max": 1
       },
