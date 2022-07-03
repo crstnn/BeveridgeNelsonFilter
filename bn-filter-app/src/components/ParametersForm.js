@@ -177,17 +177,6 @@ export class ParametersForm extends Component {
                                 />
                             </FormControl>
                         </Grid>
-                        {/*<Grid item xs={12}>*/}
-                        {/*    <FormControl variant="standard" sx={{minWidth: 450}}>*/}
-                        {/*        <FormControlLabel label="Iterative Backcasting"*/}
-                        {/*                          title="When unselected backcasting is based on unconditional mean*/}
-                        {/*                                (original KMW approach)"*/}
-                        {/*                          control={<Checkbox*/}
-                        {/*                              onChange={handleCheckboxChange('iterativeBackcasting')}*/}
-                        {/*                              checked={values.iterativeBackcasting}/>}*/}
-                        {/*        />*/}
-                        {/*    </FormControl>*/}
-                        {/*</Grid>*/}
                     </Grid>
                 </div>
             </>
