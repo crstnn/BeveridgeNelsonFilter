@@ -24,8 +24,8 @@ class BNF:
                                             iterative=self.iterative,
                                             window=self.window,
                                             delta_select=self.delta_select,
-                                            fixed_delta=self.delta if self.delta_select == 0 else None,
-                                            d0=self.delta if self.delta_select != 0 else None,
+                                            fixed_delta=self.delta if self.delta_select == 0 else 0,  # else: arbitrary value
+                                            d0=self.delta if self.delta_select != 0 else 0,  # else: arbitrary value
                                             demean=self.demean,
                                             ib=self.ib)
 
