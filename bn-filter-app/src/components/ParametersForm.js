@@ -20,7 +20,7 @@ export class ParametersForm extends Component {
 
     isDisabled = {
         rollingWindow: () => this.props.values.demean === "sm",
-        fixedDelta: () => this.props.values.deltaSelect !== 0,
+        delta: () => false, // this.props.values.deltaSelect !== 0,
     };
 
     isError = field => this.props.errors[field] !== undefined;
@@ -142,14 +142,14 @@ export class ParametersForm extends Component {
                         <Grid item xs={4}>
                             <FormControl variant="standard" sx={{minWidth: 170}}>
                                 <TextField
-                                    label="Fixed Delta"
-                                    title="Only necessary when Signal-to-noise ratio is set to 'Fixed Delta'"
-                                    onChange={handleNumberFieldChange('fixedDelta')}
-                                    defaultValue={values.fixedDelta}
-                                    disabled={this.isDisabled['fixedDelta']()}
-                                    error={this.isErrorDisplaying('fixedDelta')}
-                                    helperText={this.isErrorDisplaying('fixedDelta') ?
-                                        errors['fixedDelta'] : "​" /* zero whitespace to prevent height difference when error displays*/}
+                                    label={values.deltaSelect === 0 ? "Fixed Delta" : "Minimum Delta"}
+                                    title={values.deltaSelect === 0 ? "Fixed delta for estimation" : "Minimum threshold the grid search will start at"}
+                                    onChange={handleNumberFieldChange('delta')}
+                                    defaultValue={values.delta}
+                                    disabled={this.isDisabled['delta']()}
+                                    error={this.isErrorDisplaying('delta')}
+                                    helperText={this.isErrorDisplaying('delta') ?
+                                        errors['delta'] : "​" /* zero whitespace to prevent height difference when error displays*/}
                                 />
                             </FormControl>
                         </Grid>
@@ -166,7 +166,7 @@ export class ParametersForm extends Component {
                         <Grid item xs={4}>
                             <FormControl variant="standard" sx={{minWidth: 170}}>
                                 <TextField
-                                    label="Rolling Window"
+                                    label= "Rolling Window"
                                     title="Only necessary when the demeaning method is dynamic. Must be an integer."
                                     onChange={handleIntegerNumberFieldChange('rollingWindow')}
                                     defaultValue={values.rollingWindow}

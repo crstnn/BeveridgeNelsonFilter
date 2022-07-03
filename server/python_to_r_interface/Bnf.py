@@ -3,12 +3,12 @@ import gc
 
 class BNF:
     def __init__(self, time_series,
-                 r_instance, window, delta_select, fixed_delta, ib, demean):
+                 r_instance, window, delta_select, delta, ib, demean):
         self.r_instance = r_instance
         self.time_series_float_vec = time_series.get_time_series_float_vec(self.r_instance)
         self.window = window
         self.delta_select = delta_select
-        self.fixed_delta = fixed_delta
+        self.delta = delta
         self.ib = ib
         self.demean = demean
         if demean == "idm":
@@ -24,7 +24,7 @@ class BNF:
                                             iterative=self.iterative,
                                             window=self.window,
                                             delta_select=self.delta_select,
-                                            fixed_delta=self.fixed_delta,
+                                            fixed_delta=self.delta,
                                             demean=self.demean,
                                             ib=self.ib)
 

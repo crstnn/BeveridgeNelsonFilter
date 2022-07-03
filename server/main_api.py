@@ -43,8 +43,10 @@ def get_fred_params():
 def get_bnf_params():
     delta_select = int(request.args.get("delta_select"))
 
-    fixed_delta_arg = request.args.get("fixed_delta", None)
-    fixed_delta = float(fixed_delta_arg) if fixed_delta_arg is not None and delta_select == 0 else 0.005
+    # fixed_delta_arg = request.args.get("fixed_delta", None)
+    # fixed_delta = float(fixed_delta_arg) if fixed_delta_arg is not None and delta_select == 0 else 0.005
+
+    delta = request.args.get("delta")
 
     ib = request.args.get("ib") == "true"
     demean = request.args.get("demean")
@@ -52,7 +54,7 @@ def get_bnf_params():
     window_arg = request.args.get("window", None)
     window = 40 if window_arg is None or demean == 'sm' else int(window_arg)
 
-    return window, delta_select, fixed_delta, ib, demean
+    return window, delta_select, delta, ib, demean
 
 
 def handle_series_transformation_params(series):
@@ -109,7 +111,7 @@ def bnf_test_time_series():
     us_gdp = TestTimeSeries()  # default GDPC1
     us_gdp.set_transformation_defaults()
 
-    bnf = BNF(us_gdp, R, window=40, delta_select=2, fixed_delta=0.05, ib=True, demean="dm")
+    bnf = BNF(us_gdp, R, window=40, delta_select=2, delta=0.05, ib=True, demean="dm")
 
     res = jsonify(bnf.run())
 

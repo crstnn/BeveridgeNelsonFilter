@@ -17,7 +17,7 @@ export class BasePage extends Component {
         unprocessedY: '',
         x: [], // dates
         y: [], // processed time series
-        fixedDelta: field.freeText.fixedDelta.default,
+        delta: field.freeText.delta.default,
         deltaSelect: 2,
         demean: field.optionField.iterativeDynamicDemeaning.default,
         iterativeBackcasting: true,
@@ -147,7 +147,7 @@ export class BasePage extends Component {
 
     bnfParamArr = () => [['window', this.state.rollingWindow],
         ['delta_select', this.state.deltaSelect],
-        ['fixed_delta', this.state.fixedDelta],
+        ['delta', this.state.delta],
         ['ib', this.state.iterativeBackcasting],
         ['demean', this.state.demean],].concat(
         [['transform', this.state.transform]].concat(
@@ -268,7 +268,7 @@ export class BasePage extends Component {
 
         const {
             step,
-            fixedDelta,
+            delta,
             deltaSelect,
             demean,
             iterativeBackcasting,
@@ -285,7 +285,7 @@ export class BasePage extends Component {
         } = this.state;
         const parametersFormPageValues = {
             unprocessedY,
-            fixedDelta,
+            delta,
             deltaSelect,
             demean,
             iterativeBackcasting,
