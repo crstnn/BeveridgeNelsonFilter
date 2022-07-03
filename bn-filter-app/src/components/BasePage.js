@@ -61,7 +61,6 @@ export class BasePage extends Component {
     }
 
     cancelLoading = () => {
-        this.prevStep();
         this.setState({loading: null});
     }
 
@@ -177,6 +176,7 @@ export class BasePage extends Component {
             fetch(finalURL)
                 .then((response) => {
                     if (response.status !== 200) {
+                        this.prevStep();
                         this.cancelLoading();
                         throw new Error("bad status");
                     } else {

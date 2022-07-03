@@ -33,18 +33,19 @@ export class ParametersForm extends Component {
         e.preventDefault();
         const {getResults, getFREDResults, values, cancelLoad} = this.props;
 
+        console.log("errors", this.errorsDisplayedCount());
+
         if (this.errorsDisplayedCount() === 0) {
             if (values.dataInputType === "FRED"){
                 getFREDResults();
             } else if (values.dataInputType === "USER"){
                 getResults();
             }
+            this.props.nextStep();
         }
-        else
+        else {
             cancelLoad();
-
-        e.preventDefault();
-        this.props.nextStep();
+        }
     }
 
     back = e => {
