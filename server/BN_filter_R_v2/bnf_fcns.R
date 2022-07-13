@@ -654,38 +654,38 @@ BN_Filter <- function(y, p, delta, dynamic_bands, ib, window, compute_stderr = T
 # delta_grid
 select_delta <- function(y, p, ib, delta_select, d0 = 0.005, dt = d0)
 {
-    # Initialise the difference to enter the loop
-    diff_t <- 1;
+  # Initialise the difference to enter the loop
+  diff_t <- 1;
 
-    # Initialise the amplitude to noise ratio
-    delta_grid <- d0
+  # Initialise the amplitude to noise ratio
+  delta_grid <- d0
+  tmp <- BN_Filter(y, p, delta_grid, dynamic_bands, ib, window, F)
+  old_amp_to_noise <- var(tmp$BN_cycle) / mean(square(tmp$aux_out$residuals))
+  old_precisionDeltaBNtrend <- tmp$aux_out$varDeltaBNtrend
+
+  while (diff_t > 0) {
+    delta_grid <- delta_grid + dt
     tmp <- BN_Filter(y, p, delta_grid, dynamic_bands, ib, window, F)
-    old_amp_to_noise <- var(tmp$BN_cycle) / mean(square(tmp$aux_out$residuals))
-    old_precisionDeltaBNtrend <- tmp$aux_out$varDeltaBNtrend
+    new_amp_to_noise <- var(tmp$BN_cycle) / mean(square(tmp$aux_out$residuals))
+    new_precisionDeltaBNtrend <- tmp$aux_out$varDeltaBNtrend
 
-    while (diff_t > 0) {
-        delta_grid <- delta_grid + dt
-        tmp <- BN_Filter(y, p, delta_grid, dynamic_bands, ib, window, F)
-        new_amp_to_noise <- var(tmp$BN_cycle) / mean(square(tmp$aux_out$residuals))
-        new_precisionDeltaBNtrend <- tmp$aux_out$varDeltaBNtrend
-
-	if (delta_select == 1){
-		diff_t <- new_amp_to_noise - old_amp_to_noise
-	}
-
-   	if (delta_select == 2){
-		diff_t <- -(new_precisionDeltaBNtrend - old_precisionDeltaBNtrend)
-	}
-
-        if (diff_t > 0) {
-            old_amp_to_noise <- new_amp_to_noise
-            old_precisionDeltaBNtrend <- new_precisionDeltaBNtrend
-        }
+    if (delta_select == 1){
+    	diff_t <- new_amp_to_noise - old_amp_to_noise
+    }
+    
+     	if (delta_select == 2){
+    	diff_t <- -(new_precisionDeltaBNtrend - old_precisionDeltaBNtrend)
     }
 
-    delta_grid <- delta_grid - d0
+    if (diff_t > 0) {
+        old_amp_to_noise <- new_amp_to_noise
+        old_precisionDeltaBNtrend <- new_precisionDeltaBNtrend
+    }
+  }
 
-    return (delta_grid)
+  delta_grid <- delta_grid - dt
+
+  return (delta_grid)
 }
 
 
@@ -713,9 +713,8 @@ bnf <- function(y,
   # @varargs (...): passed into piecewise demean function
 {
 
-    if(iterative !=0 && demean != 'dm'){
-        stop("Set @iterative to 0 if @demean is not 'dm'.")
-    }
+    if(iterative != 0 && demean != 'dm') stop("Set @iterative to 0 if @demean is not 'dm'.")
+    
   
     # Save 'ts' attributes if 'y' is a 'ts' object
     if (is.ts(y)) {
