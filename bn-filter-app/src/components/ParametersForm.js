@@ -196,7 +196,7 @@ export class ParametersForm extends Component {
                 <div style={{minHeight: 600,}}>
                     {this.props.values.loading === null ?
                         <Error
-                            tagName={"During the running of the BN filter a problem occurred. Please check that the inputs are appropriate."}
+                            tagName={"During the running of the BN filter a problem occurred. Please check that the inputs are appropriate (e.g. values of delta are not too small)."}
                             close={() => {this.props.handlers.handleChange("loading")({target: {value: false}})}}/>
                         : null}
                     {this.preAnalysisTransformations()}
