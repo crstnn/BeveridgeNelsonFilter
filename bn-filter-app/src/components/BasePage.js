@@ -31,7 +31,7 @@ export class BasePage extends Component {
         endDateFRED: null,
         availableFrequencies: [],
         frequencyFRED: field.optionField.frequencyFRED.default,
-        transform: false, // transforms to data before bnf
+        transform: true, // transforms to data before bnf
         dCode: field.optionField.dCode.default,
         pCode: field.optionField.pCode.default,
         takeLog: false,

@@ -9,7 +9,6 @@ import {
     InputLabel,
     Select,
     TextField,
-    Typography
 } from "@mui/material";
 import '../styles/App.css';
 import {field} from "../config.json";
@@ -60,17 +59,7 @@ export class ParametersForm extends Component {
         return (
             <>
                 <div className="information">
-                    <Divider light><FormControl variant="standard">
-                        <FormControlLabel
-                            label={<Typography
-                                style={{fontSize: 'x-large'}}>Transformations</Typography>}
-                            title="Transformations are applied in the order below and are done prior to estimation. Check this box to apply them."
-                            control={<Checkbox
-                                onChange={handleCheckboxChange('transform')}
-                                // style={{transform: "scale(1.25)"}}
-                                checked={values.transform}/>}
-                        />
-                    </FormControl></Divider>
+                    <Divider style={{fontSize: 'x-large'}}>Transformations</Divider>
                 </div>
                 <Grid container direction="column" justifyContent="space-evenly" alignItems="center" spacing={3}>
                     <Grid item xs={4}>
@@ -134,7 +123,15 @@ export class ParametersForm extends Component {
                                 <InputLabel>Signal-to-Noise Ratio (Delta)</InputLabel>
                                 <Select
                                     label="Signal-to-Noise Ratio (Delta)"
-                                    title="Signal-to-Noise Ratio according to benchmark KMW approach"
+                                    title={(() => {
+                                        if(values.deltaSelect === 0) {
+                                            return "Signal-to-Noise Ratio according to user input"
+                                        } else if(values.deltaSelect === 1) {
+                                            return "Signal-to-Noise Ratio according to benchmark KMW approach"
+                                        } else if(values.deltaSelect === 2) {
+                                            return "Signal-to-Noise Ratio according to KMW refinement"
+                                        }
+                                    })()}
                                     onChange={handleChange('deltaSelect')}
                                     defaultValue={values.deltaSelect}
                                 >{createMenuItems(field.optionField.deltaSelect.option)}</Select>
@@ -158,7 +155,16 @@ export class ParametersForm extends Component {
                             <FormControl variant="standard" sx={{minWidth: 290}}>
                                 <InputLabel>Demeaning</InputLabel>
                                 <Select
-                                    label="Demeaning method"
+                                    label="Demeaning"
+                                    title={(() => {
+                                        if(values.demean === 'sm') {
+                                            return "Estimate constant drift"
+                                        } else if(values.demean === 'dm') {
+                                            return "Estimate time-varying drift using rolling window"
+                                        } else if(values.demean === 'idm') {
+                                            return "Iteratively estimate time-varying drift removing cycle and using rolling window according to KMW refinement"
+                                        }
+                                    })()}
                                     onChange={handleChange('demean')}
                                     defaultValue={values.demean}
                                 >{createMenuItems(field.optionField.iterativeDynamicDemeaning.option)}</Select>
@@ -168,7 +174,7 @@ export class ParametersForm extends Component {
                             <FormControl variant="standard" sx={{minWidth: 170}}>
                                 <TextField
                                     label= "Rolling Window"
-                                    title="Only necessary when the demeaning method is dynamic. Must be an integer."
+                                    title="Only active when using dynamic demeaning"
                                     onChange={handleIntegerNumberFieldChange('rollingWindow')}
                                     defaultValue={values.rollingWindow}
                                     disabled={this.isDisabled['rollingWindow']()}

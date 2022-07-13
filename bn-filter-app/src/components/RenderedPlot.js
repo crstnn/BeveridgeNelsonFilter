@@ -77,7 +77,7 @@ export class RenderedPlot extends Component {
                 <div style={{minHeight: 600,}}>
                     <div>
                         {this.getPlot()}
-                        <p> Delta: {plotPageValues.deltaCalc} </p>
+                        <p> Delta: {plotPageValues.deltaCalc.toFixed(4) /* delta reported to 4 d.p.*/} </p>
                     </div>
                     <CSVLink style={{textDecoration: "underline"}}
                              filename={this.fileName} data={this.getCSVData()}>Download as CSV</CSVLink>

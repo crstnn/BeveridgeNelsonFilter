@@ -160,7 +160,7 @@ export class FREDDataForm extends Component {
                             <FormControl variant="standard" sx={{minWidth: 220}}>
                                 <InputLabel>Frequency</InputLabel>
                                 <Select
-                                    title="Time-series frequency (default aggregation method: average)"
+                                    title="Time-series frequency (default aggregation method: averaging)"
                                     onChange={handleChange('frequencyFRED')}
                                     defaultValue={values.frequencyFRED}
                                 >{this.createFilteredFrequencies()}</Select>
@@ -170,7 +170,7 @@ export class FREDDataForm extends Component {
                         <Grid item xs={3}>
                             <FormControl sx={{marginBottom: 3, marginTop: 2}} variant="standard">
                                 <FormControlLabel label="95% Confidence Intervals"
-                                                  title="Choose to display 95% confidence intervals in graph output"
+                                                  title="Choose to report 95% confidence intervals in graph and CSV"
                                                   control={<Checkbox
                                                       size="small"
                                                       onChange={handleCheckboxChange('dispCycleCI')}
