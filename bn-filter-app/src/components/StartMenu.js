@@ -16,7 +16,7 @@ export class StartMenu extends Component {
                     <p>You will be guided through the steps to perform trend-cycle decomposition on either:</p>
                         <ol>
                             <li>A time series from the Federal Reserve Economic Database (FRED) using its mnemonic, or</li>
-                            <li>A time series of your choosing to be pasted into a field</li>
+                            <li>A time series of your choosing, to be pasted into a field</li>
                         </ol>
                     <p>
                         Note that there is additional information provided when hovering over the options in the
