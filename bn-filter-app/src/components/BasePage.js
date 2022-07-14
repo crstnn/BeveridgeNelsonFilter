@@ -112,11 +112,11 @@ export class BasePage extends Component {
     }
 
     isExceedsMinMax = (v, input) => {
-        if (v < field.freeText[input].min) {
+        if (field.freeText[input].min !== null && v < field.freeText[input].min) {
             this.setErrorMessage(input, `must be ≥ ${field.freeText[input].min}`);
             return true;
         }
-        if (v > field.freeText[input].max) {
+        if (field.freeText[input].max !== null && v > field.freeText[input].max) {
             this.setErrorMessage(input, `must be ≤ ${field.freeText[input].max}`);
             return true;
         }
