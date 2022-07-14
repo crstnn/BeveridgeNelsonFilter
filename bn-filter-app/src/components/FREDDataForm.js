@@ -101,7 +101,7 @@ export class FREDDataForm extends Component {
                 <Grid item>
                     <FormGroup row>
                         <JoinedTextField variant="outlined" label="FRED mnemonic"
-                                         title="Press enter or click 'check' to see the availability of the mnemonic"
+                                         title="Press enter or click 'check' to check the availability of the mnemonic"
                                          color={this.props.errors["mnemonic"] === undefined && this.props.values.mnemonic !== "" ? "success" : null} placeholder="e.g. GDPC1" sx={{width: 250}}
                                          error={this.props.errors["mnemonic"] !== undefined}
                                          onChange={e => this.setState({mnemonic: e.target.value}) }
