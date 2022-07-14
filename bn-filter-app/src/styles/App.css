@@ -4,6 +4,10 @@
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
 }
 
+html, body {
+    min-width: 700px;
+}
+
 .appHeader {
     background-color: #21252e;
     min-height: 8vh;

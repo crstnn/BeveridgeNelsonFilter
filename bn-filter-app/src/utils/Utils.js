@@ -26,4 +26,6 @@ const pairToParam = (paramName, currPair) =>
 
 const pairArrayToParamStr = arr => arr.reduce(pairToParam, '?');
 
+
+
 export {colsToRows, confIntZip, pairArrayToParamStr}
