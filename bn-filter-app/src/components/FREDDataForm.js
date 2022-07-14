@@ -83,7 +83,7 @@ export class FREDDataForm extends Component {
 
     mnemonicInput = () => {
 
-        const noText = () => this.props.errors["mnemonic"] === undefined && this.props.values.mnemonic === ""
+        const noText = () => this.props.errors["mnemonic"] === undefined && this.props.values.mnemonic === "";
         const mnemonicHelperText = () => {
             if (noText()) {
                 return "​"
@@ -91,7 +91,7 @@ export class FREDDataForm extends Component {
             else if(this.props.errors['mnemonic'] !== undefined) {
                 return this.props.errors['mnemonic']
             } else return "The mnemonic is available"
-        }
+        };
 
 
         return (
@@ -103,7 +103,8 @@ export class FREDDataForm extends Component {
                         <JoinedTextField variant="outlined" label="FRED mnemonic"
                                          color={this.props.errors["mnemonic"] === undefined && this.props.values.mnemonic !== "" ? "success" : null} placeholder="e.g. GDPC1" sx={{width: 250}}
                                          error={this.props.errors["mnemonic"] !== undefined}
-                                         onChange={(e) => this.setState({mnemonic: e.target.value}) }
+                                         onChange={e => this.setState({mnemonic: e.target.value}) }
+                                         onKeyDown={e => e.keyCode === 13 /* 'enter' key */ ? this.checkAvailability(e) : null}
                                          defaultValue={this.state.mnemonic}
                                          InputProps={{
                                              endAdornment: this.state.loading ? <ThreeDots height={30} width={30} color='grey'/> : null}}/>
