@@ -78,7 +78,7 @@
     "TIMEOUT": "Request has taken too long. Consider reducing computational expense of inputs or coming back later."
   },
   "URL": {
-    "baseBackendURL": "http://127.0.0.1:5000",
+    "baseBackendURL": "https://bn-filtering.herokuapp.com",
     "bnfUserSpecifiedDataSlug": "/bnf/user-specified-time-series",
     "bnfFredDataSlug": "/bnf/fred-time-series",
     "fredDataSlug": "/fred-time-series"
