@@ -13,7 +13,10 @@ class FREDTimeSeriesInfo:
             'api_key': FRED_API_KEY,
             'file_type': 'json',
         }
-        series_info = requests.get(FRED_INFO_URL, params=parameters).json()['seriess'][0]
+        response = requests.get(FRED_INFO_URL, params=parameters)
+        if response.status_code != 200: raise Exception("Bad status (FRED mnemonic not found)")
+
+        series_info = response.json()['seriess'][0]
 
         self.observation_start = series_info['observation_start']
         self.observation_end = series_info['observation_end']
