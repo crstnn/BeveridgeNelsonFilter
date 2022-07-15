@@ -40,6 +40,7 @@ export class ParametersForm extends Component {
             this.props.nextStep();
         }
         else {
+            this.props.handlers.handleChange("alertErrorType")({target: {value: "INPUT_P"}});
             cancelLoad();
         }
     }
