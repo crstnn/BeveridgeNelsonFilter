@@ -26,6 +26,10 @@ const pairToParam = (paramName, currPair) =>
 
 const pairArrayToParamStr = arr => arr.reduce(pairToParam, '?');
 
+async function fetchWithTimeout(url) {
+    const controller = new AbortController();
+    setTimeout(() => controller.abort(), 20000); // 20 second timeout
+    return fetch(url, { signal: controller.signal });
+}
 
-
-export {colsToRows, confIntZip, pairArrayToParamStr}
+export {colsToRows, confIntZip, fetchWithTimeout, pairArrayToParamStr}
