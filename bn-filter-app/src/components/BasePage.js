@@ -7,7 +7,7 @@ import Loading from "./Loading";
 import Error from "./Error";
 import {field, URL} from "../config.json";
 import {DateS} from "../utils/Date";
-import {confIntZip, pairArrayToParamStr} from "../utils/Utils";
+import {confIntZip, fetchWithTimeout, pairArrayToParamStr} from "../utils/Utils";
 
 export class BasePage extends Component {
     state = {
@@ -43,7 +43,8 @@ export class BasePage extends Component {
         cycleCILB: [],
         cycleCIUB: [],
         loading: true,
-        errorMessage: {},
+        alertErrorNumber: null, // overarching alert text
+        fieldErrorMessages: {},
     }
 
     nextStep = () => {
@@ -75,7 +76,7 @@ export class BasePage extends Component {
     setErrorMessage = (input, message) => {
         this.setState({
             errorMessage: {
-                ...this.state.errorMessage,
+                ...this.state.fieldErrorMessages,
                 [input]: message
             }
         });
@@ -83,7 +84,7 @@ export class BasePage extends Component {
 
     deleteErrorMessage = input => {
         let state = {...this.state};
-        delete state["errorMessage"][input];
+        delete state["fieldErrorMessages"][input];
         this.setState(state);
     }
 
@@ -173,7 +174,7 @@ export class BasePage extends Component {
         console.log(finalURL);
 
         this.setState({loading: true}, async () => {
-            fetch(finalURL)
+            fetchWithTimeout(finalURL)
                 .then((response) => {
                     if (response.status !== 200) {
                         this.prevStep();
@@ -223,7 +224,7 @@ export class BasePage extends Component {
         console.log(finalURL);
 
         this.setState({loading: true}, async () => {
-            fetch(finalURL)
+            fetchWithTimeout(finalURL)
                 .then((response) => {
                     if (response.status !== 200) {
                         this.cancelLoading();
@@ -279,7 +280,7 @@ export class BasePage extends Component {
             takeLog,
             cycle,
             deltaCalc,
-            errorMessage,
+            fieldErrorMessages,
             loading,
             serverError,
         } = this.state;
@@ -309,7 +310,7 @@ export class BasePage extends Component {
         };
 
         const {x, y, cycleCILB, cycleCIUB,} = this.state;
-        const plotPageValues = {x, y, cycle, deltaCalc, dispCycleCI, cycleCILB, cycleCIUB, frequency, startDate,};
+        const plotPageValues = {x, y, cycle, deltaCalc, dispCycleCI, cycleCILB, cycleCIUB, frequency, startDate, dataInputType, mnemonic};
 
         return (
             <>
@@ -325,7 +326,7 @@ export class BasePage extends Component {
                                 handleCheckboxChange={this.handleCheckboxChange}
                                 valuesUserData={dataUserFormPageValues}
                                 valuesFREDData={dataFREDFormPageValues}
-                                errors={errorMessage}
+                                errors={fieldErrorMessages}
                             />
                         case 3:
                             return (
@@ -338,7 +339,7 @@ export class BasePage extends Component {
                                         getResults={this.getResultsForUserSpecifiedData}
                                         getFREDResults={this.getResultsForFREDData}
                                         values={parametersFormPageValues}
-                                        errors={errorMessage}
+                                        errors={fieldErrorMessages}
                                     />
                                 </>
                             )
