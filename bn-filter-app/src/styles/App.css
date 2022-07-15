@@ -4,7 +4,7 @@
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
 }
 
-html, body {
+#root, .App {
     min-width: 700px;
 }
 
