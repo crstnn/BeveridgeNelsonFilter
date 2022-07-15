@@ -11,7 +11,7 @@ import {
     TextField,
 } from "@mui/material";
 import '../styles/App.css';
-import {field} from "../config.json";
+import {field, alertErrors} from "../config.json";
 import createMenuItems from "../utils/CreateMenuItem";
 import Error from "./Error";
 
@@ -35,11 +35,8 @@ export class ParametersForm extends Component {
         console.log("errors", this.errorsDisplayedCount());
 
         if (this.errorsDisplayedCount() === 0) {
-            if (values.dataInputType === "FRED"){
-                getFREDResults();
-            } else if (values.dataInputType === "USER"){
-                getResults();
-            }
+            if (values.dataInputType === "FRED") getFREDResults();
+            else if (values.dataInputType === "USER") getResults();
             this.props.nextStep();
         }
         else {
@@ -200,7 +197,7 @@ export class ParametersForm extends Component {
                 <div style={{minHeight: 600,}}>
                     {this.props.values.loading === null ?
                         <Error
-                            tagName={"During the running of the BN filter a problem occurred. Please check that the inputs are appropriate (e.g. values of delta are not too small)."}
+                            tagName={alertErrors[this.props.values.alertErrorType]}
                             close={() => {this.props.handlers.handleChange("loading")({target: {value: false}})}}/>
                         : null}
                     {this.preAnalysisTransformations()}

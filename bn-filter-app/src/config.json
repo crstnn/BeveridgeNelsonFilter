@@ -71,8 +71,14 @@
       }
     }
   },
+  "alertErrors": {
+    "INPUT_S": "The data input is either empty or incorrect. Check the time series of choice.",
+    "INPUT_P": "At least one of the parameters do not meet the requirements. Check that the parameters are appropriate",
+    "SERVER": "During running the BN filter a problem occurred. Check that the parameters are appropriate (e.g. delta is too large).",
+    "TIMEOUT": "Request has taken too long. Consider reducing computational expense of inputs or coming back later."
+  },
   "URL": {
-    "baseBackendURL": "https://bn-filtering.herokuapp.com",
+    "baseBackendURL": "http://127.0.0.1:5000",
     "bnfUserSpecifiedDataSlug": "/bnf/user-specified-time-series",
     "bnfFredDataSlug": "/bnf/fred-time-series",
     "fredDataSlug": "/fred-time-series"

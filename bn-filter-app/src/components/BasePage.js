@@ -43,7 +43,7 @@ export class BasePage extends Component {
         cycleCILB: [],
         cycleCIUB: [],
         loading: true,
-        alertErrorNumber: null, // overarching alert text
+        alertErrorType: null, // overarching alert text
         fieldErrorMessages: {},
     }
 
@@ -75,7 +75,7 @@ export class BasePage extends Component {
 
     setErrorMessage = (input, message) => {
         this.setState({
-            errorMessage: {
+            fieldErrorMessages: {
                 ...this.state.fieldErrorMessages,
                 [input]: message
             }
@@ -159,6 +159,27 @@ export class BasePage extends Component {
         )
     )
 
+    fetchResultWithErrorHandling = async (finalURL) => {
+        return fetchWithTimeout(finalURL)
+            .catch(e => {
+                this.setState({alertErrorType: "TIMEOUT"});
+                this.prevStep();
+                this.cancelLoading();
+                throw e;
+            })
+            .then((response) => {
+                if (response.status !== 200) {
+                    this.setState({alertErrorType: "SERVER"});
+                    this.prevStep();
+                    this.cancelLoading();
+                    throw new Error("bad status");
+                } else {
+                    return response.json();
+                }
+            });
+
+    }
+
     getResultsForFREDData = async () => {
 
         const paramStr = pairArrayToParamStr(
@@ -174,17 +195,7 @@ export class BasePage extends Component {
         console.log(finalURL);
 
         this.setState({loading: true}, async () => {
-            fetchWithTimeout(finalURL)
-                .then((response) => {
-                    if (response.status !== 200) {
-                        this.prevStep();
-                        this.cancelLoading();
-                        throw new Error("bad status");
-                    } else {
-                        return response;
-                    }
-                })
-                .then((response) => response.json())
+            this.fetchResultWithErrorHandling(finalURL)
                 .then(result => {
                     console.log('Success:', result);
 
@@ -203,7 +214,6 @@ export class BasePage extends Component {
                         cycleCIUB: confIntZip(cycleRes, ciRes, "ub"),
                         loading: false,
                     });
-
                 }).catch((error) => {
                 console.log(error);
             });
@@ -224,16 +234,7 @@ export class BasePage extends Component {
         console.log(finalURL);
 
         this.setState({loading: true}, async () => {
-            fetchWithTimeout(finalURL)
-                .then((response) => {
-                    if (response.status !== 200) {
-                        this.cancelLoading();
-                        throw new Error("bad status");
-                    } else {
-                        return response;
-                    }
-                })
-                .then((response) => response.json())
+            this.fetchResultWithErrorHandling(finalURL)
                 .then(result => {
                     console.log('Success:', result);
 
@@ -253,7 +254,6 @@ export class BasePage extends Component {
                         cycleCIUB: confIntZip(cycleRes, ciRes, "ub"),
                         loading: false,
                     });
-
                 }).catch((error) => {
                 console.log(error);
             });
@@ -283,6 +283,7 @@ export class BasePage extends Component {
             fieldErrorMessages,
             loading,
             serverError,
+            alertErrorType,
         } = this.state;
         const parametersFormPageValues = {
             unprocessedY,
@@ -297,7 +298,8 @@ export class BasePage extends Component {
             takeLog,
             loading,
             serverError,
-            dataInputType
+            dataInputType,
+            alertErrorType,
         };
 
         const {
