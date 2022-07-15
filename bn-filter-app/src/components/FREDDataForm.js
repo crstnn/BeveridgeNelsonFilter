@@ -91,13 +91,10 @@ export class FREDDataForm extends Component {
     mnemonicInput = () => {
 
         const showText = () => !(this.props.errors["mnemonic"] === undefined && this.props.values.mnemonic === "") || this.state.timeoutError === true;
-        console.log(showText())
         const mnemonicHelperText = () => {
             if (!showText()) {
                 return "​";
             }
-            console.log("test")
-            console.log(this.props.errors['mnemonic'])
             if(this.props.errors['mnemonic'] !== undefined) {
                 return this.props.errors['mnemonic'];
             } else return "The mnemonic is available";
