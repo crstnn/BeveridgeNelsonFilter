@@ -222,6 +222,8 @@ export class ParametersForm extends Component {
 
 const styles = {
     button: {
+        minHeight: "45px",
+        minWidth: "100px",
         margin: "0 20px 100px",
     }
 }

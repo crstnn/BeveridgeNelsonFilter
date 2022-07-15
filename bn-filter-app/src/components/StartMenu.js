@@ -38,6 +38,8 @@ export class StartMenu extends Component {
 
 const styles = {
     button: {
+        minHeight: "45px",
+        minWidth: "100px",
         margin: "30px 0 100px",
     }
 }
