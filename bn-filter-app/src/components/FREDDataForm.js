@@ -26,8 +26,6 @@ export class FREDDataForm extends Component {
         loading: false,
     }
 
-
-
     createFilteredFrequencies = () => {
         const items = field.optionField.frequencyFRED.option.filter(x => this.props.values.availableFrequencies.includes(x.value));
         return createMenuItems(items);
@@ -145,6 +143,7 @@ export class FREDDataForm extends Component {
                         <Grid item xs={3}>
                             <CustomDatePicker
                                               label={"Start Date"}
+                                              title={"Series' start date (inclusive). Determined by FRED"}
                                               date={values.startDateFRED}
                                               minDate={values.minDate}
                                               maxDate={values.maxDate}
@@ -153,6 +152,7 @@ export class FREDDataForm extends Component {
                         <Grid item xs={3}>
                             <CustomDatePicker
                                               label={"End Date"}
+                                              title={"Series' end date (inclusive). Determined by FRED"}
                                               date={values.endDateFRED}
                                               minDate={values.minDate}
                                               maxDate={values.maxDate}

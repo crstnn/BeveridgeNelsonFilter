@@ -5,7 +5,6 @@ import {TextField} from "@mui/material";
 
 function CustomDatePicker(props) {
     const date = props.date;
-    // const [startDate, setStartDate] = React.useState(props.startDate);
 
     const handleChange = (newValue) => {
         props.updateDate({target: {value: newValue}});
@@ -16,6 +15,7 @@ function CustomDatePicker(props) {
             <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DesktopDatePicker
                     label={props.label}
+
                     inputFormat="dd/MM/yyyy"
                     value={date}
                     minDate={props.minDate}
@@ -25,6 +25,7 @@ function CustomDatePicker(props) {
                     disabled={props.isDisabled}
                     renderInput={(params) =>
                         <TextField {...params}
+                                   title={props.title}
                                    InputLabelProps={{shrink: true}}
                                    inputProps={{...params.inputProps, placeholder: "DD/MM/YYYY"}}/>}
                 />

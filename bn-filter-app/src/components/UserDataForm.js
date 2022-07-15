@@ -56,6 +56,7 @@ export class UserDataForm extends Component {
                     <Grid item xs={4}>
                         <CustomDatePicker
                                       label={"Start Date"}
+                                      title={"Series' start date (inclusive). The end date is determined based on frequency"}
                                       date={values.startDate}
                                       updateDate={this.props.handleChange('startDate')}
                                       isDisabled={values.frequency === "n"}/>
