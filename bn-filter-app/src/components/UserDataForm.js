@@ -16,7 +16,7 @@ import {field} from "../config.json";
 export class UserDataForm extends Component {
 
     render() {
-        const {values, handleChange, handleCheckboxChange} = this.props;
+        const {values, errors, handleChange, handleCheckboxChange} = this.props;
 
         return (
         <div>
@@ -40,6 +40,9 @@ export class UserDataForm extends Component {
                                 "102.4" + (new Array(100).join(" ")) +
                                 "..."}
                     defaultValue={values.unprocessedY}
+                    error={errors["unprocessedY"] !== undefined}
+                    helperText={errors["unprocessedY"] !== undefined ?
+                        errors['unprocessedY'] : "​" /* zero whitespace to prevent height difference when error displays */}
                 />
             </FormControl>
             <div style={{
