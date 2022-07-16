@@ -153,7 +153,7 @@ export class ParametersForm extends Component {
                                     disabled={this.isDisabled['delta']()}
                                     error={this.isErrorDisplaying('delta')}
                                     helperText={this.isErrorDisplaying('delta') ?
-                                        errors['delta'] : "​" /* zero whitespace to prevent height difference when error displays*/}
+                                        errors['delta'] : "​" /* zero whitespace to prevent height difference when error displays */}
                                 />
                             </FormControl>
                         </Grid>
@@ -186,7 +186,7 @@ export class ParametersForm extends Component {
                                     disabled={this.isDisabled['rollingWindow']()}
                                     error={this.isErrorDisplaying('rollingWindow')}
                                     helperText={this.isErrorDisplaying('rollingWindow') ?
-                                        errors['rollingWindow'] : "​" /* zero whitespace to prevent height difference when error displays*/}
+                                        errors['rollingWindow'] : "​" /* zero whitespace to prevent height difference when error displays */}
                                 />
                             </FormControl>
                         </Grid>

@@ -37,6 +37,17 @@ export class FREDDataForm extends Component {
             finalURL = URL.baseBackendURL + URL.fredDataSlug + paramStr;
 
         this.setState({loading: true}, async () => {
+
+            const {handleChange, setErrorMessage, deleteErrorMessage, errors} = this.props;
+
+            const responseSuccess = () => {
+                this.setState(
+                    {
+                        timeoutError: false,
+                        loading: false,
+                    });
+            }
+
             fetchWithTimeout(finalURL)
                 .catch(e => {
                     this.setState(
@@ -44,17 +55,13 @@ export class FREDDataForm extends Component {
                             timeoutError: true,
                             loading: false,
                         });
-                    this.props.setErrorMessage("mnemonic", "Internal error: Come back later");
+                    setErrorMessage("mnemonic", "Internal error: Come back later");
                     throw e;
                 })
                 .then((response) => {
                     if (response.status !== 200) {
-                        this.setState(
-                            {
-                                timeoutError: false,
-                                loading: false,
-                                });
-                        this.props.setErrorMessage("mnemonic", "The mnemonic is not available");
+                        responseSuccess();
+                        setErrorMessage("mnemonic", "mnemonic is not available");
                         throw new Error("bad status");
                     } else {
                         return response;
@@ -68,18 +75,15 @@ export class FREDDataForm extends Component {
                         startDate = new Date(result["start_date"]),
                         endDate = new Date(result["end_date"]);
 
-                    this.setState({
-                        timeoutError: false,
-                        loading: false,
-                    });
-                    this.props.deleteErrorMessage("mnemonic");
-                    this.props.handleChange('mnemonic')({target: {value: this.state.mnemonic}});
-                    this.props.handleChange('startDateFRED')({target: {value: startDate}});
-                    this.props.handleChange('endDateFRED')({target: {value: endDate}});
-                    this.props.handleChange('minDate')({target: {value: startDate}});
-                    this.props.handleChange('maxDate')({target: {value: endDate}});
-                    this.props.handleChange('availableFrequencies')({target: {value: result["available_frequencies"]}});
-                    this.props.handleChange('frequencyFRED')({target: {value: result["available_frequencies"][0]}});
+                    deleteErrorMessage("mnemonic");
+                    handleChange('availableFrequencies')({target: {value: result["available_frequencies"]}});
+                    handleChange('frequencyFRED')({target: {value: result["available_frequencies"][0]}});
+                    handleChange('mnemonic')({target: {value: this.state.mnemonic}});
+                    handleChange('startDateFRED')({target: {value: startDate}});
+                    handleChange('endDateFRED')({target: {value: endDate}});
+                    handleChange('minDate')({target: {value: startDate}});
+                    handleChange('maxDate')({target: {value: endDate}});
+                    responseSuccess();
 
 
                 }).catch((error) => {
@@ -90,14 +94,16 @@ export class FREDDataForm extends Component {
 
     mnemonicInput = () => {
 
-        const showText = () => !(this.props.errors["mnemonic"] === undefined && this.props.values.mnemonic === "") || this.state.timeoutError === true;
+        const {values, errors} = this.props;
+
+        const showText = () => !(errors["mnemonic"] === undefined && values.mnemonic === "") || this.state.timeoutError === true;
         const mnemonicHelperText = () => {
             if (!showText()) {
                 return "​";
             }
-            if(this.props.errors['mnemonic'] !== undefined) {
-                return this.props.errors['mnemonic'];
-            } else return "The mnemonic is available";
+            if(errors['mnemonic'] !== undefined) {
+                return errors['mnemonic'];
+            } else return "mnemonic is available";
         };
 
 
@@ -109,8 +115,8 @@ export class FREDDataForm extends Component {
                     <FormGroup row>
                         <JoinedTextField variant="outlined" label="FRED mnemonic"
                                          title="Press enter or click 'check' to check the availability of the mnemonic"
-                                         color={this.props.errors["mnemonic"] === undefined && this.props.values.mnemonic !== "" ? "success" : null} placeholder="e.g. GDPC1" sx={{width: 250}}
-                                         error={this.props.errors["mnemonic"] !== undefined}
+                                         color={errors["mnemonic"] === undefined && values.mnemonic !== "" ? "success" : null} placeholder="e.g. GDPC1" sx={{width: 250}}
+                                         error={errors["mnemonic"] !== undefined}
                                          onChange={e => this.setState({mnemonic: e.target.value}) }
                                          onKeyDown={e => e.keyCode === 13 /* 'enter' key */ ? this.checkAvailability(e) : null}
                                          defaultValue={this.state.mnemonic}

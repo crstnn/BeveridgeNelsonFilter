@@ -27,10 +27,10 @@ export class DataForm extends Component {
         e.preventDefault();
         this.props.nextStep();
         if (this.props.valuesFREDData.dataInputType === "FRED" && this.props.valuesFREDData.mnemonic === "") {
-            this.props.setErrorMessage("mnemonic", "Mnemonic cannot be empty");
+            this.props.setErrorMessage("mnemonic", "mnemonic cannot be empty");
         }
         if (this.props.valuesUserData.dataInputType === "USER" && this.props.valuesUserData.unprocessedY === "") {
-            this.props.setErrorMessage("unprocessedY", "Data field cannot be empty");
+            this.props.setErrorMessage("unprocessedY", "time series field cannot be empty");
         }
     }
 
@@ -58,7 +58,8 @@ export class DataForm extends Component {
                             return <UserDataForm
                                         handleChange={handleChange}
                                         handleCheckboxChange={handleCheckboxChange}
-                                        values={valuesUserData}/>
+                                        values={valuesUserData}
+                                        errors={errors}/>
                         else if (valuesUserData.dataInputType === "FRED")
                             return <FREDDataForm
                                     setErrorMessage={setErrorMessage}
