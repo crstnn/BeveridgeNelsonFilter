@@ -37,7 +37,7 @@ export class UserDataForm extends Component {
             deleteErrorMessage("unprocessedY");
         }
         else if (nonNumberTest) {
-            errorMessage = "only accepts numbers, commas, or periods";
+            errorMessage = "only accepts numbers, commas, and periods";
         } else if (!arrayFormTest && !seriesFormTest) {
             errorMessage = "bad input format";
         }
