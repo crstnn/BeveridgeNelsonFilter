@@ -54,7 +54,7 @@ export class UserDataForm extends Component {
         <div>
             <div className="information">
                 <p>Enter or paste in your chosen time series below.
-                    Pasting a time series from a CSV will achieve the appropriate formatting.
+                    Pasting a time series from a CSV or array will achieve the appropriate formatting.
                 </p>
             </div>
             <FormControl variant="standard" sx={{m: 1, minWidth: 300, paddingRight: 2}}>
