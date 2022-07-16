@@ -26,11 +26,11 @@ export class ParametersForm extends Component {
 
     isErrorDisplaying = field => this.isError(field) && !this.isDisabled[field]();
 
-    errorsDisplayedCount = () => Object.keys(this.props.errors).map(key => this.isErrorDisplaying(key)).filter(x => x).length
+    errorsDisplayedCount = () => Object.keys(this.props.errors).map(key => this.isErrorDisplaying(key)).filter(x => x).length;
 
     continue = e => {
         e.preventDefault();
-        const {getResults, getFREDResults, values, cancelLoad} = this.props;
+        const {getResults, getFREDResults, handlers, values, errors, cancelLoad} = this.props;
 
         console.log("errors", this.errorsDisplayedCount());
 
@@ -38,9 +38,13 @@ export class ParametersForm extends Component {
             if (values.dataInputType === "FRED") getFREDResults();
             else if (values.dataInputType === "USER") getResults();
             this.props.nextStep();
+        } else if (values.dataInputType === "FRED" && errors["FRED"] !== undefined) {
+            handlers.handleChange("alertErrorType")({target: {value: "INPUT_USER_M"}});
+        } else if (values.dataInputType === "USER" && errors["USER"] !== undefined) {
+            handlers.handleChange("alertErrorType")({target: {value: "INPUT_USER_S"}});
         }
         else {
-            this.props.handlers.handleChange("alertErrorType")({target: {value: "INPUT_P"}});
+            handlers.handleChange("alertErrorType")({target: {value: "INPUT_PARAM"}});
             cancelLoad();
         }
     }
@@ -106,7 +110,7 @@ export class ParametersForm extends Component {
             errors = this.props.errors;
 
         const handleRollingWindowChange = () => {
-            return handleIntegerNumberFieldChange('rollingWindow')
+            return handleIntegerNumberFieldChange('rollingWindow');
         }
 
         return (
@@ -127,11 +131,11 @@ export class ParametersForm extends Component {
                                     label="Signal-to-Noise Ratio (Delta)"
                                     title={(() => {
                                         if(values.deltaSelect === 0) {
-                                            return "Signal-to-Noise Ratio according to user input"
+                                            return "Signal-to-Noise Ratio according to user input";
                                         } else if(values.deltaSelect === 1) {
-                                            return "Signal-to-Noise Ratio according to benchmark KMW approach"
+                                            return "Signal-to-Noise Ratio according to benchmark KMW approach";
                                         } else if(values.deltaSelect === 2) {
-                                            return "Signal-to-Noise Ratio according to KMW refinement"
+                                            return "Signal-to-Noise Ratio according to KMW refinement";
                                         }
                                     })()}
                                     onChange={handleChange('deltaSelect')}
@@ -160,11 +164,11 @@ export class ParametersForm extends Component {
                                     label="Demeaning"
                                     title={(() => {
                                         if(values.demean === 'sm') {
-                                            return "Estimate constant drift"
+                                            return "Estimate constant drift";
                                         } else if(values.demean === 'dm') {
-                                            return "Estimate time-varying drift using rolling window"
+                                            return "Estimate time-varying drift using rolling window";
                                         } else if(values.demean === 'idm') {
-                                            return "Iteratively estimate time-varying drift removing cycle and using rolling window according to KMW refinement"
+                                            return "Iteratively estimate time-varying drift removing cycle and using rolling window according to KMW refinement";
                                         }
                                     })()}
                                     onChange={handleChange('demean')}
