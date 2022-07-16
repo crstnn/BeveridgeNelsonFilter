@@ -119,13 +119,13 @@ export class ParametersForm extends Component {
                     <Divider style={{fontSize: 'x-large'}}>Filter Parameters</Divider>
                 </div>
                 <div style={{
-                    width: "450px",
+                    width: "420px",
                     alignItems: "center",
                     display: "inline-block",
                 }}>
                     <Grid container alignItems="flex-start" justifyContent="space-evenly" spacing={3}>
-                        <Grid item xs={8}>
-                            <FormControl variant="standard" sx={{minWidth: 300}}>
+                        <Grid item xs={7.75}>
+                            <FormControl variant="standard" sx={{ width: 280 }}>
                                 <InputLabel>Signal-to-Noise Ratio (Delta)</InputLabel>
                                 <Select
                                     label="Signal-to-Noise Ratio (Delta)"
@@ -143,8 +143,8 @@ export class ParametersForm extends Component {
                                 >{createMenuItems(field.optionField.deltaSelect.option)}</Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={4}>
-                            <FormControl variant="standard" sx={{minWidth: 170}}>
+                        <Grid item xs={4.25}>
+                            <FormControl variant="standard" sx={{width: 140}}>
                                 <TextField
                                     label={values.deltaSelect === 0 ? "Fixed Delta" : "Minimum Delta"}
                                     title={values.deltaSelect === 0 ? "Fixed delta for estimation" : "Minimum threshold start point for grid search (with grid increments of 0.0005)"}
@@ -157,8 +157,8 @@ export class ParametersForm extends Component {
                                 />
                             </FormControl>
                         </Grid>
-                        <Grid item xs={8}>
-                            <FormControl variant="standard" sx={{minWidth: 290}}>
+                        <Grid item xs={7.75}>
+                            <FormControl variant="standard" sx={{minWidth: 280}}>
                                 <InputLabel>Demeaning</InputLabel>
                                 <Select
                                     label="Demeaning"
@@ -176,8 +176,8 @@ export class ParametersForm extends Component {
                                 >{createMenuItems(field.optionField.iterativeDynamicDemeaning.option)}</Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={4}>
-                            <FormControl variant="standard" sx={{minWidth: 170}}>
+                        <Grid item xs={4.25}>
+                            <FormControl variant="standard" sx={{minWidth: 140}}>
                                 <TextField
                                     label= "Rolling Window"
                                     title="Only active when using dynamic demeaning"

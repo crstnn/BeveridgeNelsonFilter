@@ -137,7 +137,7 @@ export class FREDDataForm extends Component {
                         FRED mnemonic</a> and check its availability before continuing.</p>
                 </div>
                 <div style={{
-                    width: "450px",
+                    width: "420px",
                     alignItems: "center",
                     display: "inline-block",
                 }}>

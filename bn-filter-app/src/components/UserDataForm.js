@@ -43,7 +43,7 @@ export class UserDataForm extends Component {
                 />
             </FormControl>
             <div style={{
-                width: "450px",
+                width: "420px",
                 alignItems: "center",
                 display: "inline-block",
             }}>
