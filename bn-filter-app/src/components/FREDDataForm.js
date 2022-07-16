@@ -102,7 +102,7 @@ export class FREDDataForm extends Component {
 
 
         return (
-            <Grid container direction="column" sx={{minHeight: 100}}
+            <Grid container direction="column" sx={{minHeight: 100, marginBottom: 1}}
                   justifyContent="space-evenly"
                   alignItems="center">
                 <Grid item>
