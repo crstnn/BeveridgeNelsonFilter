@@ -142,10 +142,11 @@ export class FREDDataForm extends Component {
                     display: "inline-block",
                 }}>
                     {this.mnemonicInput()}
-                    <Divider light
-                             title="This option does not make alterations to the data but changes the display of the graph output"
-                             style={{fontSize: 'large'}}>Options</Divider>
-
+                    <div className="information">
+                        <Divider
+                                 title="This option does not make alterations to the data but changes the display of the graph output"
+                                 style={{fontSize: 'large'}}>Options</Divider>
+                    </div>
                     <Grid container direction="column" sx={{minHeight: 350,}}
                           justifyContent="space-evenly"
                           alignItems="center">

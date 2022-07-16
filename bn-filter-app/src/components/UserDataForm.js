@@ -47,9 +47,11 @@ export class UserDataForm extends Component {
                 alignItems: "center",
                 display: "inline-block",
             }}>
-                <Divider light
+                <div className="information">
+                <Divider
                          title="This option does not make alterations to the data but changes the display of the graph output"
                          style={{fontSize: 'large'}}>Display Options</Divider>
+                </div>
                 <Grid container direction="column" sx={{minHeight: 400, paddingTop: 2}}
                       justifyContent="space-evenly"
                       alignItems="center">
