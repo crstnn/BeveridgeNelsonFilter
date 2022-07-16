@@ -32,8 +32,6 @@ export class RenderedPlot extends Component {
         console.log(plotPageValues.x)
         console.log(plotPageValues.y)
 
-        console.log(window.screen.width)
-
         return (
             <Plot layout={{autosize: true, xaxis: {automargin: true}, yaxis: {automargin: true, tickangle: 'auto'},
                 width: window.screen.width <= 700 ? 450 : 700, // fit to window size
