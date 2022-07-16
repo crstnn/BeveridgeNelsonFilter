@@ -73,9 +73,9 @@
   },
   "alertErrors": {
     "INPUT_S": "The data input is either empty or incorrect. Check the time series of choice.",
-    "INPUT_P": "At least one of the parameters does not meet the requirements. Check that parameters are appropriate.",
-    "SERVER": "During the running of the BN filter a problem occurred. Check that the parameters are appropriate (e.g. delta is too large).",
-    "TIMEOUT": "Request has taken too long. Consider reducing computational expense of inputs or coming back later."
+    "INPUT_P": "At least one of the parameters does not meet the requirements. Check that the parameters are appropriate.",
+    "SERVER": "During the running of the BN filter a problem occurred. Check that the parameters are appropriate (e.g. if delta is too large).",
+    "TIMEOUT": "Request has taken too long. Consider reducing the computational cost by adjusting the inputs or coming back later."
   },
   "URL": {
     "baseBackendURL": "https://bn-filtering.herokuapp.com",
