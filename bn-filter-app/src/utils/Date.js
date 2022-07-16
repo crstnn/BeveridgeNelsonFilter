@@ -3,21 +3,21 @@ class DateS extends Date {
     static createDate = (key, date) => {
         switch (key) {
             case "a":
-                return new YearlyDate(date)
+                return new AnnualDate(date);
             case "q":
-                return new QuarterlyDate(date)
+                return new QuarterlyDate(date);
             case "m":
-                return new MonthlyDate(date)
+                return new MonthlyDate(date);
             case "w":
-                return new WeeklyDate(date)
+                return new WeeklyDate(date);
             default:
                 throw new Error("Non-existent key");
         }
     };
 
-    static packWithZero = d => d.toString().length === 1 ? '0' + d : d;
+    static toFixedTwoDigits = d => d.toString().length === 1 ? '0' + d : d;
 
-    static getTruncatedDate = (date) => `${date.getFullYear()}-${DateS.packWithZero(date.getMonth() + 1)}-${DateS.packWithZero(date.getDate())}`;
+    static getTruncatedDate = (date) => `${date.getFullYear()}-${DateS.toFixedTwoDigits(date.getMonth() + 1)}-${DateS.toFixedTwoDigits(date.getDate())}`;
 
     nextTimePeriod = () => {
         throw new Error("Child class must implement this method");
@@ -54,11 +54,11 @@ class QuarterlyDate extends DateS {
     };
 }
 
-class YearlyDate extends DateS {
+class AnnualDate extends DateS {
     nextTimePeriod = () => {
-        const oldDate = new YearlyDate(this);
-        return new YearlyDate(oldDate.setFullYear(this.getFullYear() + 1));
+        const oldDate = new AnnualDate(this);
+        return new AnnualDate(oldDate.setFullYear(this.getFullYear() + 1));
     };
 }
 
-export {DateS, WeeklyDate, MonthlyDate, QuarterlyDate, YearlyDate}
+export {DateS, WeeklyDate, MonthlyDate, QuarterlyDate, AnnualDate}
