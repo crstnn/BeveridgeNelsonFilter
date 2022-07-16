@@ -47,7 +47,7 @@ export class UserDataForm extends Component {
                 alignItems: "center",
                 display: "inline-block",
             }}>
-                <div className="information">
+                <div className="dataInformation">
                 <Divider
                          title="This option does not make alterations to the data but changes the display of the graph output"
                          style={{fontSize: 'large'}}>Display Options</Divider>

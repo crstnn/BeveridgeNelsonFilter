@@ -24,6 +24,11 @@
     margin: 3vh 20%;
 }
 
+.dataInformation {
+    text-align: left;
+    margin: 0 1%;
+}
+
 .welcomeInformation {
     margin-top: 4vh;
     margin-bottom: 3vh;

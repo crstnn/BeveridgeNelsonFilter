@@ -142,7 +142,7 @@ export class FREDDataForm extends Component {
                     display: "inline-block",
                 }}>
                     {this.mnemonicInput()}
-                    <div className="information">
+                    <div className="dataInformation">
                         <Divider
                                  title="This option does not make alterations to the data but changes the display of the graph output"
                                  style={{fontSize: 'large'}}>Options</Divider>
