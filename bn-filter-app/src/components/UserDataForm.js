@@ -40,7 +40,7 @@ export class UserDataForm extends Component {
                                 "104.8" + (new Array(100).join(" ")) +
                                 "102.4" + (new Array(100).join(" ")) +
                                 "..."}
-                    defaultValue={values.unprocessedY}
+                    value={values.unprocessedY}
                     error={errors["unprocessedY"] !== undefined}
                     helperText={errors["unprocessedY"] !== undefined ?
                         errors['unprocessedY'] : "​" /* zero whitespace to prevent height difference when error displays */}
@@ -73,7 +73,7 @@ export class UserDataForm extends Component {
                             <Select
                                 title="Time-series frequency"
                                 onChange={handleChange('frequency')}
-                                defaultValue={values.frequency}
+                                value={values.frequency}
                             >{createMenuItems(field.optionField.frequencyManual.option)}</Select>
                         </FormControl>
                     </Grid>
