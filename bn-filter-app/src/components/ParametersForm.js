@@ -24,7 +24,7 @@ export class ParametersForm extends Component {
 
     isError = field => this.props.errors[field] !== undefined;
 
-    isErrorDisplaying = field => this.isError(field) && !this.isDisabled[field]();
+    isErrorDisplaying = field => this.isError(field) && (this.isDisabled[field] === undefined || !this.isDisabled[field]());
 
     errorsDisplayedCount = () => Object.keys(this.props.errors).map(key => this.isErrorDisplaying(key)).filter(x => x).length;
 
@@ -82,7 +82,7 @@ export class ParametersForm extends Component {
                             <Select
                                 title="Differencing method applied"
                                 onChange={handleChange('dCode')}
-                                defaultValue={values.dCode}
+                                value={values.dCode}
                                 disabled={!values.transform}
                             >{createMenuItems(field.optionField.dCode.option)}</Select>
                         </FormControl>
@@ -93,7 +93,7 @@ export class ParametersForm extends Component {
                             <Select
                                 title="Multiple applied"
                                 onChange={handleChange('pCode')}
-                                defaultValue={values.pCode}
+                                value={values.pCode}
                                 disabled={!values.transform}
                             >{createMenuItems(field.optionField.pCode.option)}</Select>
                         </FormControl>
@@ -139,7 +139,7 @@ export class ParametersForm extends Component {
                                         }
                                     })()}
                                     onChange={handleChange('deltaSelect')}
-                                    defaultValue={values.deltaSelect}
+                                    value={values.deltaSelect}
                                 >{createMenuItems(field.optionField.deltaSelect.option)}</Select>
                             </FormControl>
                         </Grid>
@@ -149,7 +149,7 @@ export class ParametersForm extends Component {
                                     label={values.deltaSelect === 0 ? "Fixed Delta" : "Minimum Delta"}
                                     title={values.deltaSelect === 0 ? "Fixed delta for estimation" : "Minimum threshold start point for grid search (with grid increments of 0.0005)"}
                                     onChange={handleNumberFieldChange('delta')}
-                                    defaultValue={values.delta}
+                                    value={values.delta}
                                     disabled={this.isDisabled['delta']()}
                                     error={this.isErrorDisplaying('delta')}
                                     helperText={this.isErrorDisplaying('delta') ?
@@ -172,7 +172,7 @@ export class ParametersForm extends Component {
                                         }
                                     })()}
                                     onChange={handleChange('demean')}
-                                    defaultValue={values.demean}
+                                    value={values.demean}
                                 >{createMenuItems(field.optionField.iterativeDynamicDemeaning.option)}</Select>
                             </FormControl>
                         </Grid>
@@ -182,7 +182,7 @@ export class ParametersForm extends Component {
                                     label= "Rolling Window"
                                     title="Only active when using dynamic demeaning"
                                     onChange={handleRollingWindowChange()}
-                                    defaultValue={values.rollingWindow}
+                                    value={values.rollingWindow}
                                     disabled={this.isDisabled['rollingWindow']()}
                                     error={this.isErrorDisplaying('rollingWindow')}
                                     helperText={this.isErrorDisplaying('rollingWindow') ?

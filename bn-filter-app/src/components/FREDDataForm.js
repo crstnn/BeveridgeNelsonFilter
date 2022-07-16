@@ -38,7 +38,7 @@ export class FREDDataForm extends Component {
 
         this.setState({loading: true}, async () => {
 
-            const {handleChange, setErrorMessage, deleteErrorMessage, errors} = this.props;
+            const {handleChange, setErrorMessage, deleteErrorMessage} = this.props;
 
             const responseSuccess = () => {
                 this.setState(
@@ -119,7 +119,7 @@ export class FREDDataForm extends Component {
                                          error={errors["mnemonic"] !== undefined}
                                          onChange={e => this.setState({mnemonic: e.target.value}) }
                                          onKeyDown={e => e.keyCode === 13 /* 'enter' key */ ? this.checkAvailability(e) : null}
-                                         defaultValue={this.state.mnemonic}
+                                         value={this.state.mnemonic}
                                          InputProps={{
                                              endAdornment: this.state.loading ? <ThreeDots height={30} width={30} color='grey'/> : null}}/>
                         <JoinedButton onClick={this.checkAvailability} variant="outlined">Check</JoinedButton>
@@ -180,7 +180,7 @@ export class FREDDataForm extends Component {
                                 <Select
                                     title="Time-series frequency (default aggregation method: averaging)"
                                     onChange={handleChange('frequencyFRED')}
-                                    defaultValue={values.frequencyFRED}
+                                    value={values.frequencyFRED}
                                 >{this.createFilteredFrequencies()}</Select>
                             </FormControl>
                         </Grid>
