@@ -19,13 +19,15 @@
     left: 0;
 }
 
-.information {
+.information, .dataInformation {
     text-align: left;
+}
+
+.information {
     margin: 3vh 20%;
 }
 
 .dataInformation {
-    text-align: left;
     margin: 0 1%;
 }
 
