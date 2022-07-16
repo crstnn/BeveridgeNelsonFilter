@@ -67,6 +67,7 @@ export class BasePage extends Component {
 
     handleChange = input => e => {
         this.setState({[input]: e.target.value});
+        console.log('thesting')
     }
 
     handleCheckboxChange = input => e => {
@@ -143,6 +144,10 @@ export class BasePage extends Component {
 
     handleIntegerNumberFieldChange = input => e => {
         this.validateField([this.isEmptyString, this.isNotAnInt, this.isNotANum, this.isExceedsMinMax,], input, e);
+    }
+
+    handleChangeValidation = input => e => validationArr => {
+        this.validateField(validationArr, input, e);
     }
 
     bnfParamArr = () => [['window', this.state.rollingWindow],

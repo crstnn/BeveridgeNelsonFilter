@@ -15,13 +15,45 @@ import {field} from "../config.json";
 
 export class UserDataForm extends Component {
 
+    handleTimeSeriesChange = e => {
+        e.preventDefault();
+        const
+            timeSeries = e.target.value,
+            {setErrorMessage, deleteErrorMessage, handleChange} = this.props;
+
+        const
+            notNumberReg = new RegExp(/[^\d.,\s]+/),
+            arrayFormReg = new RegExp(/^((\d*(.\d+)?),\s*)+(\d*(.\d+)?)\s*$/),
+            seriesFormReg = new RegExp(/^((\d*(.\d+)?)(\r\n|\n|\r))+$/);
+
+        const
+            nonNumberTest = notNumberReg.test(timeSeries),
+            arrayFormTest = arrayFormReg.test(timeSeries),
+            seriesFormTest = seriesFormReg.test(timeSeries);
+
+        let errorMessage = null;
+
+        if (timeSeries === "" || arrayFormTest || seriesFormTest) {
+            deleteErrorMessage("unprocessedY");
+        }
+        else if (nonNumberTest) {
+            errorMessage = "only accepts numbers, commas, or periods";
+        } else if (!arrayFormTest && !seriesFormTest) {
+            errorMessage = "bad input format";
+        }
+        if (errorMessage !== null) setErrorMessage("unprocessedY", errorMessage);
+
+        handleChange('unprocessedY')(e);
+
+    }
+
     render() {
         const {values, errors, handleChange, handleCheckboxChange} = this.props;
 
         return (
         <div>
             <div className="information">
-                <p>Enter or paste in your chosen time series below. Each observation must start on the next line.
+                <p>Enter or paste in your chosen time series below.
                     Pasting a time series from a CSV will achieve the appropriate formatting.
                 </p>
             </div>
@@ -31,11 +63,12 @@ export class UserDataForm extends Component {
                     rows={16}
                     label="Time Series (y)"
                     title="Paste your chosen time series here"
-                    onChange={handleChange('unprocessedY')}
+                    onChange={this.handleTimeSeriesChange}
                     InputLabelProps={{shrink: true}}
-                    // Hacky newline fix that works for all browsers
-                    // (newline/line break not functioning in Safari)
-                    placeholder={"e.g." + (new Array(100).join(" ")) +
+                    // Hacky newline fix that works for all browsers (newline/line break not functioning in Safari)
+                    placeholder={"e.g. " + (new Array(100).join(" ")) +
+                                "101.2, 104.8, 102.4, ..." + (new Array(100).join(" ")) +
+                                "e.g." + (new Array(100).join(" ")) +
                                 "101.2" + (new Array(100).join(" ")) +
                                 "104.8" + (new Array(100).join(" ")) +
                                 "102.4" + (new Array(100).join(" ")) +

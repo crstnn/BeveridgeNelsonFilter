@@ -10,28 +10,32 @@ import {UserDataForm} from "./UserDataForm";
 
 export class DataForm extends Component {
 
-    toggleDataInputType = (e) => {
+    toggleDataInputType = e => {
+        const {errors, valuesUserData, valuesFREDData, handleChange, deleteErrorMessage,} = this.props;
+
         const
             isMnemonicErrorDisplaying =
-            () => this.props.errors["mnemonic"] !== undefined && this.props.valuesFREDData.dataInputType === "FRED",
+            () => errors["mnemonic"] !== undefined && valuesFREDData.dataInputType === "FRED",
             isUserSeriesErrorDisplaying =
-            () => this.props.errors["unprocessedY"] !== undefined && this.props.valuesUserData.dataInputType === "USER";
+            () => errors["unprocessedY"] !== undefined && valuesUserData.dataInputType === "USER";
 
-        if (isMnemonicErrorDisplaying()) this.props.deleteErrorMessage("mnemonic");
-        if (isUserSeriesErrorDisplaying()) this.props.deleteErrorMessage("unprocessedY");
+        if (isMnemonicErrorDisplaying()) deleteErrorMessage("mnemonic");
+        if (isUserSeriesErrorDisplaying()) deleteErrorMessage("unprocessedY");
 
-        this.props.handleChange('dataInputType')(e);
+        handleChange('dataInputType')(e);
     }
 
     continue = e => {
         e.preventDefault();
-        this.props.nextStep();
-        if (this.props.valuesFREDData.dataInputType === "FRED" && this.props.valuesFREDData.mnemonic === "") {
-            this.props.setErrorMessage("mnemonic", "mnemonic cannot be empty");
+        const {valuesUserData, valuesFREDData, setErrorMessage, nextStep,} = this.props;
+        nextStep();
+        if (valuesFREDData.dataInputType === "FRED" && valuesFREDData.mnemonic === "") {
+            setErrorMessage("mnemonic", "mnemonic cannot be empty");
         }
-        if (this.props.valuesUserData.dataInputType === "USER" && this.props.valuesUserData.unprocessedY === "") {
-            this.props.setErrorMessage("unprocessedY", "time series field cannot be empty");
+        if (valuesUserData.dataInputType === "USER" && valuesUserData.unprocessedY === "") {
+            setErrorMessage("unprocessedY", "time series field cannot be empty");
         }
+        console.log(valuesUserData)
     }
 
     render() {
@@ -56,10 +60,13 @@ export class DataForm extends Component {
                     {(() => {
                         if (valuesUserData.dataInputType === "USER")
                             return <UserDataForm
+                                        setErrorMessage={setErrorMessage}
+                                        deleteErrorMessage={deleteErrorMessage}
                                         handleChange={handleChange}
                                         handleCheckboxChange={handleCheckboxChange}
                                         values={valuesUserData}
-                                        errors={errors}/>
+                                        errors={errors}
+                                    />
                         else if (valuesUserData.dataInputType === "FRED")
                             return <FREDDataForm
                                     setErrorMessage={setErrorMessage}
