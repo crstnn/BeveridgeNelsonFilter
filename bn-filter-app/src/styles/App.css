@@ -1,6 +1,5 @@
 .App {
     text-align: center;
-    min-width: 700px;
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
 }
 
@@ -23,7 +22,6 @@
 .information {
     text-align: left;
     margin: 3vh 20%;
-
 }
 
 .welcomeInformation {
@@ -38,9 +36,3 @@ a {
 a:hover {
     text-decoration: underline;
 }
-
-/*ol > li::marker {*/
-/*    font-weight: bold;*/
-/*}*/
-
-
