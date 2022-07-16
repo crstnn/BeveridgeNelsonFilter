@@ -13,7 +13,7 @@ export class DataForm extends Component {
     toggleDataInputType = (e) => {
         const
             isMnemonicErrorDisplaying =
-            () => this.props.errors["mnemonic"] !== undefined && this.props.valuesUserData.dataInputType === "FRED",
+            () => this.props.errors["mnemonic"] !== undefined && this.props.valuesFREDData.dataInputType === "FRED",
             isUserSeriesErrorDisplaying =
             () => this.props.errors["unprocessedY"] !== undefined && this.props.valuesUserData.dataInputType === "USER";
 
@@ -21,6 +21,17 @@ export class DataForm extends Component {
         if (isUserSeriesErrorDisplaying()) this.props.deleteErrorMessage("unprocessedY");
 
         this.props.handleChange('dataInputType')(e);
+    }
+
+    continue = e => {
+        e.preventDefault();
+        this.props.nextStep();
+        if (this.props.valuesFREDData.dataInputType === "FRED" && this.props.valuesFREDData.mnemonic === "") {
+            this.props.setErrorMessage("mnemonic", "Mnemonic cannot be empty");
+        }
+        if (this.props.valuesUserData.dataInputType === "USER" && this.props.valuesUserData.unprocessedY === "") {
+            this.props.setErrorMessage("unprocessedY", "Data field cannot be empty");
+        }
     }
 
     render() {
@@ -70,7 +81,7 @@ export class DataForm extends Component {
                         <Button
                             variant="contained"
                             style={styles.button}
-                            onClick={this.props.nextStep}
+                            onClick={this.continue}
                         >Continue</Button>
                     </Grid>
                 </Grid>

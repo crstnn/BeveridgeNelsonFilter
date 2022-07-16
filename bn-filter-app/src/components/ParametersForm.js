@@ -32,18 +32,18 @@ export class ParametersForm extends Component {
         e.preventDefault();
         const {getResults, getFREDResults, handlers, values, errors, cancelLoad} = this.props;
 
-        console.log("errors", this.errorsDisplayedCount());
-
-        if (this.errorsDisplayedCount() === 0) {
+        if (values.dataInputType === "FRED" && errors["mnemonic"] !== undefined) {
+            handlers.handleChange("alertErrorType")({target: {value: "INPUT_USER_M"}});
+            cancelLoad();
+        } else if (values.dataInputType === "USER" && errors["unprocessedY"] !== undefined) {
+            handlers.handleChange("alertErrorType")({target: {value: "INPUT_USER_S"}});
+            cancelLoad();
+        }
+        else if (this.errorsDisplayedCount() === 0) {
             if (values.dataInputType === "FRED") getFREDResults();
             else if (values.dataInputType === "USER") getResults();
             this.props.nextStep();
-        } else if (values.dataInputType === "FRED" && errors["FRED"] !== undefined) {
-            handlers.handleChange("alertErrorType")({target: {value: "INPUT_USER_M"}});
-        } else if (values.dataInputType === "USER" && errors["USER"] !== undefined) {
-            handlers.handleChange("alertErrorType")({target: {value: "INPUT_USER_S"}});
-        }
-        else {
+        } else {
             handlers.handleChange("alertErrorType")({target: {value: "INPUT_PARAM"}});
             cancelLoad();
         }
