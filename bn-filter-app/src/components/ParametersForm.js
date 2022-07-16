@@ -180,7 +180,7 @@ export class ParametersForm extends Component {
                             <FormControl variant="standard" sx={{minWidth: 140}}>
                                 <TextField
                                     label= "Rolling Window"
-                                    title="Only active when using dynamic demeaning"
+                                    title="Only active when using dynamic demeaning. Upper bound is two less than the number of observations"
                                     onChange={handleRollingWindowChange()}
                                     value={values.rollingWindow}
                                     disabled={this.isDisabled['rollingWindow']()}
