@@ -21,7 +21,8 @@ export class UserDataForm extends Component {
         return (
         <div>
             <div className="information">
-                <p>Enter or paste in your chosen time series below. Each observation must start on the next line. Pasting a time series from a CSV will achieve the appropriate formatting.
+                <p>Enter or paste in your chosen time series below. Each observation must start on the next line.
+                    Pasting a time series from a CSV will achieve the appropriate formatting.
                 </p>
             </div>
             <FormControl variant="standard" sx={{m: 1, minWidth: 300, paddingRight: 2}}>
@@ -33,7 +34,7 @@ export class UserDataForm extends Component {
                     onChange={handleChange('unprocessedY')}
                     InputLabelProps={{shrink: true}}
                     // Hacky newline fix that works for all browsers
-                    // (newline or line break not functioning in Safari)
+                    // (newline/line break not functioning in Safari)
                     placeholder={"e.g." + (new Array(100).join(" ")) +
                                 "101.2" + (new Array(100).join(" ")) +
                                 "104.8" + (new Array(100).join(" ")) +
