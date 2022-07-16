@@ -44,7 +44,6 @@ export class UserDataForm extends Component {
         if (errorMessage !== null) setErrorMessage("unprocessedY", errorMessage);
 
         handleChange('unprocessedY')(e);
-
     }
 
     render() {
