@@ -53,6 +53,7 @@ const styles = {
         left: "0",
         bottom: "0",
         width: "100%",
+        zIndex: 1,
     },
     feature: {
         marginTop: "5px",
