@@ -67,7 +67,6 @@ export class BasePage extends Component {
 
     handleChange = input => e => {
         this.setState({[input]: e.target.value});
-        console.log('thesting')
     }
 
     handleCheckboxChange = input => e => {
@@ -84,9 +83,9 @@ export class BasePage extends Component {
     }
 
     deleteErrorMessage = input => {
-        let state = {...this.state};
-        delete state["fieldErrorMessages"][input];
-        this.setState(state);
+        let fieldErrorMessagesTemp = {...this.state.fieldErrorMessages};
+        delete fieldErrorMessagesTemp[input];
+        this.setState({fieldErrorMessages : fieldErrorMessagesTemp});
     }
 
     isEmptyString = (v, input) => {
