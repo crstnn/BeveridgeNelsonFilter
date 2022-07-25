@@ -33,7 +33,7 @@ function App() {
                 Benjamin Wong</a>
             <br/>
             <div style={styles.feature}>
-                <a href="https://github.com/crstnn" rel="noopener noreferrer" target="_blank">@cristian</a>
+                <a href="https://crstnn.github.io/" rel="noopener noreferrer" target="_blank">@cristian</a>
             </div>
         </div>
         </>
