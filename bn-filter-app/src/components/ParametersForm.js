@@ -76,7 +76,7 @@ export class ParametersForm extends Component {
                             />
                         </FormControl>
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={4}>
                         <FormControl variant="standard" sx={{minWidth: 350}}>
                             <InputLabel>Differencing Method</InputLabel>
                             <Select
