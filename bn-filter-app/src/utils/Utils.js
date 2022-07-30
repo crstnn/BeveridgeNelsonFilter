@@ -14,7 +14,7 @@ const colsToRows = (...columns) => {
         for (let r = 0; r < rowLength; r++) {
             row.push(columns[r][c]);
         }
-        retArr.push(row)
+        retArr.push(row);
     }
     return retArr;
 };
@@ -22,7 +22,7 @@ const colsToRows = (...columns) => {
 const confIntZip = (cycle, ci, bound) => cycle.map((x, i) => bound === "lb" ? x - ci[i] : /* ub */ x + ci[i]);
 
 const pairToParam = (paramName, currPair) =>
-    paramName + currPair[0].toString() + '=' + currPair[1].toString() + '&'
+    paramName + currPair[0].toString() + '=' + currPair[1].toString() + '&';
 
 const pairArrayToParamStr = arr => arr.reduce(pairToParam, '?');
 
@@ -32,7 +32,7 @@ async function fetchWithTimeout(url) {
         timeoutID = setTimeout(() => controller.abort(), 20000), // 20 second timeout
         f = await fetch(url, {signal: controller.signal});
     clearTimeout(timeoutID);
-    return f
+    return f;
 }
 
 export {colsToRows, confIntZip, fetchWithTimeout, pairArrayToParamStr}
