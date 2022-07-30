@@ -3,4 +3,4 @@
 # Additional R package dependencies go here
 #
 # (Using base R without any imports)
-# ensure R buildpack is before other server buildpacks
+# ensure R buildpack is placed before other server buildpacks
