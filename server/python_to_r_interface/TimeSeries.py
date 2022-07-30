@@ -1,5 +1,5 @@
 import gc
-from rpy2.robjects.vectors import FloatVector
+import array
 
 
 class TimeSeries:
@@ -68,7 +68,7 @@ class TimeSeries:
         return self._y
 
     def get_time_series_float_vec(self, r_instance):
-        self._y_float_vector = FloatVector(self._y)
+        self._y_float_vector = array.array('f', self._y)
         if self._transform and self._y:
             # transform series
             ret_series = r_instance('transform_series')(y=self._y_float_vector,
