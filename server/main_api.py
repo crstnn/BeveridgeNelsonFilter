@@ -95,7 +95,7 @@ def bnf_user_specified_time_series():
     # for huge time series this may be problematic due to URL length limits (as we cannot send
     # this data in the body because GET requests do not have bodies).
     # May need to change to POST if this poses a problem in the future.
-    user_y = request.args.get("processed_y").split(",")
+    user_y = [float(i) for i in request.args.get("processed_y").split(",")]
 
     user_series = TimeSeries(user_y)
     handle_series_transformation_params(user_series)
