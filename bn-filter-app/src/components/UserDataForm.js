@@ -24,7 +24,7 @@ export class UserDataForm extends Component {
         const
             notNumberReg = new RegExp(/[^\d.,\s]+/),
             arrayFormReg = new RegExp(/^((\d*(.\d+)?),\s*)+(\d*(.\d+)?)\s*$/),
-            seriesFormReg = new RegExp(/^((\d*(.\d+)?)(\r\n|\n|\r))+$/);
+            seriesFormReg = new RegExp(/^((\d*(.\d+)?)(\r\n|\n|\r))*((\d*(.\d+)?)(\r\n|\n|\r)?)$/);
 
         const
             nonNumberTest = notNumberReg.test(timeSeries),
