@@ -1,4 +1,4 @@
-class DateS extends Date {
+class DateAbstract extends Date {
 
     static createDate = (key, date) => {
         switch (key) {
@@ -17,7 +17,7 @@ class DateS extends Date {
 
     static toFixedTwoDigits = d => d.toString().length === 1 ? '0' + d : d;
 
-    static getTruncatedDate = (date) => `${date.getFullYear()}-${DateS.toFixedTwoDigits(date.getMonth() + 1)}-${DateS.toFixedTwoDigits(date.getDate())}`;
+    static getTruncatedDate = date => `${date.getFullYear()}-${DateAbstract.toFixedTwoDigits(date.getMonth() + 1)}-${DateAbstract.toFixedTwoDigits(date.getDate())}`;
 
     nextTimePeriod = () => {
         throw new Error("Child class must implement this method");
@@ -33,32 +33,32 @@ class DateS extends Date {
     };
 }
 
-class WeeklyDate extends DateS {
+class WeeklyDate extends DateAbstract {
     nextTimePeriod = () => {
         const oldDate = new WeeklyDate(this);
         return new WeeklyDate(oldDate.setDate(this.getDate() + 7));
     };
 }
 
-class MonthlyDate extends DateS {
+class MonthlyDate extends DateAbstract {
     nextTimePeriod = () => {
         const oldDate = new MonthlyDate(this);
         return new MonthlyDate(oldDate.setMonth(this.getMonth() + 1));
     };
 }
 
-class QuarterlyDate extends DateS {
+class QuarterlyDate extends DateAbstract {
     nextTimePeriod = () => {
         const oldDate = new QuarterlyDate(this);
         return new QuarterlyDate(oldDate.setMonth(this.getMonth() + 3));
     };
 }
 
-class AnnualDate extends DateS {
+class AnnualDate extends DateAbstract {
     nextTimePeriod = () => {
         const oldDate = new AnnualDate(this);
         return new AnnualDate(oldDate.setFullYear(this.getFullYear() + 1));
     };
 }
 
-export {DateS, WeeklyDate, MonthlyDate, QuarterlyDate, AnnualDate}
+export {DateAbstract, WeeklyDate, MonthlyDate, QuarterlyDate, AnnualDate}
