@@ -72,8 +72,8 @@ export class FREDDataForm extends Component {
                     console.log('Success:', result);
 
                     const
-                        startDate = new Date(result["start_date"]),
-                        endDate = new Date(result["end_date"]);
+                        startDate = new Date(...result["start_date"].split("-").map(x => Number(x))),
+                        endDate = new Date(...result["end_date"].split("-").map(x => Number(x)));
 
                     console.log("response: startDate: ", startDate)
                     console.log("response: endDate: ", endDate)
