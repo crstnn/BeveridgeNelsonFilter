@@ -75,6 +75,9 @@ export class FREDDataForm extends Component {
                         startDate = new Date(result["start_date"]),
                         endDate = new Date(result["end_date"]);
 
+                    console.log("response: startDate: ", startDate)
+                    console.log("response: endDate: ", endDate)
+
                     deleteErrorMessage("mnemonic");
                     handleChange('availableFrequencies')({target: {value: result["available_frequencies"]}});
                     handleChange('frequencyFRED')({target: {value: result["available_frequencies"][0]}});
@@ -84,7 +87,6 @@ export class FREDDataForm extends Component {
                     handleChange('minDate')({target: {value: startDate}});
                     handleChange('maxDate')({target: {value: endDate}});
                     responseSuccess();
-
 
                 }).catch((error) => {
                 console.log(error);
