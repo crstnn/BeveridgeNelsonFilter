@@ -2,4 +2,4 @@ flask
 flask_cors
 gunicorn
 requests
-rpy2
+rpy2==3.4.5
