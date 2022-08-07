@@ -109,13 +109,9 @@ export class ParametersForm extends Component {
             {handleChange, handleNumberFieldChange, handleIntegerNumberFieldChange} = handlers,
             errors = this.props.errors;
 
-        const handleRollingWindowChange = () => {
-            return handleIntegerNumberFieldChange('rollingWindow');
-        }
-
         return (
             <>
-                <div className="information">
+                <div className="information" style={{paddingTop: "7px"}}>
                     <Divider style={{fontSize: 'x-large'}}>Filter Parameters</Divider>
                 </div>
                 <div style={{
@@ -165,7 +161,7 @@ export class ParametersForm extends Component {
                                 <TextField
                                     label= "Rolling Window"
                                     title="Only active when using dynamic demeaning. Upper bound is two less than the number of observations"
-                                    onChange={handleRollingWindowChange()}
+                                    onChange={handleIntegerNumberFieldChange('rollingWindow')}
                                     value={values.rollingWindow}
                                     disabled={this.isDisabled['rollingWindow']()}
                                     error={this.isErrorDisplaying('rollingWindow')}
