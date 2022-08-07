@@ -111,7 +111,7 @@ export class ParametersForm extends Component {
 
         return (
             <>
-                <div className="information" style={{paddingTop: "7px"}}>
+                <div className="information" style={{marginTop: "35px"}}>
                     <Divider style={{fontSize: 'x-large'}}>Filter Parameters</Divider>
                 </div>
                 <div style={{
