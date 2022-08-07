@@ -25,17 +25,17 @@
       },
         "iterativeDynamicDemeaning": {
           "option": [
-            {"value": "sm", "text": "Constant (Static Demeaning)"},
-            {"value": "dm", "text": "Dynamic Demeaning"},
-            {"value": "idm", "text": "Iterative Dynamic Demeaning"}
+            {"value": "sm", "text": "Constant (Static Demeaning)", "hoverText": "Estimate constant drift"},
+            {"value": "dm", "text": "Dynamic Demeaning", "hoverText": "Estimate time-varying drift using rolling window"},
+            {"value": "idm", "text": "Iterative Dynamic Demeaning", "hoverText": "Iteratively estimate time-varying drift removing cycle and using rolling window according to KMW refinement"}
           ],
           "default": "sm"
         },
         "deltaSelect": {
           "option": [
-            {"value": 0, "text": "Fixed Delta"},
-            {"value": 1, "text": "Maximize Amplitude-to-Noise Ratio"},
-            {"value": 2, "text": "Minimize Stochastic Trend Volatility"}
+            {"value": 0, "text": "Fixed Delta", "hoverText": "Signal-to-Noise Ratio according to user input"},
+            {"value": 1, "text": "Maximize Amplitude-to-Noise Ratio", "hoverText": "Signal-to-Noise Ratio according to benchmark KMW approach"},
+            {"value": 2, "text": "Minimize Stochastic Trend Volatility", "hoverText": "Signal-to-Noise Ratio according to KMW refinement"}
           ],
           "default": 0
         },

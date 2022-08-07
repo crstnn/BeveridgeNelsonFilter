@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import {withStyles} from "@mui/styles";
 import CustomDatePicker from "../pickers/CustomDatePicker";
-import createMenuItems from "../utils/CreateMenuItem";
+import {createMenuItems} from "../utils/createItems";
 import {field, URL} from "../config.json";
 import {fetchWithTimeout, pairArrayToParamStr} from "../utils/Utils";
 import Error from "./Error";

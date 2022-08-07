@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import '../styles/App.css';
 import {field, alertErrors} from "../config.json";
-import createMenuItems from "../utils/CreateMenuItem";
+import {createMenuItems, createHoverText} from "../utils/createItems";
 import Error from "./Error";
 
 export class ParametersForm extends Component {
@@ -129,15 +129,7 @@ export class ParametersForm extends Component {
                                 <InputLabel>Signal-to-Noise Ratio (Delta)</InputLabel>
                                 <Select
                                     label="Signal-to-Noise Ratio (Delta)"
-                                    title={(() => {
-                                        if(values.deltaSelect === 0) {
-                                            return "Signal-to-Noise Ratio according to user input";
-                                        } else if(values.deltaSelect === 1) {
-                                            return "Signal-to-Noise Ratio according to benchmark KMW approach";
-                                        } else if(values.deltaSelect === 2) {
-                                            return "Signal-to-Noise Ratio according to KMW refinement";
-                                        }
-                                    })()}
+                                    title={createHoverText(field.optionField.deltaSelect.option)(values.deltaSelect)}
                                     onChange={handleChange('deltaSelect')}
                                     value={values.deltaSelect}
                                 >{createMenuItems(field.optionField.deltaSelect.option)}</Select>
@@ -162,15 +154,7 @@ export class ParametersForm extends Component {
                                 <InputLabel>Demeaning</InputLabel>
                                 <Select
                                     label="Demeaning"
-                                    title={(() => {
-                                        if(values.demean === 'sm') {
-                                            return "Estimate constant drift";
-                                        } else if(values.demean === 'dm') {
-                                            return "Estimate time-varying drift using rolling window";
-                                        } else if(values.demean === 'idm') {
-                                            return "Iteratively estimate time-varying drift removing cycle and using rolling window according to KMW refinement";
-                                        }
-                                    })()}
+                                    title={createHoverText(field.optionField.iterativeDynamicDemeaning.option)(values.demean)}
                                     onChange={handleChange('demean')}
                                     value={values.demean}
                                 >{createMenuItems(field.optionField.iterativeDynamicDemeaning.option)}</Select>
