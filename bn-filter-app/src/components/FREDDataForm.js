@@ -108,7 +108,7 @@ export class FREDDataForm extends Component {
 
 
         return (
-            <Grid container direction="column" sx={{minHeight: 100, marginBottom: 1}}
+            <Grid container direction="column" sx={{marginBottom: 1}}
                   justifyContent="space-evenly"
                   alignItems="center">
                 <Grid item>
@@ -153,7 +153,7 @@ export class FREDDataForm extends Component {
                                  title="This option does not make alterations to the data but changes the display of the graph output"
                                  style={{fontSize: 'large'}}>Options</Divider>
                     </div>
-                    <Grid container direction="column" sx={{minHeight: 320,}}
+                    <Grid container direction="column" sx={{minHeight: 340,}}
                           justifyContent="space-evenly"
                           alignItems="center">
                         <Grid item xs={3}>
