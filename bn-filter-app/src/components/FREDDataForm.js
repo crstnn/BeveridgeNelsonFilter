@@ -108,7 +108,7 @@ export class FREDDataForm extends Component {
 
 
         return (
-            <Grid container direction="column" sx={{marginBottom: 1}}
+            <Grid container direction="column" sx={{minHeight: 80, marginBottom: 1}}
                   justifyContent="space-evenly"
                   alignItems="center">
                 <Grid item>
@@ -208,6 +208,7 @@ const JoinedTextField = withStyles({
         "& fieldset": {
             borderTopRightRadius: 0,
             borderBottomRightRadius: 0,
+            borderRight: 0,
         }
     }
 })(TextField);
