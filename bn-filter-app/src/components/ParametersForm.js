@@ -12,8 +12,8 @@ import {
 } from "@mui/material";
 import '../styles/App.css';
 import {field, alertErrors} from "../config.json";
-import {createMenuItems, createHoverText} from "../utils/createItems";
 import Error from "./Error";
+import {createHoverText, createMenuItems} from "../utils/utils";
 
 export class ParametersForm extends Component {
 

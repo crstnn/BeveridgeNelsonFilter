@@ -1,3 +1,6 @@
+import {MenuItem} from "@mui/material";
+import React from "react";
+
 const colsToRows = (...columns) => {
 
     columns = columns.filter(x => x !== undefined)
@@ -35,4 +38,12 @@ async function fetchWithTimeout(url) {
     return f;
 }
 
-export {colsToRows, confIntZip, fetchWithTimeout, pairArrayToParamStr}
+const createMenuItems = option => option.map((item) => <MenuItem value={item.value}>{item.text}</MenuItem>)
+
+const createHoverText = option => {
+    const hoverText = {};
+    option.forEach(x => hoverText[x.value] = x.hoverText);
+    return fieldItem => hoverText[fieldItem];
+}
+
+export {colsToRows, confIntZip, fetchWithTimeout, pairArrayToParamStr, createMenuItems, createHoverText}

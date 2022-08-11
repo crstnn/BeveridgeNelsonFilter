@@ -6,8 +6,8 @@ import RenderedPlot from "./RenderedPlot";
 import Loading from "./Loading";
 import Error from "./Error";
 import {field, URL} from "../config.json";
-import {DateAbstract} from "../utils/Date";
-import {confIntZip, fetchWithTimeout, pairArrayToParamStr} from "../utils/Utils";
+import {DateAbstract} from "../utils/date";
+import {confIntZip, fetchWithTimeout, pairArrayToParamStr} from "../utils/utils";
 
 export class BasePage extends Component {
     state = {
@@ -189,8 +189,8 @@ export class BasePage extends Component {
         const paramStr = pairArrayToParamStr(
             [['fred_abbr', this.state.mnemonic],
                 ['freq', this.state.frequencyFRED],
-                ['obs_start', DateAbstract.getTruncatedDate(this.state.startDateFRED)],
-                ['obs_end', DateAbstract.getTruncatedDate(this.state.endDateFRED)],
+                ['obs_start', DateAbstract.truncatedDate(this.state.startDateFRED)],
+                ['obs_end', DateAbstract.truncatedDate(this.state.endDateFRED)],
                 ].concat(this.bnfParamArr())
             );
 
@@ -249,7 +249,7 @@ export class BasePage extends Component {
 
                     this.setState({
                         x: this.state.frequency !== "n" ? // dated axis or numbered axis
-                            DateAbstract.createDate(this.state.frequency, this.state.startDate).getDateArray(cycleRes.length).map(DateAbstract.getTruncatedDate)
+                            DateAbstract.createDate(this.state.frequency, this.state.startDate).getDateSeries(cycleRes.length).map(DateAbstract.truncatedDate)
                             : Array.from({length: cycleRes.length}, (_, i) => i + 1),
                         cycle: cycleRes,
                         cycleCI: ciRes,

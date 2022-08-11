@@ -10,8 +10,8 @@ import {
     TextField
 } from "@mui/material";
 import CustomDatePicker from "../pickers/CustomDatePicker";
-import {createMenuItems} from "../utils/createItems";
 import {field} from "../config.json";
+import {createMenuItems} from "../utils/utils";
 
 export class UserDataForm extends Component {
 

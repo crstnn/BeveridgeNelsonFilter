@@ -17,13 +17,13 @@ class DateAbstract extends Date {
 
     static toFixedTwoDigits = d => d.toString().length === 1 ? '0' + d : d;
 
-    static getTruncatedDate = date => `${date.getFullYear()}-${DateAbstract.toFixedTwoDigits(date.getMonth() + 1)}-${DateAbstract.toFixedTwoDigits(date.getDate())}`;
+    static truncatedDate = date => `${date.getFullYear()}-${DateAbstract.toFixedTwoDigits(date.getMonth() + 1)}-${DateAbstract.toFixedTwoDigits(date.getDate())}`;
 
     nextTimePeriod = () => {throw new Error("Child class must implement this method");};
 
-    getDateArray = len => {
+    getDateSeries = periods => {
         let currDate = this, retDate = this;
-        return Array.from({length: len}).map(() => {
+        return Array.from({length: periods}).map(() => {
             retDate = currDate;
             currDate = currDate.nextTimePeriod();
             return retDate;

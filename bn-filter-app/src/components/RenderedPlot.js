@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import Plot from 'react-plotly.js';
 import {Button} from "@mui/material";
 import {CSVLink} from "react-csv";
-import {colsToRows} from "../utils/Utils";
+import {colsToRows} from "../utils/utils";
 
 export class RenderedPlot extends Component {
 
