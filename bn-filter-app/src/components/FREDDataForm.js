@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import {
-    Button,
     Checkbox,
     Divider,
     FormControl,
@@ -10,7 +9,6 @@ import {
     Select,
     TextField,
 } from "@mui/material";
-import {withStyles} from "@mui/styles";
 import CustomDatePicker from "../pickers/CustomDatePicker";
 import {field, URL} from "../config.json";
 import {createMenuItems, fetchWithTimeout, pairArrayToParamStr} from "../utils/utils";
@@ -18,6 +16,8 @@ import Error from "./Error";
 import {ThreeDots} from "react-loader-spinner";
 
 export class FREDDataForm extends Component {
+
+    mnemonicTimeoutID = null;
 
     state = {
         mnemonic: this.props.values.mnemonic,
@@ -29,6 +29,17 @@ export class FREDDataForm extends Component {
         const items = field.optionField.frequencyFRED.option.filter(x => this.props.values.availableFrequencies.includes(x.value));
         return createMenuItems(items);
     }
+
+    handleMnemonic = (e) => {
+        this.setState({mnemonic: e.target.value});
+
+        if (this.mnemonicTimeoutID) clearTimeout(this.mnemonicTimeoutID);
+
+        this.mnemonicTimeoutID = setTimeout(() => {
+            this.checkAvailability();
+        }, 500);  // 0.5-second debounce timer
+    }
+
 
     checkAvailability = () => {
         const
@@ -112,16 +123,15 @@ export class FREDDataForm extends Component {
                   alignItems="center">
                 <Grid item>
                     <FormGroup row>
-                        <JoinedTextField variant="outlined" label="FRED mnemonic"
+                        <TextField variant="outlined" label="FRED mnemonic"
                                          title="Press enter or click 'check' to check the availability of the mnemonic"
                                          color={errors["mnemonic"] === undefined && values.mnemonic !== "" ? "success" : null} placeholder="e.g. GDPC1" sx={{width: 250}}
                                          error={errors["mnemonic"] !== undefined}
-                                         onChange={e => this.setState({mnemonic: e.target.value}) }
+                                         onChange={e => this.handleMnemonic(e) }
                                          onKeyDown={e => e.keyCode === 13 /* 'enter' key */ ? this.checkAvailability(e) : null}
                                          value={this.state.mnemonic}
                                          InputProps={{
                                              endAdornment: this.state.loading ? <ThreeDots height={30} width={30} color='grey'/> : null}}/>
-                        <JoinedButton onClick={this.checkAvailability} variant="outlined">Check</JoinedButton>
                     </FormGroup>
                     <FormHelperText>{mnemonicHelperText()}</FormHelperText>
                 </Grid>
@@ -201,23 +211,3 @@ export class FREDDataForm extends Component {
         )
     }
 }
-
-const JoinedTextField = withStyles({
-    root: {
-        "& fieldset": {
-            borderTopRightRadius: 0,
-            borderBottomRightRadius: 0,
-            borderRight: 0,
-        }
-    }
-})(TextField);
-
-const JoinedButton = withStyles({
-    root: {
-        borderTopLeftRadius: 0,
-        borderBottomLeftRadius: 0,
-        backgroundColor: "#ede8e8",
-        borderColor: "#454545",
-        color: "black",
-    }
-})(Button);
