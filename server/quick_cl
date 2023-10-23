@@ -1,3 +1,6 @@
 git subtree push --prefix server <host> main
 
+# to overwrite remote changes (on a force push)
+git push <host> `git subtree split --prefix server main`:main --force
+
 k6 run "loadTest.js"
