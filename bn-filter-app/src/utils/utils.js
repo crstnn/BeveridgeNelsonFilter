@@ -29,10 +29,10 @@ const pairToParam = (paramName, currPair) =>
 
 const pairArrayToParamStr = arr => arr.reduce(pairToParam, '?');
 
-async function fetchWithTimeout(url) {
+async function fetchWithTimeout(url, timeout = 20000) { // 20 second timeout
     const
         controller = new AbortController(),
-        timeoutID = setTimeout(() => controller.abort(), 20000), // 20 second timeout
+        timeoutID = setTimeout(() => controller.abort(), timeout),
         f = await fetch(url, {signal: controller.signal});
     clearTimeout(timeoutID);
     return f;
