@@ -16,12 +16,15 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '14'
+
+      - name: Set NPM version
+        run: npm install -g npm@8
 
       - name: Install dependencies
         run: npm install
