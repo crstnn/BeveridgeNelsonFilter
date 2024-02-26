@@ -5,6 +5,11 @@ on:
     branches:
       - main
 
+defaults:
+  run:
+    # change to frontend dir
+    working-directory: ./bn-filter-app
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -12,9 +17,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
-      - name: Change to frontend directory
-        run: cd bn-filter-app
 
       - name: Set up node.js
         uses: actions/setup-node@v3
