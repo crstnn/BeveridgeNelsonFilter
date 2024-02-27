@@ -32,7 +32,7 @@ jobs:
           git config --global user.name "Github-actions-bot"
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Deploy GH pages
         run: npm run deploy
