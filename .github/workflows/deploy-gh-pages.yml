@@ -1,12 +1,9 @@
-name: NPM Deploy to Gitub Pages
+name: NPM Deploy to Github Pages
 
 on:
   push:
     branches:
       - main
-
-permissions:
-  contents: write
 
 defaults:
   run:
@@ -32,7 +29,8 @@ jobs:
       - name: Set Git config
         run: |
           git config --global user.email "actions@github.com"
-          git config --global user.name "Github-actions-bot"
+          git config --global user.name "github-actions-bot"
+          git remote set-url origin https://github-actions-bot:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
 
       - name: Install dependencies
         run: npm ci
