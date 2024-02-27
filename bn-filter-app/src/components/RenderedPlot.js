@@ -4,7 +4,7 @@ import {Button} from "@mui/material";
 import {CSVLink} from "react-csv";
 import {colsToRows} from "../utils/utils";
 
-export class RenderedPlot extends Component {
+class RenderedPlot extends Component {
 
     fileName = "BNF_cycle.csv"
 
@@ -19,7 +19,7 @@ export class RenderedPlot extends Component {
 
         return colsToRows(
             ["date"].concat(plotPageValues.x),
-            [(plotPageValues.dataInputType === "FRED" ? `${plotPageValues.mnemonic}_` : "" ) + "original_y"].concat(plotPageValues.y),
+            [(plotPageValues.dataInputType === "FRED" ? `${plotPageValues.mnemonic}_` : "") + "original_y"].concat(plotPageValues.y),
             ["cycle"].concat(plotPageValues.cycle),
             plotPageValues.dispCycleCI ? ["conf_int_lower_bound"].concat(plotPageValues.cycleCILB) : undefined,
             plotPageValues.dispCycleCI ? ["conf_int_upper_bound"].concat(plotPageValues.cycleCIUB) : undefined);
@@ -33,10 +33,11 @@ export class RenderedPlot extends Component {
         console.log(plotPageValues.y)
 
         return (
-            <Plot layout={{autosize: true, xaxis: {automargin: true}, yaxis: {automargin: true, tickangle: 'auto'},
+            <Plot layout={{
+                autosize: true, xaxis: {automargin: true}, yaxis: {automargin: true, tickangle: 'auto'},
                 width: window.screen.width <= 700 ? 450 : 700, // fit to window size
                 margin: {l: 20, r: 20, b: 20, t: 20, pad: 5}
-                }}
+            }}
                   data={[
                       {
                           x: plotPageValues.x,

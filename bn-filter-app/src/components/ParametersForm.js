@@ -11,11 +11,13 @@ import {
     TextField,
 } from "@mui/material";
 import '../styles/App.css';
-import {field, alertErrors} from "../config.json";
+import config from "../config.json";
 import Error from "./Error";
 import {createHoverText, createMenuItems} from "../utils/utils";
 
-export class ParametersForm extends Component {
+const {field, alertErrors} = config;
+
+class ParametersForm extends Component {
 
     isDisabled = {
         rollingWindow: () => this.props.values.demean === "sm",
@@ -38,8 +40,7 @@ export class ParametersForm extends Component {
         } else if (values.dataInputType === "USER" && errors["unprocessedY"] !== undefined) {
             handlers.handleChange("alertErrorType")({target: {value: "INPUT_USER_S"}});
             cancelLoad();
-        }
-        else if (this.errorsDisplayedCount() === 0) {
+        } else if (this.errorsDisplayedCount() === 0) {
             if (values.dataInputType === "FRED") getFREDResults();
             else if (values.dataInputType === "USER") getResults();
             this.props.nextStep();
@@ -121,7 +122,7 @@ export class ParametersForm extends Component {
                 }}>
                     <Grid container alignItems="flex-start" justifyContent="space-evenly" spacing={3}>
                         <Grid item xs={7.75}>
-                            <FormControl variant="standard" sx={{ width: 280 }}>
+                            <FormControl variant="standard" sx={{width: 280}}>
                                 <InputLabel>Signal-to-Noise Ratio (Delta)</InputLabel>
                                 <Select
                                     label="Signal-to-Noise Ratio (Delta)"
@@ -159,7 +160,7 @@ export class ParametersForm extends Component {
                         <Grid item xs={4.25}>
                             <FormControl variant="standard" sx={{minWidth: 140}}>
                                 <TextField
-                                    label= "Rolling Window"
+                                    label="Rolling Window"
                                     title="Only active when using dynamic demeaning. Upper bound is two less than the number of observations"
                                     onChange={handleIntegerNumberFieldChange('rollingWindow')}
                                     value={values.rollingWindow}
@@ -183,7 +184,9 @@ export class ParametersForm extends Component {
                     {this.props.values.loading === null ?
                         <Error
                             tagName={alertErrors[this.props.values.alertErrorType]}
-                            close={() => {this.props.handlers.handleChange("loading")({target: {value: false}})}}/>
+                            close={() => {
+                                this.props.handlers.handleChange("loading")({target: {value: false}})
+                            }}/>
                         : null}
                     {this.preAnalysisTransformations()}
                     {this.bnFilterParameters()}

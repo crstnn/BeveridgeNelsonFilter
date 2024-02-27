@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Button} from "@mui/material";
 import '../styles/App.css';
 
-export class StartMenu extends Component {
+class StartMenu extends Component {
     continue = e => {
         e.preventDefault();
         this.props.nextStep();
@@ -14,10 +14,10 @@ export class StartMenu extends Component {
             <div>
                 <div className="information">
                     <p>You will be guided through the steps to perform trend-cycle decomposition on either:</p>
-                        <ol>
-                            <li>A time series from the Federal Reserve Economic Database (FRED) using its mnemonic, or</li>
-                            <li>A time series of your choosing, to be pasted into a field</li>
-                        </ol>
+                    <ol>
+                        <li>A time series from the Federal Reserve Economic Database (FRED) using its mnemonic, or</li>
+                        <li>A time series of your choosing, to be pasted into a field</li>
+                    </ol>
                     <p>
                         Note that there is additional information provided when hovering over the options in the
                         subsequent pages. The cycle is reported and can be downloaded as a CSV.

@@ -1,23 +1,19 @@
 import React, {Component} from 'react';
-import {
-    ToggleButton,
-    ToggleButtonGroup,
-    Divider, Grid, Button,
-} from "@mui/material";
+import {Button, Divider, Grid, ToggleButton, ToggleButtonGroup,} from "@mui/material";
 import '../styles/App.css';
-import {FREDDataForm} from "./FREDDataForm";
-import {UserDataForm} from "./UserDataForm";
+import FREDDataForm from "./FREDDataForm";
+import UserDataForm from "./UserDataForm";
 
-export class DataForm extends Component {
+class DataForm extends Component {
 
     toggleDataInputType = e => {
         const {errors, valuesUserData, valuesFREDData, handleChange, deleteErrorMessage,} = this.props;
 
         const
             isMnemonicErrorDisplaying =
-            () => errors["mnemonic"] !== undefined && valuesFREDData.dataInputType === "FRED",
+                () => errors["mnemonic"] !== undefined && valuesFREDData.dataInputType === "FRED",
             isUserSeriesErrorDisplaying =
-            () => errors["unprocessedY"] !== undefined && valuesUserData.dataInputType === "USER";
+                () => errors["unprocessedY"] !== undefined && valuesUserData.dataInputType === "USER";
 
         if (isMnemonicErrorDisplaying()) deleteErrorMessage("mnemonic");
         if (isUserSeriesErrorDisplaying()) deleteErrorMessage("unprocessedY");
@@ -39,7 +35,15 @@ export class DataForm extends Component {
     }
 
     render() {
-        const {valuesUserData, errors, valuesFREDData, setErrorMessage, deleteErrorMessage, handleChange, handleCheckboxChange} = this.props;
+        const {
+            valuesUserData,
+            errors,
+            valuesFREDData,
+            setErrorMessage,
+            deleteErrorMessage,
+            handleChange,
+            handleCheckboxChange
+        } = this.props;
 
         return (
             <>
@@ -60,22 +64,22 @@ export class DataForm extends Component {
                     {(() => {
                         if (valuesUserData.dataInputType === "USER")
                             return <UserDataForm
-                                        setErrorMessage={setErrorMessage}
-                                        deleteErrorMessage={deleteErrorMessage}
-                                        handleChange={handleChange}
-                                        handleCheckboxChange={handleCheckboxChange}
-                                        values={valuesUserData}
-                                        errors={errors}
-                                    />
+                                setErrorMessage={setErrorMessage}
+                                deleteErrorMessage={deleteErrorMessage}
+                                handleChange={handleChange}
+                                handleCheckboxChange={handleCheckboxChange}
+                                values={valuesUserData}
+                                errors={errors}
+                            />
                         else if (valuesUserData.dataInputType === "FRED")
                             return <FREDDataForm
-                                    setErrorMessage={setErrorMessage}
-                                    deleteErrorMessage={deleteErrorMessage}
-                                    handleChange={handleChange}
-                                    handleCheckboxChange={handleCheckboxChange}
-                                    values={valuesFREDData}
-                                    errors={errors}
-                                    />
+                                setErrorMessage={setErrorMessage}
+                                deleteErrorMessage={deleteErrorMessage}
+                                handleChange={handleChange}
+                                handleCheckboxChange={handleCheckboxChange}
+                                values={valuesFREDData}
+                                errors={errors}
+                            />
                     })()}
                 </div>
                 <Grid container direction="column" justifyContent="space-evenly"

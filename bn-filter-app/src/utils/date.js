@@ -19,7 +19,9 @@ class DateAbstract extends Date {
 
     static truncatedDate = date => `${date.getFullYear()}-${DateAbstract.toFixedTwoDigits(date.getMonth() + 1)}-${DateAbstract.toFixedTwoDigits(date.getDate())}`;
 
-    nextTimePeriod = () => {throw new Error("Child class must implement this method");};
+    nextTimePeriod = () => {
+        throw new Error("Child class must implement this method");
+    };
 
     getDateSeries = periods => {
         let currDate = this, retDate = this;

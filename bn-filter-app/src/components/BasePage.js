@@ -5,11 +5,13 @@ import DataForm from "./DataForm";
 import RenderedPlot from "./RenderedPlot";
 import Loading from "./Loading";
 import Error from "./Error";
-import {field, URL} from "../config.json";
+import config from "../config.json";
 import {DateAbstract} from "../utils/date";
 import {confIntZip, fetchWithTimeout, pairArrayToParamStr} from "../utils/utils";
 
-export class BasePage extends Component {
+const {field, URL} = config;
+
+class BasePage extends Component {
     state = {
         step: 1,
         dataInputType: "FRED",
@@ -85,7 +87,7 @@ export class BasePage extends Component {
     deleteErrorMessage = input => {
         let fieldErrorMessagesTemp = {...this.state.fieldErrorMessages};
         delete fieldErrorMessagesTemp[input];
-        this.setState({fieldErrorMessages : fieldErrorMessagesTemp});
+        this.setState({fieldErrorMessages: fieldErrorMessagesTemp});
     }
 
     isEmptyString = (v, input) => {
@@ -191,8 +193,8 @@ export class BasePage extends Component {
                 ['freq', this.state.frequencyFRED],
                 ['obs_start', DateAbstract.truncatedDate(this.state.startDateFRED)],
                 ['obs_end', DateAbstract.truncatedDate(this.state.endDateFRED)],
-                ].concat(this.bnfParamArr())
-            );
+            ].concat(this.bnfParamArr())
+        );
 
         const finalURL = URL.baseBackendURL + URL.bnfFredDataSlug + paramStr;
 
@@ -227,11 +229,13 @@ export class BasePage extends Component {
     getResultsForUserSpecifiedData = async () => {
 
         // dealing with all operating system's newline characters
-        this.state.y = this.state.unprocessedY.replace(/(,?(\r\n|\n|\r))|(,\s)/gm, ",")
+        const y = this.state.unprocessedY.replace(/(,?(\r\n|\n|\r))|(,\s)/gm, ",")
             .split(",")
-            .filter(x => x !== "");
+            .filter(x => x !== "")
 
-        const paramStr = pairArrayToParamStr([['processed_y', this.state.y]].concat(this.bnfParamArr()));
+        this.setState({y});
+
+        const paramStr = pairArrayToParamStr([['processed_y', y]].concat(this.bnfParamArr()));
 
         const finalURL = URL.baseBackendURL + URL.bnfUserSpecifiedDataSlug + paramStr;
 
@@ -267,9 +271,27 @@ export class BasePage extends Component {
 
     render() {
         const {unprocessedY, startDate, endDate, frequency, dataInputType, dispCycleCI} = this.state;
-        const {startDateFRED, endDateFRED, minDate, maxDate, mnemonic, frequencyFRED, availableFrequencies} = this.state;
+        const {
+            startDateFRED,
+            endDateFRED,
+            minDate,
+            maxDate,
+            mnemonic,
+            frequencyFRED,
+            availableFrequencies
+        } = this.state;
         const dataUserFormPageValues = {unprocessedY, startDate, endDate, frequency, dataInputType, dispCycleCI};
-        const dataFREDFormPageValues = {startDateFRED, endDateFRED, minDate, maxDate, mnemonic, frequencyFRED, dataInputType, availableFrequencies, dispCycleCI};
+        const dataFREDFormPageValues = {
+            startDateFRED,
+            endDateFRED,
+            minDate,
+            maxDate,
+            mnemonic,
+            frequencyFRED,
+            dataInputType,
+            availableFrequencies,
+            dispCycleCI
+        };
 
         const {
             step,
@@ -316,7 +338,19 @@ export class BasePage extends Component {
         };
 
         const {x, y, cycleCILB, cycleCIUB,} = this.state;
-        const plotPageValues = {x, y, cycle, deltaCalc, dispCycleCI, cycleCILB, cycleCIUB, frequency, startDate, dataInputType, mnemonic};
+        const plotPageValues = {
+            x,
+            y,
+            cycle,
+            deltaCalc,
+            dispCycleCI,
+            cycleCILB,
+            cycleCIUB,
+            frequency,
+            startDate,
+            dataInputType,
+            mnemonic
+        };
 
         return (
             <>
@@ -353,9 +387,9 @@ export class BasePage extends Component {
                             return (
                                 <>
                                     {this.state.loading ? Loading() : <RenderedPlot
-                                                                            prevStep={this.prevStep}
-                                                                            plotPageValues={plotPageValues}
-                                                                        />
+                                        prevStep={this.prevStep}
+                                        plotPageValues={plotPageValues}
+                                    />
                                     }
                                 </>
                             )

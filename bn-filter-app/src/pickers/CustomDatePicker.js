@@ -1,7 +1,7 @@
 import React from "react";
-import {LocalizationProvider, DesktopDatePicker} from '@mui/x-date-pickers';
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import {DesktopDatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import {TextField} from "@mui/material";
+import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFnsV3";
 
 function CustomDatePicker(props) {
     const date = props.date;

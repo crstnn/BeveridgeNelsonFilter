@@ -3,19 +3,23 @@ import {
     Checkbox,
     Divider,
     FormControl,
-    FormControlLabel, FormGroup, FormHelperText,
+    FormControlLabel,
+    FormGroup,
+    FormHelperText,
     Grid,
     InputLabel,
     Select,
     TextField,
 } from "@mui/material";
 import CustomDatePicker from "../pickers/CustomDatePicker";
-import {field, URL} from "../config.json";
+import config from "../config.json";
 import {createMenuItems, fetchWithTimeout, pairArrayToParamStr} from "../utils/utils";
 import Error from "./Error";
 import {ThreeDots} from "react-loader-spinner";
 
-export class FREDDataForm extends Component {
+const {field, URL} = config;
+
+export default class FREDDataForm extends Component {
 
     mnemonicTimeoutID = null;
 
@@ -124,14 +128,17 @@ export class FREDDataForm extends Component {
                 <Grid item>
                     <FormGroup row>
                         <TextField variant="outlined" label="FRED mnemonic"
-                                         title="Press enter or click 'check' to check the availability of the mnemonic"
-                                         color={errors["mnemonic"] === undefined && values.mnemonic !== "" ? "success" : null} placeholder="e.g. GDPC1" sx={{width: 250}}
-                                         error={errors["mnemonic"] !== undefined}
-                                         onChange={e => this.handleMnemonic(e) }
-                                         onKeyDown={e => e.keyCode === 13 /* 'enter' key */ ? this.checkAvailability(e) : null}
-                                         value={this.state.mnemonic}
-                                         InputProps={{
-                                             endAdornment: this.state.loading ? <ThreeDots height={30} width={30} color='grey'/> : null}}/>
+                                   title="Press enter or click 'check' to check the availability of the mnemonic"
+                                   color={errors["mnemonic"] === undefined && values.mnemonic !== "" ? "success" : null}
+                                   placeholder="e.g. GDPC1" sx={{width: 250}}
+                                   error={errors["mnemonic"] !== undefined}
+                                   onChange={e => this.handleMnemonic(e)}
+                                   onKeyDown={e => e.keyCode === 13 /* 'enter' key */ ? this.checkAvailability(e) : null}
+                                   value={this.state.mnemonic}
+                                   InputProps={{
+                                       endAdornment: this.state.loading ?
+                                           <ThreeDots height={30} width={30} color='grey'/> : null
+                                   }}/>
                     </FormGroup>
                     <FormHelperText>{mnemonicHelperText()}</FormHelperText>
                 </Grid>
@@ -147,8 +154,8 @@ export class FREDDataForm extends Component {
             <div>
                 <div className="information">
                     <p>Choose a <a target="_blank"
-                                                rel="noopener noreferrer"
-                                                href="https://fred.stlouisfed.org/tags/series">
+                                   rel="noopener noreferrer"
+                                   href="https://fred.stlouisfed.org/tags/series">
                         FRED mnemonic</a> and check its availability before continuing.</p>
                 </div>
                 <div style={{
@@ -159,29 +166,29 @@ export class FREDDataForm extends Component {
                     {this.mnemonicInput()}
                     <div className="dataInformation">
                         <Divider
-                                 title="This option does not make alterations to the data but changes the display of the graph output"
-                                 style={{fontSize: 'large'}}>Options</Divider>
+                            title="This option does not make alterations to the data but changes the display of the graph output"
+                            style={{fontSize: 'large'}}>Options</Divider>
                     </div>
                     <Grid container direction="column" sx={{minHeight: 340,}}
                           justifyContent="space-evenly"
                           alignItems="center">
                         <Grid item xs={3}>
                             <CustomDatePicker
-                                              label={"Start Date"}
-                                              title={"Series' start date (inclusive). Determined by FRED"}
-                                              date={values.startDateFRED}
-                                              minDate={values.minDate}
-                                              maxDate={values.maxDate}
-                                              updateDate={handleChange('startDateFRED')}/>
+                                label={"Start Date"}
+                                title={"Series' start date (inclusive). Determined by FRED"}
+                                date={values.startDateFRED}
+                                minDate={values.minDate}
+                                maxDate={values.maxDate}
+                                updateDate={handleChange('startDateFRED')}/>
                         </Grid>
                         <Grid item xs={3}>
                             <CustomDatePicker
-                                              label={"End Date"}
-                                              title={"Series' end date (inclusive). Determined by FRED"}
-                                              date={values.endDateFRED}
-                                              minDate={values.minDate}
-                                              maxDate={values.maxDate}
-                                              updateDate={handleChange('endDateFRED')}/>
+                                label={"End Date"}
+                                title={"Series' end date (inclusive). Determined by FRED"}
+                                date={values.endDateFRED}
+                                minDate={values.minDate}
+                                maxDate={values.maxDate}
+                                updateDate={handleChange('endDateFRED')}/>
                         </Grid>
                         <Grid item xs={3}>
                             <FormControl variant="standard" sx={{minWidth: 220}}>
