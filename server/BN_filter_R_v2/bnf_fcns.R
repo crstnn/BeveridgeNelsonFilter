@@ -708,7 +708,7 @@ bnf <- function(y,
   # @delta_select: set to 0 if use fixed delta, 1 if max amp-to-noise, 2 if min var(trend shocks)
   # @min_delta: start point of grid search for delta
   # @fixed_delta: set a fixed delta to be used if delta_select=0
-  # @dynamic_bands: set to T for dynamic error bands, F for fixed standard error bands
+  # @dynamic_bands: set to T for dynamic error bands, F for fixed standard error bands (should be F when sm demean type)
   # @ib: set to F if no iterative backcasting as in KMW2018 (just unconditional mean), set to T if iterative backcasting
   # @varargs (...): passed into piecewise demean function
 {

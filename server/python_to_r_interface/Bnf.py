@@ -11,6 +11,7 @@ class BNF:
         self.delta = delta
         self.ib = ib
         self.demean = demean
+
         if demean == "idm":
             self.demean = 'dm'
             self.iterative = 100
@@ -18,6 +19,8 @@ class BNF:
             self.iterative = 1
         else:
             self.iterative = 0
+
+        self.dynamic_bands = self.iterative != 0
 
     def run(self):
         bnf_output = self.r_instance('bnf')(self.time_series_float_vec,
@@ -27,6 +30,7 @@ class BNF:
                                             fixed_delta=self.delta if self.delta_select == 0 else 0,  # else: arbitrary value
                                             d0=self.delta if self.delta_select != 0 else 0,  # else: arbitrary value
                                             demean=self.demean,
+                                            dynamic_bands=self.dynamic_bands,
                                             ib=self.ib)
 
         # using both garbage collectors to free up space that rpy2 hogs after running ops
