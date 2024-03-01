@@ -159,7 +159,7 @@
     "INPUT_USER_M": "The FRED mnemonic input is either empty or incorrect. Check the mnemonic.",
     "INPUT_USER_S": "The user inputted series is either empty or incorrect. Check the data for the series.",
     "INPUT_PARAM": "At least one of the parameters does not meet the requirements. Check that the parameters are appropriate.",
-    "SERVER": "During the running of the BN filter a problem occurred. Check that the parameters are appropriate (e.g. if delta is too large).",
+    "SERVER": "During the running of the BN filter a problem occurred. Check that the parameters are appropriate (e.g., if minimum delta is low enough).",
     "TIMEOUT": "Request has taken too long. Consider reducing the computational cost by adjusting the inputs or coming back later."
   },
   "URL": {
