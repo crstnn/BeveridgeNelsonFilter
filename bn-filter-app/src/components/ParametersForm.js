@@ -136,7 +136,7 @@ class ParametersForm extends Component {
                             <FormControl variant="standard" sx={{width: 140}}>
                                 <TextField
                                     label={values.deltaSelect === 0 ? "Fixed Delta" : "Minimum Delta"}
-                                    title={values.deltaSelect === 0 ? "Fixed delta for estimation" : "Minimum threshold start point for grid search (with grid increments of 0.0005)"}
+                                    title={values.deltaSelect === 0 ? "Fixed delta for estimation" : "Minimum threshold start point for grid search (with grid increments of 0.0005). Lowest possible minimum will depend on time series, including length of sample period, with higher minimum needed for shorter time series."}
                                     onChange={handleNumberFieldChange('delta')}
                                     value={values.delta}
                                     disabled={this.isDisabled['delta']()}
@@ -161,7 +161,7 @@ class ParametersForm extends Component {
                             <FormControl variant="standard" sx={{minWidth: 140}}>
                                 <TextField
                                     label="Rolling Window"
-                                    title="Only active when using dynamic demeaning. Upper bound is two less than the number of observations"
+                                    title="Only active when using dynamic demeaning. Upper bound is two less than the number of observations. A rolling window of 40 is suggested for quarterly macroeconomic data to average over effects of business cycles on mean growth, but appropriate value will depend on frequency of data, timeframe over which cyclical movements should average out, and sufficient observations to estimate drift precisely."
                                     onChange={handleIntegerNumberFieldChange('rollingWindow')}
                                     value={values.rollingWindow}
                                     disabled={this.isDisabled['rollingWindow']()}
