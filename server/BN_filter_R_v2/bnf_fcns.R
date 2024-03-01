@@ -371,13 +371,13 @@ backcast <- function(y, p, delta){
     reparameterised_y_flip <- t(t(augmented_y_flip[start_row:end_row, , drop = FALSE])) - 
         rho * X_flip[,1]
  
-#Calculate other preliminaries before estimation
- 
-# Create Data for transformed model to estimate
-Y <- reparameterised_y
-X <- X[1:nr_X,2:nc_X]
-Y_flip <- reparameterised_y_flip
-X_flip <- X_flip[1:nr_X,2:nc_X]
+    #Calculate other preliminaries before estimation
+
+    # Create Data for transformed model to estimate
+    Y <- reparameterised_y
+    X <- X[1:nr_X,2:nc_X]
+    Y_flip <- reparameterised_y_flip
+    X_flip <- X_flip[1:nr_X,2:nc_X]
 
     # Set other parameters for conjugate priors
     A_prior <- zeros(p - 1, 1)     # constant and (p-1) phi_star coefficients
@@ -385,8 +385,8 @@ X_flip <- X_flip[1:nr_X,2:nc_X]
     V_prior <- diag(drop(repmat(0.5, 1, p - 1) / (square(seq(from = 1, to = p - 1, by = 1)))))
 
     # Calculate Posteriors
-    V_post <- qr.solve(qr.solve(V_prior) + (1.0 / sig2_ols) * crossprod(x = X, y = NULL))
-    A_post <- V_post %*% (qr.solve(V_post) %*% A_prior + t((1.0 / sig2_ols) * X) %*% Y)
+    V_post <- qr.solve(qr.solve(V_prior,tol = 1e-30) + (1.0 / sig2_ols) * crossprod(x = X, y = NULL),tol = 1e-30)
+    A_post <- V_post %*% (qr.solve(V_post,tol = 1e-30) %*% A_prior + t((1.0 / sig2_ols) * X) %*% Y)
     
     # Add rho back into the posterior of estimated parameters
     A_post <- rbind(rho, A_post)
@@ -405,43 +405,43 @@ X_flip <- X_flip[1:nr_X,2:nc_X]
     # Calculate AR(1) term
     AR_params[1] <- rho - sum(AR_params[2:p]) 
  
- 
-# p out of sample forecasts here
-#Add current period in to incoporate current information set to do BN decomposition
-   end_col = nc_X_untransformed-1   
-X <-rbind(X_untransformed[2:nr_X_untransformed,1:nc_X_untransformed],cbind(y[nr_y,1],t(X_untransformed[nr_X_untransformed,1:end_col]))) 
-X_flip <- rbind(X_flip_untransformed[2:nr_X_untransformed,1:nc_X_untransformed], cbind(y_flip[nr_y,1], t(X_flip_untransformed[nr_X_untransformed,1:end_col])))
 
- 
-Companion <- rbind(t(AR_params), cbind(eye(p - 1), zeros(p - 1, 1))) 
-      
- 
-j <- 1
-while (j < p+3){
-	Companion_j <- eye(nrow(Companion))
-	for(i in 1:j-1){Companion_j <- Companion %*% Companion_j}
-    X_j = Companion_j %*% t(t(X[nrow(X),1:ncol(X)]))
-    overwrite_row = p+2+nrow(y)+j
-    augmented_y[overwrite_row] = t(X_j[1,1:ncol(X_j)])
-    X_j = Companion_j %*% t(t(X_flip[nrow(X_flip),1:ncol(X_flip)]))
-    augmented_y_flip[overwrite_row] = t(X_j[1,1:ncol(X_j)])
-j = j+1
-}
+    # p out of sample forecasts here
+    #Add current period in to incoporate current information set to do BN decomposition
+       end_col = nc_X_untransformed-1
+    X <-rbind(X_untransformed[2:nr_X_untransformed,1:nc_X_untransformed],cbind(y[nr_y,1],t(X_untransformed[nr_X_untransformed,1:end_col])))
+    X_flip <- rbind(X_flip_untransformed[2:nr_X_untransformed,1:nc_X_untransformed], cbind(y_flip[nr_y,1], t(X_flip_untransformed[nr_X_untransformed,1:end_col])))
 
- 
-end_row0 = p+2
-start_row = p+2+nr_y+1
-end_row = p+2+nr_y+p+2
- 
-augmented_y[1:end_row0] = t(t(rev(t(t(augmented_y_flip[start_row:end_row])))))
- 
-augmented_y_iter = cbind(augmented_y_iter, augmented_y)
-    
-iter = iter + 1
-}   
- end_row = p+2+nr_y
-augmented_y = t(t(augmented_y[1:end_row]))
-    
+
+    Companion <- rbind(t(AR_params), cbind(eye(p - 1), zeros(p - 1, 1)))
+
+
+    j <- 1
+    while (j < p+3){
+        Companion_j <- eye(nrow(Companion))
+        for(i in 1:j-1){Companion_j <- Companion %*% Companion_j}
+        X_j = Companion_j %*% t(t(X[nrow(X),1:ncol(X)]))
+        overwrite_row = p+2+nrow(y)+j
+        augmented_y[overwrite_row] = t(X_j[1,1:ncol(X_j)])
+        X_j = Companion_j %*% t(t(X_flip[nrow(X_flip),1:ncol(X_flip)]))
+        augmented_y_flip[overwrite_row] = t(X_j[1,1:ncol(X_j)])
+    j = j+1
+    }
+
+
+    end_row0 = p+2
+    start_row = p+2+nr_y+1
+    end_row = p+2+nr_y+p+2
+
+    augmented_y[1:end_row0] = t(t(rev(t(t(augmented_y_flip[start_row:end_row])))))
+
+    augmented_y_iter = cbind(augmented_y_iter, augmented_y)
+
+    iter = iter + 1
+    }
+     end_row = p+2+nr_y
+    augmented_y = t(t(augmented_y[1:end_row]))
+
     # Return backcast data
     return (augmented_y)
 }
@@ -507,7 +507,7 @@ BN_Filter <- function(y, p, delta, dynamic_bands, ib, window, compute_stderr = T
     V_prior <- diag(drop(repmat(0.5, 1, p - 1) / (square(seq(from = 1, to = p - 1, by = 1)))))
 
     # Calculate Posteriors
-    V_post <- qr.solve(qr.solve(V_prior,tol = 1e-30) + (1.0 / sig2_ols) * crossprod(x = X, y = NULL))
+    V_post <- qr.solve(qr.solve(V_prior,tol = 1e-30) + (1.0 / sig2_ols) * crossprod(x = X, y = NULL),tol = 1e-30)
     A_post <- V_post %*% (qr.solve(V_post,tol = 1e-30) %*% A_prior + t((1.0 / sig2_ols) * X) %*% Y)
     
     # Add rho back into the posterior of estimated parameters
