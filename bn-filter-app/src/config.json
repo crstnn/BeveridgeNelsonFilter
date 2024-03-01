@@ -77,7 +77,7 @@
             "hoverText": "Iteratively estimate time-varying drift removing cycle and using rolling window according to KMW refinement"
           }
         ],
-        "default": "sm"
+        "default": "idm"
       },
       "deltaSelect": {
         "option": [
@@ -139,7 +139,7 @@
             "text": "Multiply by 1200 (Annualized Monthly Rate)"
           }
         ],
-        "default": "np"
+        "default": "p1"
       }
     },
     "freeText": {
@@ -159,7 +159,7 @@
     "INPUT_USER_M": "The FRED mnemonic input is either empty or incorrect. Check the mnemonic.",
     "INPUT_USER_S": "The user inputted series is either empty or incorrect. Check the data for the series.",
     "INPUT_PARAM": "At least one of the parameters does not meet the requirements. Check that the parameters are appropriate.",
-    "SERVER": "During the running of the BN filter a problem occurred. Check that the parameters are appropriate (e.g., if minimum delta is low enough).",
+    "SERVER": "During the running of the BN filter a problem occurred. Check that the selected options are appropriate for the time series (e.g. different transformations or if minimum delta is low enough) or consider simpler settings (e.g. no confidence intervals, fixed delta, static demeaning).",
     "TIMEOUT": "Request has taken too long. Consider reducing the computational cost by adjusting the inputs or coming back later."
   },
   "URL": {

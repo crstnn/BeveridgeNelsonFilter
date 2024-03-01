@@ -36,10 +36,10 @@ class BasePage extends Component {
         transform: true, // transforms to data before bnf
         dCode: field.optionField.dCode.default,
         pCode: field.optionField.pCode.default,
-        takeLog: false,
+        takeLog: true,
         // bnf output (from API)
         cycle: [],
-        dispCycleCI: false,
+        dispCycleCI: true,
         cycleCI: [],
         deltaCalc: undefined,
         cycleCILB: [],
