@@ -41,7 +41,7 @@ export default class FREDDataForm extends Component {
 
         this.mnemonicTimeoutID = setTimeout(() => {
             this.checkAvailability();
-        }, 600);  // 0.6-second debounce timer
+        }, 500);  // 0.5-second debounce timer
     }
 
 

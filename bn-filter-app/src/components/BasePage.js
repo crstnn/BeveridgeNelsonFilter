@@ -85,7 +85,7 @@ class BasePage extends Component {
     }
 
     deleteErrorMessage = input => {
-        let fieldErrorMessagesTemp = {...this.state.fieldErrorMessages};
+        const fieldErrorMessagesTemp = {...this.state.fieldErrorMessages};
         delete fieldErrorMessagesTemp[input];
         this.setState({fieldErrorMessages: fieldErrorMessagesTemp});
     }
