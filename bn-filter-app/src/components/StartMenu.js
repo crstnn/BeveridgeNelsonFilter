@@ -27,7 +27,13 @@ class StartMenu extends Component {
                         <a target="_blank"
                            rel="noopener noreferrer"
                            href="https://sites.google.com/site/jamescmorley/code#:~:text=Beveridge%2DNelson%20Filter">
-                            Link to easily adaptable code in MATLAB or R</a>.
+                            Link to easily adaptable code in MATLAB or R</a>
+                    </p>
+                    <p>
+                        <a target="_blank"
+                           rel="noopener noreferrer"
+                           href="https://github.com/crstnn/BeveridgeNelsonFilter">
+                            Link to GitHub repository</a>
                     </p>
                 </div>
 
