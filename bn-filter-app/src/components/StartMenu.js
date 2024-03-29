@@ -20,7 +20,7 @@ class StartMenu extends Component {
                     </ol>
                     <p>
                         Additional information is provided by hovering over the options on the
-                        subsequent pages. Default options are as in Kamber, Morley and Wong (2024). The cycle is
+                        subsequent pages. Default options are as in Kamber, Morley and Wong (2024). The cycle gets
                         plotted and can be downloaded as a CSV.
                     </p>
                     <p>
