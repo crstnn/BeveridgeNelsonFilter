@@ -13,14 +13,14 @@ class StartMenu extends Component {
         return (
             <div>
                 <div className="information">
-                    <p>You will be guided through the steps to perform trend-cycle decomposition on either:</p>
+                    <p>You will be guided through the steps to conduct trend-cycle decomposition on either:</p>
                     <ol>
                         <li>A time series from the Federal Reserve Economic Database (FRED) using its mnemonic, or</li>
                         <li>A time series of your choosing, to be pasted into a field</li>
                     </ol>
                     <p>
-                        Note that there is additional information provided when hovering over the options in the
-                        subsequent pages. The default options are as in Kamber, Morley and Wong (2024). The cycle is
+                        Additional information is provided by hovering over the options on the
+                        subsequent pages. Default options are as in Kamber, Morley and Wong (2024). The cycle is
                         plotted and can be downloaded as a CSV.
                     </p>
                     <p>
