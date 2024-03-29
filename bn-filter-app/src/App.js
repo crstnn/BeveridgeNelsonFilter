@@ -13,13 +13,14 @@ function App() {
                 </header>
 
                 <div className="information welcomeInformation">
-                    <p>This tool performs trend-cycle decomposition using the Beveridge-Nelson filter in <a target="_blank"
-                                                                                                   rel="noopener noreferrer"
-                                                                                                   href="https://doi.org/10.1162/rest_a_00691">
-                            Kamber, Morley, and Wong (2018)</a> and the refined version in <a target="_blank"
-                                                                                                 rel="noopener noreferrer"
-                                                                                                 href="https://ideas.repec.org/p/een/camaaa/2024-24.html">
-                            Kamber, Morley, and Wong (2024)</a>.
+                    <p>This tool performs trend-cycle decomposition using the Beveridge-Nelson filter in <a
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href="https://doi.org/10.1162/rest_a_00691">
+                        Kamber, Morley, and Wong (2018)</a> and the refined version in <a target="_blank"
+                                                                                          rel="noopener noreferrer"
+                                                                                          href="https://ideas.repec.org/p/een/camaaa/2024-24.html">
+                        Kamber, Morley, and Wong (2024)</a>.
                     </p>
                 </div>
                 <BasePage/>
