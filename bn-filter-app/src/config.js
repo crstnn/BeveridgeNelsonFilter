@@ -2,12 +2,12 @@ const SERVER_ERROR = <>
   During the running of the BN filter a problem occurred.{' '}
   Check that the selected options are appropriate for the time series{' '}
   (e.g. different transformations or if minimum delta is low enough) or consider simpler settings (e.g. no confidence intervals, fixed delta, static demeaning).{' '}
-  The MATLAB or R code for the BN filter is available at this <a target="_blank" rel="noopener noreferrer" href="https://sites.google.com/site/jamescmorley/code#:~:text=Beveridge%2DNelson%20Filter">link</a>.
+  MATLAB or R code for the BN filter is available at this <a target="_blank" rel="noopener noreferrer" href="https://sites.google.com/site/jamescmorley/code#:~:text=Beveridge%2DNelson%20Filter">link</a>.
 </>
 
 const SERVER_TIMEOUT = <>
   Request has taken too long. Consider reducing the computational cost by adjusting the inputs or coming back later.{' '}
-  Alternatively, the MATLAB or R code for the BN filter is available at this <a target="_blank" rel="noopener noreferrer" href="https://sites.google.com/site/jamescmorley/code#:~:text=Beveridge%2DNelson%20Filter">link</a>.
+  Alternatively, MATLAB or R code for the BN filter is available at this <a target="_blank" rel="noopener noreferrer" href="https://sites.google.com/site/jamescmorley/code#:~:text=Beveridge%2DNelson%20Filter">link</a>.
 </>
 
 export const CONFIG = Object.freeze({
