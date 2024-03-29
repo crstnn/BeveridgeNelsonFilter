@@ -12,12 +12,12 @@ import {
     TextField,
 } from "@mui/material";
 import CustomDatePicker from "../pickers/CustomDatePicker";
-import config from "../config.json";
+import {CONFIG} from "../config.js";
 import {createMenuItems, fetchWithTimeout, pairArrayToParamStr} from "../utils/utils";
 import Error from "./Error";
 import {ThreeDots} from "react-loader-spinner";
 
-const {field, URL} = config;
+const {field, URL} = CONFIG;
 
 export default class FREDDataForm extends Component {
 

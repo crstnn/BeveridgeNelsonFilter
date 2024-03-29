@@ -20,7 +20,14 @@ class StartMenu extends Component {
                     </ol>
                     <p>
                         Note that there is additional information provided when hovering over the options in the
-                        subsequent pages. The cycle is reported and can be downloaded as a CSV.
+                        subsequent pages. The default options are as in Kamber, Morley and Wong (2024). The cycle is
+                        plotted and can be downloaded as a CSV.
+                    </p>
+                    <p>
+                        <a target="_blank"
+                           rel="noopener noreferrer"
+                           href="https://sites.google.com/site/jamescmorley/code">
+                            Link to easily adaptable code in MATLAB or R</a>.
                     </p>
                 </div>
 

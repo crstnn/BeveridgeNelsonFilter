@@ -5,11 +5,11 @@ import DataForm from "./DataForm";
 import RenderedPlot from "./RenderedPlot";
 import Loading from "./Loading";
 import Error from "./Error";
-import config from "../config.json";
+import {CONFIG} from "../config.js";
 import {DateAbstract} from "../utils/date";
 import {confIntZip, fetchWithTimeout, pairArrayToParamStr} from "../utils/utils";
 
-const {field, URL} = config;
+const {field, URL} = CONFIG;
 
 class BasePage extends Component {
     state = {

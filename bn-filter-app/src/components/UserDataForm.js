@@ -1,10 +1,10 @@
 import React, {Component} from "react";
 import {Checkbox, Divider, FormControl, FormControlLabel, Grid, InputLabel, Select, TextField} from "@mui/material";
 import CustomDatePicker from "../pickers/CustomDatePicker";
-import config from "../config.json";
+import {CONFIG} from "../config.js";
 import {createMenuItems} from "../utils/utils";
 
-const {field} = config;
+const {field} = CONFIG;
 
 export default class UserDataForm extends Component {
 

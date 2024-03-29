@@ -11,11 +11,11 @@ import {
     TextField,
 } from "@mui/material";
 import '../styles/App.css';
-import config from "../config.json";
+import {CONFIG} from "../config.js";
 import Error from "./Error";
 import {createHoverText, createMenuItems} from "../utils/utils";
 
-const {field, alertErrors} = config;
+const {field, alertErrors} = CONFIG;
 
 class ParametersForm extends Component {
 

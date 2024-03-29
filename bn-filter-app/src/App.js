@@ -16,10 +16,12 @@ function App() {
                     <p>This tool performs trend-cycle decomposition.
                         It is implemented using the Beveridge-Nelson filter method described in <a target="_blank"
                                                                                                    rel="noopener noreferrer"
-                                                                                                   href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3434174">
-                            Kamber, Morley, and Wong</a>.
+                                                                                                   href="https://doi.org/10.1162/rest_a_00691">
+                            Kamber, Morley, and Wong (2018)</a> and the refined version described in <a target="_blank"
+                                                                                                 rel="noopener noreferrer"
+                                                                                                 href="https://ideas.repec.org/p/een/camaaa/2024-24.html">
+                            Kamber, Morley, and Wong (2024)</a>.
                     </p>
-
                 </div>
                 <BasePage/>
             </div>
