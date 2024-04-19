@@ -75,7 +75,7 @@ export default class FREDDataForm extends Component {
                 .then((response) => {
                     if (response.status !== 200) {
                         responseSuccess();
-                        setErrorMessage("mnemonic", "mnemonic is not available");
+                        setErrorMessage("mnemonic", "This mnemonic is not available");
                         throw new Error("bad status");
                     } else {
                         return response;
@@ -117,7 +117,7 @@ export default class FREDDataForm extends Component {
             showText = () => !(errors["mnemonic"] === undefined && values.mnemonic === "") || this.state.timeoutError === true,
             mnemonicHelperText = () => {
                 if (!showText()) return "​";
-                return errors['mnemonic'] !== undefined ? errors['mnemonic'] : "mnemonic is available";
+                return errors['mnemonic'] !== undefined ? errors['mnemonic'] : "This mnemonic is available";
             };
 
 
@@ -128,7 +128,7 @@ export default class FREDDataForm extends Component {
                 <Grid item>
                     <FormGroup row>
                         <TextField variant="outlined" label="FRED mnemonic"
-                                   title="Press enter or click 'check' to check the availability of the mnemonic"
+                                   title="Press enter or click 'check' to check the availability of the mnemonic/series"
                                    color={errors["mnemonic"] === undefined && values.mnemonic !== "" ? "success" : null}
                                    placeholder="e.g. GDPC1" sx={{width: 250}}
                                    error={errors["mnemonic"] !== undefined}

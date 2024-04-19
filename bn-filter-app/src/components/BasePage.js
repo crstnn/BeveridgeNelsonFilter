@@ -92,7 +92,7 @@ class BasePage extends Component {
 
     isEmptyString = (v, input) => {
         if (v === "") {
-            this.setErrorMessage(input, "must not be empty");
+            this.setErrorMessage(input, "Must not be empty");
             return true;
         }
         return false;
@@ -100,7 +100,7 @@ class BasePage extends Component {
 
     isNotANum = (v, input) => {
         if (isNaN(v)) {
-            this.setErrorMessage(input, "must be numeric");
+            this.setErrorMessage(input, "Must be numeric");
             return true;
         }
         return false;
@@ -108,7 +108,7 @@ class BasePage extends Component {
 
     isNotAnInt = (v, input) => {
         if ((v % 1) !== 0) {
-            this.setErrorMessage(input, "must be an integer");
+            this.setErrorMessage(input, "Must be an integer");
             return true;
         }
         return false;
@@ -116,11 +116,11 @@ class BasePage extends Component {
 
     isExceedsMinMax = (v, input) => {
         if (field.freeText[input].min !== null && v < field.freeText[input].min) {
-            this.setErrorMessage(input, `must be ≥ ${field.freeText[input].min}`);
+            this.setErrorMessage(input, `Must be ≥ ${field.freeText[input].min}`);
             return true;
         }
         if (field.freeText[input].max !== null && v > field.freeText[input].max) {
-            this.setErrorMessage(input, `must be ≤ ${field.freeText[input].max}`);
+            this.setErrorMessage(input, `Must be ≤ ${field.freeText[input].max}`);
             return true;
         }
         return false;
