@@ -10,7 +10,7 @@
 # MATLAB codes converted to R by Luke Hartigan, 2017
 # Additional R codes and wrapper class 'bnf' written by Luke Hartigan, 2017
 # Updated by James Morley, 2022
-# Additional code changes by Cristian
+# Additional code changes by Cristian, 2022/2023/2024
 ####################################################################################################
 
 # Helper functions used by the main functions below
@@ -699,7 +699,7 @@ bnf <- function(y,
                 p = 12, 
                 d0 = 0.0005, 
                 dt = 0.0005,
-                demean = c("sm", "pm", "dm"), 
+                demean = c("nd", "sm", "pm", "dm"),
                 dynamic_bands = T, 
                 ib = T, 
                 ...)
@@ -740,9 +740,12 @@ bnf <- function(y,
     } else if (demean == "pm") {
         demeaned_dy <- piecewise_demean(y = dy, ...)
         demean_method <- "Piecewise mean"
-    } else {
+    } else if (demean == "dm") {
         demeaned_dy <- rolling_demean(y = dy, y_cycle = zeros(nrow(dy),1), wind = window)
         demean_method <- "Rolling mean"
+    } else { # demean == "nd"
+        demeaned_dy <- dy
+        demean_method <- "No drift"
     }
     
     
