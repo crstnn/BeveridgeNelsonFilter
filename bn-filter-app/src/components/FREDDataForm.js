@@ -35,7 +35,7 @@ export default class FREDDataForm extends Component {
     }
 
     handleMnemonic = (e) => {
-        this.setState({mnemonic: e.target.value});
+        this.setState({mnemonic: e.target.value.toUpperCase()});
 
         if (this.mnemonicTimeoutID) clearTimeout(this.mnemonicTimeoutID);
 
