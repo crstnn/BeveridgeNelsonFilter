@@ -133,7 +133,7 @@ export default class FREDDataForm extends Component {
                                    placeholder="e.g. GDPC1" sx={{width: 250}}
                                    error={errors["mnemonic"] !== undefined}
                                    onChange={e => this.handleMnemonic(e)}
-                                   onKeyDown={e => e.keyCode === 13 /* 'enter' key */ ? this.checkAvailability(e) : null}
+                                   onKeyDown={e => e.key === "Enter" ? this.checkAvailability(e) : null}
                                    value={this.state.mnemonic}
                                    InputProps={{
                                        endAdornment: this.state.loading ?
