@@ -713,7 +713,7 @@ bnf <- function(y,
   # @varargs (...): passed into piecewise demean function
 {
 
-    if(iterative != 0 && demean != 'dm') stop("Set @iterative to 0 if @demean is not 'dm'.")
+    if(demean != 'dm' && iterative != 0) stop("Set @iterative to 0 if @demean is not 'dm'.")
     
   
     # Save 'ts' attributes if 'y' is a 'ts' object
