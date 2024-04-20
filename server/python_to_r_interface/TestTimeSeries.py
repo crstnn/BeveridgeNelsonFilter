@@ -1,3 +1,4 @@
+from global_config import FILTER_FILEPATH
 from python_to_r_interface.TimeSeries import *
 
 

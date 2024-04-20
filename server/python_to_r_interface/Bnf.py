@@ -6,11 +6,14 @@ class BNF:
                  r_instance, window, delta_select, delta, ib, demean):
         self.r_instance = r_instance
 
-        # parameters
+        # data
         self.time_series_float_vector = time_series.get_post_transform_time_series(self.r_instance)
+
+        # parameters
         self.window = window
         self.delta_select = delta_select
-        self.delta = delta
+        self.delta = delta if delta_select == 0 else 0  # else: arbitrary value
+        self.d0 = delta if delta_select != 0 else 0  # else: arbitrary value
         self.ib = ib
         self.demean = demean
 
@@ -25,19 +28,19 @@ class BNF:
         self.dynamic_bands = self.iterative != 0
 
         # outputs (of interest)
-        self.cycle = self.trend = self.ci = self.delta = None
+        self.cycle = self.trend = self.ci = None
 
     def run(self):
         bnf_output = self.r_instance('bnf')(self.time_series_float_vector,
                                             iterative=self.iterative,
                                             window=self.window,
                                             delta_select=self.delta_select,
-                                            fixed_delta=self.delta if self.delta_select == 0 else 0,
-                                            # else: arbitrary value
-                                            d0=self.delta if self.delta_select != 0 else 0,  # else: arbitrary value
+                                            fixed_delta=self.delta,
+                                            d0=self.d0,
                                             demean=self.demean,
                                             dynamic_bands=self.dynamic_bands,
-                                            ib=self.ib)
+                                            ib=self.ib,
+                                            )
 
         self.trend = [float(v) for v in bnf_output.rx2('trend')]
         self.cycle = [float(v) for v in bnf_output.rx2('cycle')]

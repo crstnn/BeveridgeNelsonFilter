@@ -1,5 +1,6 @@
 import gc
-import array
+
+from python_to_r_interface.utils import create_float_array
 
 
 class TimeSeries:
@@ -70,29 +71,29 @@ class TimeSeries:
 
     def get_time_series_float_vector(self):
         if not self._y_float_vector:
-            self._y_float_vector = array.array('f', self._y)
+            self._y_float_vector = create_float_array(self._y)
         return self._y_float_vector
 
     def get_post_transform_time_series(self, r_instance):
+        float_vector = self.get_time_series_float_vector()
         if self._transform and self._y and not self._y_post_transform:
             # transform series
-            self._y_post_transform = r_instance('transform_series')(y=self.get_time_series_float_vector(),
-                                                                    take_log=self.take_log,
-                                                                    dcode=self.d_code,
-                                                                    pcode=self.p_code)
+            y_post_transform = r_instance('transform_series')(y=float_vector,
+                                                              take_log=self.take_log,
+                                                              dcode=self.d_code,
+                                                              pcode=self.p_code)
 
             # using both garbage collectors to free up space that rpy2 hogs after running ops
             r_instance('gc()')
             gc.collect()
+            self._y_post_transform = create_float_array(y_post_transform)
         else:
-            self._y_post_transform = self.get_time_series_float_vector()
-
-        print(self._y_post_transform)
+            self._y_post_transform = float_vector
 
         return self._y_post_transform
 
     def get_series_dict(self):
         return {
             'original_y': self._y,
-            'transformed_y': self._y_post_transform  # may be the same as `original_y` if no transform is applied
+            'transformed_y': list(self._y_post_transform)  # may be the same as `original_y` if no transform is applied
         }
