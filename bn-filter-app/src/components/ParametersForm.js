@@ -73,8 +73,7 @@ class ParametersForm extends Component {
                                               control={<Checkbox
                                                   size="small"
                                                   onChange={handleCheckboxChange('takeLog')}
-                                                  checked={values.takeLog}
-                                                  disabled={!values.transform}/>}
+                                                  checked={values.takeLog}/>}
                             />
                         </FormControl>
                     </Grid>
@@ -85,7 +84,6 @@ class ParametersForm extends Component {
                                 title="Differencing method applied"
                                 onChange={handleChange('dCode')}
                                 value={values.dCode}
-                                disabled={!values.transform}
                             >{createMenuItems(field.optionField.dCode.option)}</Select>
                         </FormControl>
                     </Grid>
@@ -96,7 +94,6 @@ class ParametersForm extends Component {
                                 title="Multiple applied"
                                 onChange={handleChange('pCode')}
                                 value={values.pCode}
-                                disabled={!values.transform}
                             >{createMenuItems(field.optionField.pCode.option)}</Select>
                         </FormControl>
                     </Grid>
@@ -179,6 +176,14 @@ class ParametersForm extends Component {
     }
 
     render() {
+
+        const updateTransformationState = () => {
+            const {values, handlers} = this.props;
+            const {handleChange} = handlers;
+            if (values.takeLog === false && values.dCode === 'nd' && values.pCode === 'np')
+                handleChange('transform')({target: {value: false}})
+        }
+
         return (
             <>
                 <div style={{minHeight: 600,}}>
@@ -200,7 +205,10 @@ class ParametersForm extends Component {
                 <Button
                     variant="contained"
                     style={styles.button}
-                    onClick={this.continue}
+                    onClick={(e) => {
+                        updateTransformationState()
+                        this.continue(e)
+                    }}
                 >Get Trend Decomposition</Button>
             </>
         )
