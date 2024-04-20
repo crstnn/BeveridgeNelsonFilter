@@ -177,21 +177,22 @@ class ParametersForm extends Component {
 
     render() {
 
+        const {values, handlers} = this.props;
+        const {handleChange} = handlers;
+
         const updateTransformationState = () => {
-            const {values, handlers} = this.props;
-            const {handleChange} = handlers;
-            if (values.takeLog === false && values.dCode === 'nd' && values.pCode === 'np')
-                handleChange('transform')({target: {value: false}})
+            const isTransformApplied = !(values.takeLog === false && values.dCode === 'nd' && values.pCode === 'np');
+            handleChange('transform')({target: {value: isTransformApplied}});
         }
 
         return (
             <>
                 <div style={{minHeight: 600,}}>
-                    {this.props.values.loading === null ?
+                    {values.loading === null ?
                         <Error
-                            tagName={alertErrors[this.props.values.alertErrorType]}
+                            tagName={alertErrors[values.alertErrorType]}
                             close={() => {
-                                this.props.handlers.handleChange("loading")({target: {value: false}})
+                                handleChange("loading")({target: {value: false}})
                             }}/>
                         : null}
                     {this.preAnalysisTransformations()}
