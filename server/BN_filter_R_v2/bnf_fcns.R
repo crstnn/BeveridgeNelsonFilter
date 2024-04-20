@@ -10,7 +10,7 @@
 # MATLAB codes converted to R by Luke Hartigan, 2017
 # Additional R codes and wrapper class 'bnf' written by Luke Hartigan, 2017
 # Updated by James Morley, 2022
-# Additional code changes by Cristian, 2022/2023/2024
+# Additional code changes by Cristian
 ####################################################################################################
 
 # Helper functions used by the main functions below
@@ -699,7 +699,7 @@ bnf <- function(y,
                 p = 12, 
                 d0 = 0.0005, 
                 dt = 0.0005,
-                demean = c("nd", "sm", "pm", "dm"),
+                demean = c("sm", "pm", "dm"), 
                 dynamic_bands = T, 
                 ib = T, 
                 ...)
@@ -713,7 +713,7 @@ bnf <- function(y,
   # @varargs (...): passed into piecewise demean function
 {
 
-    if(demean != 'dm' && iterative != 0) stop("Set @iterative to 0 if @demean is not 'dm'.")
+    if(iterative != 0 && demean != 'dm') stop("Set @iterative to 0 if @demean is not 'dm'.")
     
   
     # Save 'ts' attributes if 'y' is a 'ts' object
@@ -740,12 +740,9 @@ bnf <- function(y,
     } else if (demean == "pm") {
         demeaned_dy <- piecewise_demean(y = dy, ...)
         demean_method <- "Piecewise mean"
-    } else if (demean == "dm") {
+    } else {
         demeaned_dy <- rolling_demean(y = dy, y_cycle = zeros(nrow(dy),1), wind = window)
         demean_method <- "Rolling mean"
-    } else { # demean == "nd"
-        demeaned_dy <- dy
-        demean_method <- "No drift"
     }
     
     
@@ -801,7 +798,6 @@ bnf <- function(y,
     result$call <- match.call()
     result$y <- y
     result$cycle <- cycle
-    result$trend <- y - cycle
     result$cycle_se <- cycle_se
     result$delta <- delta
     result$demean_method <- demean_method

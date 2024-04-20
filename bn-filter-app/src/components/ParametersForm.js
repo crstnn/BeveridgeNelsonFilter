@@ -20,7 +20,7 @@ const {field, alertErrors} = CONFIG;
 class ParametersForm extends Component {
 
     isDisabled = {
-        rollingWindow: () => ["nd", "sm"].includes(this.props.values.demean),
+        rollingWindow: () => this.props.values.demean === "sm",
         delta: () => false, // this.props.values.deltaSelect !== 0,
     };
 
@@ -32,21 +32,20 @@ class ParametersForm extends Component {
 
     continue = e => {
         e.preventDefault();
-        const {getResults, getFREDResults, handlers, values, errors, cancelLoad, nextStep} = this.props;
-        const {handleChange} = handlers;
+        const {getResults, getFREDResults, handlers, values, errors, cancelLoad} = this.props;
 
         if (values.dataInputType === "FRED" && errors["mnemonic"] !== undefined) {
-            handleChange("alertErrorType")({target: {value: "INPUT_USER_M"}});
+            handlers.handleChange("alertErrorType")({target: {value: "INPUT_USER_M"}});
             cancelLoad();
         } else if (values.dataInputType === "USER" && errors["unprocessedY"] !== undefined) {
-            handleChange("alertErrorType")({target: {value: "INPUT_USER_S"}});
+            handlers.handleChange("alertErrorType")({target: {value: "INPUT_USER_S"}});
             cancelLoad();
         } else if (this.errorsDisplayedCount() === 0) {
             if (values.dataInputType === "FRED") getFREDResults();
             else if (values.dataInputType === "USER") getResults();
-            nextStep();
+            this.props.nextStep();
         } else {
-            handleChange("alertErrorType")({target: {value: "INPUT_PARAM"}});
+            handlers.handleChange("alertErrorType")({target: {value: "INPUT_PARAM"}});
             cancelLoad();
         }
     }
@@ -73,7 +72,8 @@ class ParametersForm extends Component {
                                               control={<Checkbox
                                                   size="small"
                                                   onChange={handleCheckboxChange('takeLog')}
-                                                  checked={values.takeLog}/>}
+                                                  checked={values.takeLog}
+                                                  disabled={!values.transform}/>}
                             />
                         </FormControl>
                     </Grid>
@@ -84,6 +84,7 @@ class ParametersForm extends Component {
                                 title="Differencing method applied"
                                 onChange={handleChange('dCode')}
                                 value={values.dCode}
+                                disabled={!values.transform}
                             >{createMenuItems(field.optionField.dCode.option)}</Select>
                         </FormControl>
                     </Grid>
@@ -94,6 +95,7 @@ class ParametersForm extends Component {
                                 title="Multiple applied"
                                 onChange={handleChange('pCode')}
                                 value={values.pCode}
+                                disabled={!values.transform}
                             >{createMenuItems(field.optionField.pCode.option)}</Select>
                         </FormControl>
                     </Grid>
@@ -176,14 +178,6 @@ class ParametersForm extends Component {
     }
 
     render() {
-
-        const updateTransformationState = () => {
-            const {values, handlers} = this.props;
-            const {handleChange} = handlers;
-            if (values.takeLog === false && values.dCode === 'nd' && values.pCode === 'np')
-                handleChange('transform')({target: {value: false}})
-        }
-
         return (
             <>
                 <div style={{minHeight: 600,}}>
@@ -205,10 +199,7 @@ class ParametersForm extends Component {
                 <Button
                     variant="contained"
                     style={styles.button}
-                    onClick={(e) => {
-                        updateTransformationState()
-                        this.continue(e)
-                    }}
+                    onClick={this.continue}
                 >Get Trend Decomposition</Button>
             </>
         )

@@ -33,7 +33,7 @@ bnfOutput <- bnf(as.vector(y),
                  demean = "dm",
                  delta_select = 2, 
                  ib = T)    
-# defaults are 'p = 12', 'd0 = 0.005' and 'dt = d0' values, 'demean = "nd"' sample mean, `wind = window'
+# defaults are 'p = 12', 'd0 = 0.005' and 'dt = d0' values, 'demean = "sm"' sample mean, `wind = window' 
 # "dm" is dynamic demeaning, '"pm", breaks = c(50, 75, 100, 125, 150)' allows for breaks at set dates
 
 

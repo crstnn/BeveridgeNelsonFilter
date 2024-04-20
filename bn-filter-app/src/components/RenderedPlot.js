@@ -4,7 +4,7 @@ import {Button} from "@mui/material";
 import {CSVLink} from "react-csv";
 import {colsToRows} from "../utils/utils";
 
-class DataPlot extends Component {
+class RenderedPlot extends Component {
 
     fileName = "BNF_cycle.csv"
 
@@ -14,15 +14,13 @@ class DataPlot extends Component {
     }
 
 
-    getCSVData = () => {
+    getCSVData() {
         const {plotPageValues} = this.props;
 
         return colsToRows(
             ["date"].concat(plotPageValues.x),
-            [`${plotPageValues.dataInputType === "FRED" ? `${plotPageValues.mnemonic}_` : ''}original_y`].concat(plotPageValues.y),
-            plotPageValues.transform ? [`${plotPageValues.dataInputType === "FRED" ? `${plotPageValues.mnemonic}_` : ''}transformed_y`].concat(plotPageValues.transformedY) : undefined,
+            [(plotPageValues.dataInputType === "FRED" ? `${plotPageValues.mnemonic}_` : "") + "original_y"].concat(plotPageValues.y),
             ["cycle"].concat(plotPageValues.cycle),
-            ["trend"].concat(plotPageValues.trend),
             plotPageValues.dispCycleCI ? ["conf_int_lower_bound"].concat(plotPageValues.cycleCILB) : undefined,
             plotPageValues.dispCycleCI ? ["conf_int_upper_bound"].concat(plotPageValues.cycleCIUB) : undefined);
     }
@@ -31,8 +29,8 @@ class DataPlot extends Component {
     getPlot() {
         const {plotPageValues} = this.props;
 
-        console.log(plotPageValues.x);
-        console.log(plotPageValues.y);
+        console.log(plotPageValues.x)
+        console.log(plotPageValues.y)
 
         return (
             <Plot layout={{
@@ -107,4 +105,4 @@ const styles = {
     }
 }
 
-export default DataPlot
+export default RenderedPlot

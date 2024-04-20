@@ -1,5 +1,5 @@
 flask==3.0.*
-flask-cors==4.0.*
+flask_cors==4.0.*
 gunicorn==21.2.*
 requests==2.31.*
 rpy2==3.4.5

@@ -7,6 +7,7 @@ function CustomDatePicker(props) {
     const date = props.date;
 
     const handleDateChange = newValue => {
+        console.log("pre-handleDateChange: ", newValue)
         props.updateDate({target: {value: newValue}});
     };
 

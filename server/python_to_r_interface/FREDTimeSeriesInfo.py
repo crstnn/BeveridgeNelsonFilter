@@ -1,6 +1,6 @@
 import requests
 
-from global_config import FRED_INFO_URL, FRED_API_KEY, FRED_FREQUENCIES
+from GLOBAL_imp import FRED_INFO_URL, FRED_API_KEY, FRED_FREQUENCIES
 
 
 class FREDTimeSeriesInfo:
