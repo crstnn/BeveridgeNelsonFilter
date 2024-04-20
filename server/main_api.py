@@ -1,4 +1,4 @@
-from GLOBAL_imp import *
+from global_config import *
 from python_to_r_interface.FREDTimeSeriesInfo import FREDTimeSeriesInfo
 from python_to_r_interface.TestTimeSeries import *
 from python_to_r_interface.FREDTimeSeries import *
