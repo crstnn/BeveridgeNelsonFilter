@@ -91,8 +91,8 @@ export default class FREDDataForm extends Component {
                         startDate = new Date(parsedStartDate[0], parsedStartDate[1] - 1, parsedStartDate[2]),
                         endDate = new Date(parsedEndDate[0], parsedEndDate[1] - 1, parsedEndDate[2]);
 
-                    console.log("response: startDate: ", startDate)
-                    console.log("response: endDate: ", endDate)
+                    console.log("Response - startDate: ", startDate)
+                    console.log("Response - endDate: ", endDate)
 
                     deleteErrorMessage("mnemonic");
                     handleChange('availableFrequencies')({target: {value: result["available_frequencies"]}});
@@ -127,7 +127,7 @@ export default class FREDDataForm extends Component {
                   alignItems="center">
                 <Grid item>
                     <FormGroup row>
-                        <TextField variant="outlined" label="FRED mnemonic"
+                        <TextField variant="outlined" label="FRED Mnemonic"
                                    title="Press enter to check the availability of the mnemonic/series"
                                    color={errors["mnemonic"] === undefined && values.mnemonic !== "" ? "success" : null}
                                    placeholder="e.g. GDPC1" sx={{width: 250}}

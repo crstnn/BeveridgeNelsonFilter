@@ -1,4 +1,4 @@
-from GLOBAL_imp import *
+from global_config import *
 from python_to_r_interface.FREDTimeSeriesInfo import FREDTimeSeriesInfo
 from python_to_r_interface.TestTimeSeries import *
 from python_to_r_interface.FREDTimeSeries import *
@@ -59,9 +59,9 @@ def get_bnf_params():
 
 def handle_series_transformation_params(series):
     if request.args.get("transform") == "true":
-        series.set_transformation(request.args.get("d_code"),
-                                  request.args.get("p_code"),
-                                  request.args.get("take_log") == "true")
+        series.set_transformation(d_code=request.args.get("d_code"),
+                                  p_code=request.args.get("p_code"),
+                                  take_log=request.args.get("take_log") == "true")
 
 
 @app.route('/')
@@ -73,9 +73,7 @@ def index():
 def fred_time_series():
     fred_series = FREDTimeSeriesInfo(get_fred_abbr())
 
-    res = jsonify(fred_series.get_information_dict())
-
-    return res
+    return jsonify(fred_series.get_information_dict())
 
 
 @app.route('/bnf/fred-time-series', methods=['GET'])
@@ -84,9 +82,9 @@ def bnf_fred_time_series():
     handle_series_transformation_params(fred_series)
 
     bnf = BNF(fred_series, R, *get_bnf_params())
-    res = jsonify(fred_series.get_series_dict() | bnf.run())
+    bnf.run()
 
-    return res
+    return jsonify(fred_series.get_series_dict() | bnf.get_result_dict())
 
 
 @app.route('/bnf/user-specified-time-series', methods=['GET'])
@@ -101,9 +99,9 @@ def bnf_user_specified_time_series():
     handle_series_transformation_params(user_series)
 
     bnf = BNF(user_series, R, *get_bnf_params())
-    res = jsonify(bnf.run())
+    bnf.run()
 
-    return res
+    return jsonify(user_series.get_series_dict(), bnf.get_result_dict())
 
 
 @app.route('/bnf/test-time-series', methods=['GET'])
@@ -112,7 +110,8 @@ def bnf_test_time_series():
     us_gdp.set_transformation_defaults()
 
     bnf = BNF(us_gdp, R, window=40, delta_select=2, delta=0.05, ib=True, demean="dm")
+    bnf.run()
 
-    res = jsonify(bnf.run())
+    res = jsonify(bnf.get_result_dict())
 
     return res

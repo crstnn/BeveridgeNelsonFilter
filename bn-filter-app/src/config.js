@@ -78,8 +78,13 @@ export const CONFIG = Object.freeze({
             "iterativeDynamicDemeaning": {
                 "option": [
                     {
+                        "value": "nd",
+                        "text": "No Demeaning (Zero Drift)",
+                        "hoverText": "Estimate zero drift"
+                    },
+                    {
                         "value": "sm",
-                        "text": "Constant (Static Demeaning)",
+                        "text": "Static demeaning (Constant Drift)",
                         "hoverText": "Estimate constant drift"
                     },
                     {
@@ -179,7 +184,7 @@ export const CONFIG = Object.freeze({
         "TIMEOUT": SERVER_TIMEOUT,
     },
     "URL": {
-        "baseBackendURL": "https://bn-filtering.herokuapp.com",
+        "baseBackendURL": "http://127.0.0.1:5000",
         "bnfUserSpecifiedDataSlug": "/bnf/user-specified-time-series",
         "bnfFredDataSlug": "/bnf/fred-time-series",
         "fredDataSlug": "/fred-time-series"
