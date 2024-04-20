@@ -1,10 +1,11 @@
-from global_config import *
-from python_to_r_interface.FREDTimeSeriesInfo import FREDTimeSeriesInfo
-from python_to_r_interface.TestTimeSeries import *
-from python_to_r_interface.FREDTimeSeries import *
-from python_to_r_interface.Bnf import *
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+
+from global_config import *
+from python_to_r_interface.Bnf import *
+from python_to_r_interface.FREDTimeSeries import *
+from python_to_r_interface.FREDTimeSeriesInfo import FREDTimeSeriesInfo
+from python_to_r_interface.TestTimeSeries import *
 
 app = Flask(__name__)
 cors = CORS(app, resources={
