@@ -801,6 +801,7 @@ bnf <- function(y,
     result$call <- match.call()
     result$y <- y
     result$cycle <- cycle
+    result$trend <- y - cycle
     result$cycle_se <- cycle_se
     result$delta <- delta
     result$demean_method <- demean_method

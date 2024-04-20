@@ -184,7 +184,7 @@ export const CONFIG = Object.freeze({
         "TIMEOUT": SERVER_TIMEOUT,
     },
     "URL": {
-        "baseBackendURL": "https://bn-filtering.herokuapp.com",
+        "baseBackendURL": "http://127.0.0.1:5000",
         "bnfUserSpecifiedDataSlug": "/bnf/user-specified-time-series",
         "bnfFredDataSlug": "/bnf/fred-time-series",
         "fredDataSlug": "/fred-time-series"

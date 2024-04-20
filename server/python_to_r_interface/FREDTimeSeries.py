@@ -52,5 +52,5 @@ class FREDTimeSeries(TimeSeries):
     def get_series_dict(self):
         return {
             'dates': self.dates,
-            'y': self._y,
+            **super().get_series_dict(),
         }

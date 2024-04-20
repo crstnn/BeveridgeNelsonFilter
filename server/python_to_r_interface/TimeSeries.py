@@ -9,21 +9,22 @@ class TimeSeries:
 
     def __init__(self, time_series):
         self._y = time_series
-        self._y_float_vector = None
+        self._y_float_vector = self._y_post_transform = None
         self.set_transformation_defaults()
 
     def set_transformation_defaults(self):
-        self.d_code = TimeSeries.D_CODES[0]
-        self.p_code = TimeSeries.P_CODES[0]
+        self._d_code = TimeSeries.D_CODES[0]
+        self._p_code = TimeSeries.P_CODES[0]
         self._transform = self.take_log = False
 
-    def set_transformation(self, d_code, p_code, take_log):
+    def set_transformation(self, d_code=None, p_code=None, take_log=None):
         self.d_code = d_code
         self.p_code = p_code
         self.take_log = take_log
 
     def check_for_transformation(self):
-        self._transform = not (self._d_code == "nd" and self._p_code == "np" and self._take_log is False)  # no transforms
+        self._transform = not (
+                self.d_code == "nd" and self.p_code == "np" and self.take_log is False)  # no transforms
 
     @property
     def d_code(self):
@@ -64,22 +65,34 @@ class TimeSeries:
         self._take_log = l
         self.check_for_transformation()
 
-    def get_raw_untransformed_time_series(self):
+    def get_pre_transform_time_series(self):
         return self._y
 
-    def get_time_series_float_vec(self, r_instance):
-        self._y_float_vector = array.array('f', self._y)
-        if self._transform and self._y:
+    def get_time_series_float_vector(self):
+        if not self._y_float_vector:
+            self._y_float_vector = array.array('f', self._y)
+        return self._y_float_vector
+
+    def get_post_transform_time_series(self, r_instance):
+        if self._transform and self._y and not self._y_post_transform:
             # transform series
-            ret_series = r_instance('transform_series')(y=self._y_float_vector,
-                                                        take_log=self.take_log,
-                                                        dcode=self.d_code,
-                                                        pcode=self.p_code)
+            self._y_post_transform = r_instance('transform_series')(y=self.get_time_series_float_vector(),
+                                                                    take_log=self.take_log,
+                                                                    dcode=self.d_code,
+                                                                    pcode=self.p_code)
 
             # using both garbage collectors to free up space that rpy2 hogs after running ops
             r_instance('gc()')
             gc.collect()
+        else:
+            self._y_post_transform = self.get_time_series_float_vector()
 
-            return ret_series
+        print(self._y_post_transform)
 
-        return self._y_float_vector
+        return self._y_post_transform
+
+    def get_series_dict(self):
+        return {
+            'original_y': self._y,
+            'transformed_y': self._y_post_transform  # may be the same as `original_y` if no transform is applied
+        }

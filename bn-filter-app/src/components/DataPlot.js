@@ -20,6 +20,7 @@ class DataPlot extends Component {
         return colsToRows(
             ["date"].concat(plotPageValues.x),
             [`${plotPageValues.dataInputType === "FRED" ? `${plotPageValues.mnemonic}_` : ''}original_y`].concat(plotPageValues.y),
+            plotPageValues.transform ? [`${plotPageValues.dataInputType === "FRED" ? `${plotPageValues.mnemonic}_` : ''}transformed_y`].concat(plotPageValues.transformedY) : undefined,
             ["cycle"].concat(plotPageValues.cycle),
             plotPageValues.dispCycleCI ? ["conf_int_lower_bound"].concat(plotPageValues.cycleCILB) : undefined,
             plotPageValues.dispCycleCI ? ["conf_int_upper_bound"].concat(plotPageValues.cycleCIUB) : undefined);
