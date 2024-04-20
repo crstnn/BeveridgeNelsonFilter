@@ -1,6 +1,6 @@
 import requests
 
-from GLOBAL_imp import FRED_API_KEY, FRED_OBS_URL, FRED_FREQUENCIES
+from global_config import FRED_API_KEY, FRED_OBS_URL, FRED_FREQUENCIES
 from python_to_r_interface.TimeSeries import *
 
 
@@ -52,5 +52,5 @@ class FREDTimeSeries(TimeSeries):
     def get_series_dict(self):
         return {
             'dates': self.dates,
-            'y': self._y,
+            **super().get_series_dict(),
         }

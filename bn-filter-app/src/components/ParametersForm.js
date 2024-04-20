@@ -20,7 +20,7 @@ const {field, alertErrors} = CONFIG;
 class ParametersForm extends Component {
 
     isDisabled = {
-        rollingWindow: () => this.props.values.demean === "sm",
+        rollingWindow: () => ["nd", "sm"].includes(this.props.values.demean),
         delta: () => false, // this.props.values.deltaSelect !== 0,
     };
 
@@ -32,20 +32,21 @@ class ParametersForm extends Component {
 
     continue = e => {
         e.preventDefault();
-        const {getResults, getFREDResults, handlers, values, errors, cancelLoad} = this.props;
+        const {getResults, getFREDResults, handlers, values, errors, cancelLoad, nextStep} = this.props;
+        const {handleChange} = handlers;
 
         if (values.dataInputType === "FRED" && errors["mnemonic"] !== undefined) {
-            handlers.handleChange("alertErrorType")({target: {value: "INPUT_USER_M"}});
+            handleChange("alertErrorType")({target: {value: "INPUT_USER_M"}});
             cancelLoad();
         } else if (values.dataInputType === "USER" && errors["unprocessedY"] !== undefined) {
-            handlers.handleChange("alertErrorType")({target: {value: "INPUT_USER_S"}});
+            handleChange("alertErrorType")({target: {value: "INPUT_USER_S"}});
             cancelLoad();
         } else if (this.errorsDisplayedCount() === 0) {
             if (values.dataInputType === "FRED") getFREDResults();
             else if (values.dataInputType === "USER") getResults();
-            this.props.nextStep();
+            nextStep();
         } else {
-            handlers.handleChange("alertErrorType")({target: {value: "INPUT_PARAM"}});
+            handleChange("alertErrorType")({target: {value: "INPUT_PARAM"}});
             cancelLoad();
         }
     }
@@ -72,8 +73,7 @@ class ParametersForm extends Component {
                                               control={<Checkbox
                                                   size="small"
                                                   onChange={handleCheckboxChange('takeLog')}
-                                                  checked={values.takeLog}
-                                                  disabled={!values.transform}/>}
+                                                  checked={values.takeLog}/>}
                             />
                         </FormControl>
                     </Grid>
@@ -84,7 +84,6 @@ class ParametersForm extends Component {
                                 title="Differencing method applied"
                                 onChange={handleChange('dCode')}
                                 value={values.dCode}
-                                disabled={!values.transform}
                             >{createMenuItems(field.optionField.dCode.option)}</Select>
                         </FormControl>
                     </Grid>
@@ -95,7 +94,6 @@ class ParametersForm extends Component {
                                 title="Multiple applied"
                                 onChange={handleChange('pCode')}
                                 value={values.pCode}
-                                disabled={!values.transform}
                             >{createMenuItems(field.optionField.pCode.option)}</Select>
                         </FormControl>
                     </Grid>
@@ -178,6 +176,14 @@ class ParametersForm extends Component {
     }
 
     render() {
+
+        const updateTransformationState = () => {
+            const {values, handlers} = this.props;
+            const {handleChange} = handlers;
+            if (values.takeLog === false && values.dCode === 'nd' && values.pCode === 'np')
+                handleChange('transform')({target: {value: false}})
+        }
+
         return (
             <>
                 <div style={{minHeight: 600,}}>
@@ -199,7 +205,10 @@ class ParametersForm extends Component {
                 <Button
                     variant="contained"
                     style={styles.button}
-                    onClick={this.continue}
+                    onClick={(e) => {
+                        updateTransformationState()
+                        this.continue(e)
+                    }}
                 >Get Trend Decomposition</Button>
             </>
         )

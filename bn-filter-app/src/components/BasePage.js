@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import StartMenu from './StartMenu';
 import ParametersForm from "./ParametersForm";
 import DataForm from "./DataForm";
-import RenderedPlot from "./RenderedPlot";
+import DataPlot from "./DataPlot";
 import Loading from "./Loading";
 import Error from "./Error";
 import {CONFIG} from "../config.js";
@@ -19,6 +19,7 @@ class BasePage extends Component {
         unprocessedY: '',
         x: [], // dates
         y: [], // processed time series
+        transformedY: [], // transformed y (only will differ from `y` if a transform is applied)
         delta: field.freeText.delta.default,
         deltaSelect: 2,
         demean: field.optionField.iterativeDynamicDemeaning.default,
@@ -39,6 +40,7 @@ class BasePage extends Component {
         takeLog: true,
         // bnf output (from API)
         cycle: [],
+        trend: [],
         dispCycleCI: true,
         cycleCI: [],
         deltaCalc: undefined,
@@ -206,16 +208,17 @@ class BasePage extends Component {
                     console.log('Success:', result);
 
                     const
-                        cycleRes = result["cycle"].map(x => Number(x)),
-                        ciRes = result["ci"].map(x => Number(x)),
-                        deltaRes = Number(result["delta"]);
+                        cycleRes = result["cycle"],
+                        ciRes = result["ci"];
 
                     this.setState({
                         x: result["dates"],
-                        y: result["y"],
+                        y: result["original_y"],
+                        transformedY: result["transformed_y"],
+                        trend: result["trend"],
                         cycle: cycleRes,
                         cycleCI: ciRes,
-                        deltaCalc: deltaRes,
+                        deltaCalc: result["delta"],
                         cycleCILB: confIntZip(cycleRes, ciRes, "lb"),
                         cycleCIUB: confIntZip(cycleRes, ciRes, "ub"),
                         loading: false,
@@ -247,17 +250,18 @@ class BasePage extends Component {
                     console.log('Success:', result);
 
                     const
-                        cycleRes = result["cycle"].map(x => Number(x)),
-                        ciRes = result["ci"].map(x => Number(x)),
-                        deltaRes = Number(result["delta"]);
+                        cycleRes = result["cycle"],
+                        ciRes = result["ci"];
 
                     this.setState({
                         x: this.state.frequency !== "n" ? // dated axis or numbered axis
                             DateAbstract.createDate(this.state.frequency, this.state.startDate).getDateSeries(cycleRes.length).map(DateAbstract.truncatedDate)
                             : Array.from({length: cycleRes.length}, (_, i) => i + 1),
+                        transformedY: result["transformed_y"],
+                        trend: result['trend'],
                         cycle: cycleRes,
                         cycleCI: ciRes,
-                        deltaCalc: deltaRes,
+                        deltaCalc: result["delta"],
                         cycleCILB: confIntZip(cycleRes, ciRes, "lb"),
                         cycleCIUB: confIntZip(cycleRes, ciRes, "ub"),
                         loading: false,
@@ -337,12 +341,15 @@ class BasePage extends Component {
             handleCheckboxChange, handleErrorField
         };
 
-        const {x, y, cycleCILB, cycleCIUB,} = this.state;
+        const {x, y, transformedY, trend, cycleCILB, cycleCIUB,} = this.state;
         const plotPageValues = {
             x,
             y,
+            transformedY,
             cycle,
+            trend,
             deltaCalc,
+            transform,
             dispCycleCI,
             cycleCILB,
             cycleCIUB,
@@ -386,7 +393,7 @@ class BasePage extends Component {
                         case 4:
                             return (
                                 <>
-                                    {this.state.loading ? Loading() : <RenderedPlot
+                                    {this.state.loading ? Loading() : <DataPlot
                                         prevStep={this.prevStep}
                                         plotPageValues={plotPageValues}
                                     />

@@ -26,7 +26,7 @@ class DataForm extends Component {
         const {valuesUserData, valuesFREDData, setErrorMessage, nextStep,} = this.props;
         nextStep();
         if (valuesFREDData.dataInputType === "FRED" && valuesFREDData.mnemonic === "") {
-            setErrorMessage("mnemonic", "mnemonic cannot be empty");
+            setErrorMessage("mnemonic", "A mnemonic must be specified");
         }
         if (valuesUserData.dataInputType === "USER" && valuesUserData.unprocessedY === "") {
             setErrorMessage("unprocessedY", "time series field cannot be empty");
