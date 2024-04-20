@@ -78,8 +78,13 @@ export const CONFIG = Object.freeze({
             "iterativeDynamicDemeaning": {
                 "option": [
                     {
+                        "value": "nd",
+                        "text": "No Demeaning (Zero Drift)",
+                        "hoverText": "Estimate zero drift"
+                    },
+                    {
                         "value": "sm",
-                        "text": "Constant (Static Demeaning)",
+                        "text": "Static demeaning (Constant Drift)",
                         "hoverText": "Estimate constant drift"
                     },
                     {
