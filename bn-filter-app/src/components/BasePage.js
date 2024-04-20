@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import StartMenu from './StartMenu';
 import ParametersForm from "./ParametersForm";
 import DataForm from "./DataForm";
-import RenderedPlot from "./RenderedPlot";
+import DataPlot from "./Plot";
 import Loading from "./Loading";
 import Error from "./Error";
 import {CONFIG} from "../config.js";
@@ -386,7 +386,7 @@ class BasePage extends Component {
                         case 4:
                             return (
                                 <>
-                                    {this.state.loading ? Loading() : <RenderedPlot
+                                    {this.state.loading ? Loading() : <DataPlot
                                         prevStep={this.prevStep}
                                         plotPageValues={plotPageValues}
                                     />
