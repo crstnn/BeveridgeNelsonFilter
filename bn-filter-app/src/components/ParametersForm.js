@@ -32,20 +32,21 @@ class ParametersForm extends Component {
 
     continue = e => {
         e.preventDefault();
-        const {getResults, getFREDResults, handlers, values, errors, cancelLoad} = this.props;
+        const {getResults, getFREDResults, handlers, values, errors, cancelLoad, nextStep} = this.props;
+        const {handleChange} = handlers;
 
         if (values.dataInputType === "FRED" && errors["mnemonic"] !== undefined) {
-            handlers.handleChange("alertErrorType")({target: {value: "INPUT_USER_M"}});
+            handleChange("alertErrorType")({target: {value: "INPUT_USER_M"}});
             cancelLoad();
         } else if (values.dataInputType === "USER" && errors["unprocessedY"] !== undefined) {
-            handlers.handleChange("alertErrorType")({target: {value: "INPUT_USER_S"}});
+            handleChange("alertErrorType")({target: {value: "INPUT_USER_S"}});
             cancelLoad();
         } else if (this.errorsDisplayedCount() === 0) {
             if (values.dataInputType === "FRED") getFREDResults();
             else if (values.dataInputType === "USER") getResults();
-            this.props.nextStep();
+            nextStep();
         } else {
-            handlers.handleChange("alertErrorType")({target: {value: "INPUT_PARAM"}});
+            handleChange("alertErrorType")({target: {value: "INPUT_PARAM"}});
             cancelLoad();
         }
     }
