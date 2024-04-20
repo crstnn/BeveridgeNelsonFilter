@@ -127,7 +127,7 @@ export default class FREDDataForm extends Component {
                   alignItems="center">
                 <Grid item>
                     <FormGroup row>
-                        <TextField variant="outlined" label="FRED mnemonic"
+                        <TextField variant="outlined" label="FRED Mnemonic"
                                    title="Press enter to check the availability of the mnemonic/series"
                                    color={errors["mnemonic"] === undefined && values.mnemonic !== "" ? "success" : null}
                                    placeholder="e.g. GDPC1" sx={{width: 250}}
