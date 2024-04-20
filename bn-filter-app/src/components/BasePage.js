@@ -40,6 +40,7 @@ class BasePage extends Component {
         takeLog: true,
         // bnf output (from API)
         cycle: [],
+        trend: [],
         dispCycleCI: true,
         cycleCI: [],
         deltaCalc: undefined,
@@ -340,12 +341,13 @@ class BasePage extends Component {
             handleCheckboxChange, handleErrorField
         };
 
-        const {x, y, transformedY, cycleCILB, cycleCIUB,} = this.state;
+        const {x, y, transformedY, trend, cycleCILB, cycleCIUB,} = this.state;
         const plotPageValues = {
             x,
             y,
             transformedY,
             cycle,
+            trend,
             deltaCalc,
             transform,
             dispCycleCI,
