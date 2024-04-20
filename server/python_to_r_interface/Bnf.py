@@ -13,7 +13,7 @@ class BNF:
         self.demean = demean
 
         if demean == "nd":
-            self.iterative = 100
+            self.iterative = -1
         elif demean == "idm":
             self.demean = 'dm'
             self.iterative = 100

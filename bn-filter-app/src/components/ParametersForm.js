@@ -20,7 +20,7 @@ const {field, alertErrors} = CONFIG;
 class ParametersForm extends Component {
 
     isDisabled = {
-        rollingWindow: () => this.props.values.demean === "sm",
+        rollingWindow: () => ["nd", "sm"].includes(this.props.values.demean),
         delta: () => false, // this.props.values.deltaSelect !== 0,
     };
 
