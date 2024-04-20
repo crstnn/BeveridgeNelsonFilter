@@ -18,7 +18,7 @@ class BasePage extends Component {
         mnemonic: "",
         unprocessedY: '',
         x: [], // dates
-        y: [], // processed time series
+        y: [], // time series
         transformedY: [], // transformed y (only will differ from `y` if a transform is applied)
         delta: field.freeText.delta.default,
         deltaSelect: 2,

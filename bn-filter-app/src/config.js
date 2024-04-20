@@ -84,7 +84,7 @@ export const CONFIG = Object.freeze({
                     },
                     {
                         "value": "sm",
-                        "text": "Static demeaning (Constant Drift)",
+                        "text": "Static Demeaning (Constant Drift)",
                         "hoverText": "Estimate constant drift"
                     },
                     {
