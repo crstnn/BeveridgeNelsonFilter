@@ -23,7 +23,7 @@ class TimeSeries:
         self.take_log = take_log
 
     def check_for_transformation(self):
-        self._transform = self._d_code is not None or self._p_code is not None or self._take_log is not None
+        self._transform = not (self._d_code == "nd" and self._p_code == "np" and self._take_log is False)  # no transforms
 
     @property
     def d_code(self):
