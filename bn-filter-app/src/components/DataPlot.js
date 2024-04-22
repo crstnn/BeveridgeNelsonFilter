@@ -23,8 +23,8 @@ class DataPlot extends Component {
             plotPageValues.transform ? [`${plotPageValues.dataInputType === "FRED" ? `${plotPageValues.mnemonic}_` : ''}transformed_series`].concat(plotPageValues.transformedY) : undefined,
             ["trend"].concat(plotPageValues.trend),
             ["cycle"].concat(plotPageValues.cycle),
-            plotPageValues.dispCycleCI ? ["conf_int_lower_bound"].concat(plotPageValues.cycleCILB) : undefined,
-            plotPageValues.dispCycleCI ? ["conf_int_upper_bound"].concat(plotPageValues.cycleCIUB) : undefined);
+            plotPageValues.dispCycleCI ? ["cycle_conf_int_lower_bound"].concat(plotPageValues.cycleCILB) : undefined,
+            plotPageValues.dispCycleCI ? ["cycle_conf_int_upper_bound"].concat(plotPageValues.cycleCIUB) : undefined);
     }
 
 
