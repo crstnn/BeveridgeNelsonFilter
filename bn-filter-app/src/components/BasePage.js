@@ -209,7 +209,7 @@ class BasePage extends Component {
 
                     const
                         cycleRes = result["cycle"],
-                        ciRes = result["ci"];
+                        ciRes = result["cycle_ci"];
 
                     this.setState({
                         x: result["dates"],
@@ -250,7 +250,7 @@ class BasePage extends Component {
                     console.log('Success:', result);
 
                     const
-                        cycleRes = result["cycle"],
+                        cycleRes = result["cycle_ci"],
                         ciRes = result["ci"];
 
                     this.setState({

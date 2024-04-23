@@ -28,7 +28,7 @@ class BNF:
         self.dynamic_bands = self.iterative != 0
 
         # outputs (of interest)
-        self.cycle = self.trend = self.ci = None
+        self.cycle = self.trend = self.cycle_ci = None
 
     def run(self):
         bnf_output = self.r_instance('bnf')(self.time_series_float_vector,
@@ -44,7 +44,7 @@ class BNF:
 
         self.trend = [float(v) for v in bnf_output.rx2('trend')]
         self.cycle = [float(v) for v in bnf_output.rx2('cycle')]
-        self.ci = [float(v) for v in bnf_output.rx2('ci')]
+        self.cycle_ci = [float(v) for v in bnf_output.rx2('cycle_ci')]
         self.delta = bnf_output.rx2('delta')[0]
 
         # using both garbage collectors to free up space that rpy2 hogs after running ops
@@ -55,6 +55,6 @@ class BNF:
         return {
             "trend": self.trend,
             "cycle": self.cycle,
-            "ci": self.ci,
+            "cycle_ci": self.cycle_ci,
             "delta": self.delta
         }
