@@ -380,6 +380,7 @@ class BasePage extends Component {
                                 setErrorMessage={this.setErrorMessage}
                                 deleteErrorMessage={this.deleteErrorMessage}
                                 handleChange={this.handleChange}
+                                handleCheckboxChange={this.handleCheckboxChange}
                                 valuesUserData={dataUserFormPageValues}
                                 valuesFREDData={dataFREDFormPageValues}
                                 errors={fieldErrorMessages}

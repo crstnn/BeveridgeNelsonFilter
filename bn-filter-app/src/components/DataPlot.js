@@ -15,14 +15,16 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
     }
 
     const getCSVData = () => colsToRows(
-            ["date"].concat(plotPageValues.x),
-            [`${plotPageValues.dataInputType === "FRED" ? `${plotPageValues.mnemonic}_` : ''}original_series`].concat(plotPageValues.y),
-            plotPageValues.transform ? [`${plotPageValues.dataInputType === "FRED" ? `${plotPageValues.mnemonic}_` : ''}transformed_series`].concat(plotPageValues.transformedY) : undefined,
-            ["trend"].concat(plotPageValues.trend),
-            ["cycle"].concat(plotPageValues.cycle),
-            displayConfInterval ? ["cycle_conf_int_lower_bound"].concat(plotPageValues.cycleCILB) : undefined,
-            displayConfInterval ? ["cycle_conf_int_upper_bound"].concat(plotPageValues.cycleCIUB) : undefined);
-
+        ["date"].concat(plotPageValues.x),
+        [`${plotPageValues.dataInputType === "FRED" ? `${plotPageValues.mnemonic}_` : ''}original_series`].concat(plotPageValues.y),
+        plotPageValues.transform ? [`${plotPageValues.dataInputType === "FRED" ? `${plotPageValues.mnemonic}_` : ''}transformed_series`].concat(plotPageValues.transformedY) : undefined,
+        ["trend"].concat(plotPageValues.trend),
+        ["cycle"].concat(plotPageValues.cycle),
+        displayConfInterval ? ["cycle_conf_int_lower_bound"].concat(plotPageValues.cycleCILB) : undefined,
+        displayConfInterval ? ["cycle_conf_int_upper_bound"].concat(plotPageValues.cycleCIUB) : undefined,
+        displayConfInterval ? ["trend_conf_int_lower_bound"].concat(plotPageValues.trendCILB) : undefined,
+        displayConfInterval ? ["trend_conf_int_upper_bound"].concat(plotPageValues.trendCIUB) : undefined
+    );
 
 
     const getPlot = () => {
@@ -125,26 +127,29 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
 
         ];
 
+        const layout =
+            {
+                autosize: true,
+                width: window.screen.width <= 700 ? 450 : 700, // fit to window size
+                margin: {l: 20, r: 20, b: 50, t: 20},
+                xaxis: {automargin: true},
+                yaxis: {automargin: true, tickangle: 'auto'},
+                yaxis2: {
+                    overlaying: 'y',
+                    side: 'right',
+                    automargin: true,
+                },
+                legend: {
+                    orientation: "h",
+                    xanchor: "center",
+                    x: 0.5,
+                    y: -0.10,
+                },
+            }
+
         return (
             <Plot
-                layout={{
-                    autosize: true,
-                    width: window.screen.width <= 700 ? 450 : 700, // fit to window size
-                    margin: {l: 20, r: 20, b: 50, t: 20},
-                    xaxis: {automargin: true},
-                    yaxis: {automargin: true, tickangle: 'auto'},
-                    yaxis2: {
-                        overlaying: 'y',
-                        side: 'right',
-                        automargin: true,
-                    },
-                    legend: {
-                        orientation: "h",
-                        xanchor: "center",
-                        x: 0.5,
-                        y: -0.10,
-                    },
-                }}
+                layout={layout}
                 data={[...cycle, ...trendAndSeries]}
             />
         )

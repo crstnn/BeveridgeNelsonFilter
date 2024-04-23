@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Divider, FormControl, Grid, InputLabel, Select, TextField} from "@mui/material";
+import {Checkbox, Divider, FormControl, FormControlLabel, Grid, InputLabel, Select, TextField} from "@mui/material";
 import CustomDatePicker from "../pickers/CustomDatePicker";
 import {CONFIG} from "../config.js";
 import {createMenuItems} from "../utils/utils";
@@ -39,7 +39,7 @@ export default class UserDataForm extends Component {
     }
 
     render() {
-        const {values, errors, handleChange} = this.props;
+        const {values, errors, handleChange, handleCheckboxChange} = this.props;
 
         return (
             <div>
@@ -83,15 +83,15 @@ export default class UserDataForm extends Component {
                     <Grid container direction="column" sx={{minHeight: 400, paddingTop: 2}}
                           justifyContent="space-evenly"
                           alignItems="center">
-                        <Grid item xs={6}>
+                        <Grid item xs={4}>
                             <CustomDatePicker
                                 label={"Start Date"}
                                 title={"Series' start date (inclusive). The end date is determined based on frequency"}
                                 date={values.startDate}
-                                updateDate={handleChange('startDate')}
+                                updateDate={this.props.handleChange('startDate')}
                                 isDisabled={values.frequency === "n"}/>
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={4}>
                             <FormControl variant="standard" sx={{minWidth: 220}}>
                                 <InputLabel>Frequency</InputLabel>
                                 <Select
@@ -99,6 +99,18 @@ export default class UserDataForm extends Component {
                                     onChange={handleChange('frequency')}
                                     value={values.frequency}
                                 >{createMenuItems(field.optionField.frequencyManual.option)}</Select>
+                            </FormControl>
+                        </Grid>
+
+                        <Grid item xs={4}>
+                            <FormControl sx={{marginBottom: 3, marginTop: 2}} variant="standard">
+                                <FormControlLabel label="95% Confidence Intervals"
+                                                  title="Choose to display 95% confidence intervals in graph output"
+                                                  control={<Checkbox
+                                                      size="small"
+                                                      onChange={handleCheckboxChange('displayConfInterval')}
+                                                      checked={values.displayConfInterval}/>}
+                                />
                             </FormControl>
                         </Grid>
                     </Grid>
