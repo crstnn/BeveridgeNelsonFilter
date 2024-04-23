@@ -697,7 +697,7 @@ bnf <- function(y,
                 delta_select = 2,
                 fixed_delta = 0.1,
                 p = 12, 
-                d0 = 0.0005, 
+                d0 = 0.01, 
                 dt = 0.0005,
                 demean = c("nd", "sm", "pm", "dm"),
                 dynamic_bands = T, 
@@ -706,8 +706,8 @@ bnf <- function(y,
   # @window: rolling window length for dynamic demeaning and/or dynamic error bands (e.g., 40 is 10 years for quarterly data)
   # @iterative: set to >1 for max number of iterations for iterative dynamic demeaning
   # @delta_select: set to 0 if use fixed delta, 1 if max amp-to-noise, 2 if min var(trend shocks)
-  # @min_delta: start point of grid search for delta
-  # @fixed_delta: set a fixed delta to be used if delta_select=0
+  # @d0: min_delta: start point of grid search for delta if delta_select!=0
+  # @fixed_delta: set a fixed delta to be used if delta_select=0, or for delta
   # @dynamic_bands: set to T for dynamic error bands, F for fixed standard error bands (should be F when sm demean type)
   # @ib: set to F if no iterative backcasting as in KMW2018 (just unconditional mean), set to T if iterative backcasting
   # @varargs (...): passed into piecewise demean function
