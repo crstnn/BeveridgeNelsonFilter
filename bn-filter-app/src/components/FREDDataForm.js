@@ -1,9 +1,7 @@
 import React, {Component} from "react";
 import {
-    Checkbox,
     Divider,
     FormControl,
-    FormControlLabel,
     FormGroup,
     FormHelperText,
     Grid,
@@ -148,7 +146,7 @@ export default class FREDDataForm extends Component {
 
 
     render() {
-        const {values, handleChange, handleCheckboxChange} = this.props;
+        const {values, handleChange} = this.props;
 
         return (
             <div>
@@ -172,7 +170,7 @@ export default class FREDDataForm extends Component {
                     <Grid container direction="column" sx={{minHeight: 340,}}
                           justifyContent="space-evenly"
                           alignItems="center">
-                        <Grid item xs={3}>
+                        <Grid item xs={4}>
                             <CustomDatePicker
                                 label={"Start Date"}
                                 title={"Series' start date (inclusive). Determined by FRED"}
@@ -181,7 +179,7 @@ export default class FREDDataForm extends Component {
                                 maxDate={values.maxDate}
                                 updateDate={handleChange('startDateFRED')}/>
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid item xs={4}>
                             <CustomDatePicker
                                 label={"End Date"}
                                 title={"Series' end date (inclusive). Determined by FRED"}
@@ -190,7 +188,7 @@ export default class FREDDataForm extends Component {
                                 maxDate={values.maxDate}
                                 updateDate={handleChange('endDateFRED')}/>
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid item xs={4}>
                             <FormControl variant="standard" sx={{minWidth: 220}}>
                                 <InputLabel>Frequency</InputLabel>
                                 <Select
@@ -198,18 +196,6 @@ export default class FREDDataForm extends Component {
                                     onChange={handleChange('frequencyFRED')}
                                     value={values.frequencyFRED}
                                 >{this.createFilteredFrequencies()}</Select>
-                            </FormControl>
-                        </Grid>
-
-                        <Grid item xs={3}>
-                            <FormControl sx={{marginBottom: 3, marginTop: 2}} variant="standard">
-                                <FormControlLabel label="95% Confidence Intervals"
-                                                  title="Choose to report 95% confidence intervals in graph and CSV"
-                                                  control={<Checkbox
-                                                      size="small"
-                                                      onChange={handleCheckboxChange('dispCycleCI')}
-                                                      checked={values.dispCycleCI}/>}
-                                />
                             </FormControl>
                         </Grid>
                     </Grid>

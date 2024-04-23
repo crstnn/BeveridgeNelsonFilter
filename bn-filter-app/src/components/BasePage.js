@@ -41,11 +41,13 @@ class BasePage extends Component {
         // bnf output (from API)
         cycle: [],
         trend: [],
-        dispCycleCI: true,
+        displayConfInterval: true,
         cycleCI: [],
         deltaCalc: undefined,
         cycleCILB: [],
         cycleCIUB: [],
+        trendCILB: [],
+        trendCIUB: [],
         loading: true,
         alertErrorType: null, // overarching alert text
         fieldErrorMessages: {},
@@ -209,18 +211,21 @@ class BasePage extends Component {
 
                     const
                         cycleRes = result["cycle"],
+                        trendRes = result["trend"],
                         ciRes = result["cycle_ci"];
 
                     this.setState({
                         x: result["dates"],
                         y: result["original_y"],
                         transformedY: result["transformed_y"],
-                        trend: result["trend"],
+                        trend: trendRes,
                         cycle: cycleRes,
                         cycleCI: ciRes,
                         deltaCalc: result["delta"],
                         cycleCILB: confIntZip(cycleRes, ciRes, "lb"),
                         cycleCIUB: confIntZip(cycleRes, ciRes, "ub"),
+                        trendCILB: confIntZip(trendRes, ciRes, "lb"),
+                        trendCIUB: confIntZip(trendRes, ciRes, "ub"),
                         loading: false,
                     });
                 }).catch((error) => {
@@ -250,20 +255,23 @@ class BasePage extends Component {
                     console.log('Success:', result);
 
                     const
-                        cycleRes = result["cycle_ci"],
-                        ciRes = result["ci"];
+                        cycleRes = result["cycle"],
+                        trendRes = result["trend"],
+                        ciRes = result["cycle_ci"];
 
                     this.setState({
                         x: this.state.frequency !== "n" ? // dated axis or numbered axis
                             DateAbstract.createDate(this.state.frequency, this.state.startDate).getDateSeries(cycleRes.length).map(DateAbstract.truncatedDate)
                             : Array.from({length: cycleRes.length}, (_, i) => i + 1),
                         transformedY: result["transformed_y"],
-                        trend: result['trend'],
+                        trend: trendRes,
                         cycle: cycleRes,
                         cycleCI: ciRes,
                         deltaCalc: result["delta"],
                         cycleCILB: confIntZip(cycleRes, ciRes, "lb"),
                         cycleCIUB: confIntZip(cycleRes, ciRes, "ub"),
+                        trendCILB: confIntZip(trendRes, ciRes, "lb"),
+                        trendCIUB: confIntZip(trendRes, ciRes, "ub"),
                         loading: false,
                     });
                 }).catch((error) => {
@@ -274,7 +282,7 @@ class BasePage extends Component {
 
 
     render() {
-        const {unprocessedY, startDate, endDate, frequency, dataInputType, dispCycleCI} = this.state;
+        const {unprocessedY, startDate, endDate, frequency, dataInputType, displayConfInterval} = this.state;
         const {
             startDateFRED,
             endDateFRED,
@@ -284,7 +292,7 @@ class BasePage extends Component {
             frequencyFRED,
             availableFrequencies
         } = this.state;
-        const dataUserFormPageValues = {unprocessedY, startDate, endDate, frequency, dataInputType, dispCycleCI};
+        const dataUserFormPageValues = {unprocessedY, startDate, endDate, frequency, dataInputType, displayConfInterval};
         const dataFREDFormPageValues = {
             startDateFRED,
             endDateFRED,
@@ -294,7 +302,7 @@ class BasePage extends Component {
             frequencyFRED,
             dataInputType,
             availableFrequencies,
-            dispCycleCI
+            displayConfInterval
         };
 
         const {
@@ -341,7 +349,7 @@ class BasePage extends Component {
             handleCheckboxChange, handleErrorField
         };
 
-        const {x, y, transformedY, trend, cycleCILB, cycleCIUB,} = this.state;
+        const {x, y, transformedY, trend, cycleCILB, cycleCIUB, trendCILB, trendCIUB} = this.state;
         const plotPageValues = {
             x,
             y,
@@ -350,9 +358,11 @@ class BasePage extends Component {
             trend,
             deltaCalc,
             transform,
-            dispCycleCI,
+            displayConfInterval,
             cycleCILB,
             cycleCIUB,
+            trendCILB,
+            trendCIUB,
             frequency,
             startDate,
             dataInputType,
@@ -370,7 +380,6 @@ class BasePage extends Component {
                                 setErrorMessage={this.setErrorMessage}
                                 deleteErrorMessage={this.deleteErrorMessage}
                                 handleChange={this.handleChange}
-                                handleCheckboxChange={this.handleCheckboxChange}
                                 valuesUserData={dataUserFormPageValues}
                                 valuesFREDData={dataFREDFormPageValues}
                                 errors={fieldErrorMessages}
@@ -396,6 +405,7 @@ class BasePage extends Component {
                                     {this.state.loading ? Loading() : <DataPlot
                                         prevStep={this.prevStep}
                                         plotPageValues={plotPageValues}
+                                        handleCheckboxChange={this.handleCheckboxChange}
                                     />
                                     }
                                 </>
