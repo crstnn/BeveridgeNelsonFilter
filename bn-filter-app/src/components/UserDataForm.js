@@ -108,8 +108,8 @@ export default class UserDataForm extends Component {
                                                   title="Choose to display 95% confidence intervals in graph output"
                                                   control={<Checkbox
                                                       size="small"
-                                                      onChange={handleCheckboxChange('dispCycleCI')}
-                                                      checked={values.dispCycleCI}/>}
+                                                      onChange={handleCheckboxChange('displayConfInterval')}
+                                                      checked={values.displayConfInterval}/>}
                                 />
                             </FormControl>
                         </Grid>

@@ -207,8 +207,8 @@ export default class FREDDataForm extends Component {
                                                   title="Choose to report 95% confidence intervals in graph and CSV"
                                                   control={<Checkbox
                                                       size="small"
-                                                      onChange={handleCheckboxChange('dispCycleCI')}
-                                                      checked={values.dispCycleCI}/>}
+                                                      onChange={handleCheckboxChange('displayConfInterval')}
+                                                      checked={values.displayConfInterval}/>}
                                 />
                             </FormControl>
                         </Grid>
