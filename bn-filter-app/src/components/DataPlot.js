@@ -4,7 +4,7 @@ import {Button} from "@mui/material";
 import {CSVLink} from "react-csv";
 import {colsToRows} from "../utils/utils";
 
-const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
+const DataPlot = ({plotPageValues, prevStep}) => {
 
     const {displayConfInterval} = plotPageValues;
     const fileName = "BNF_cycle.csv";
@@ -29,47 +29,8 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
 
     const getPlot = () => {
         console.log(plotPageValues.x);
-        console.log(plotPageValues.y);
+        console.log(plotPageValues.transformedY);
 
-        const cycle = [
-            {
-                x: plotPageValues.x,
-                y: plotPageValues.cycle,
-                type: 'scatter',
-                mode: 'lines+markers',
-                marker: {color: 'blue'},
-                name: "Cycle",
-                showlegend: true,
-                legendgroup: 'cycle',
-                yaxis: 'y1',
-            },
-            displayConfInterval ? {
-                // confint lower bound: enclosing line (which is hidden) hence 0 opacity (using properties of 'tonexty')
-                x: plotPageValues.x,
-                y: plotPageValues.cycleCILB,
-                fill: "tonexty",
-                fillcolor: "rgba(0, 0, 0, 0)",
-                line: {color: "transparent"},
-                showlegend: false,
-                type: "scatter",
-                hoverinfo: 'skip',
-                legendgroup: 'cycle',
-                yaxis: 'y1',
-            } : {},
-            displayConfInterval ? { // confint upper bound
-                x: plotPageValues.x,
-                y: plotPageValues.cycleCIUB,
-                fill: "tonexty",
-                fillcolor: "rgba(0,100,80,0.2)",
-                line: {color: "transparent"},
-                name: 'Cycle CI',
-                showlegend: false,
-                type: "scatter",
-                hoverinfo: 'skip',
-                legendgroup: 'cycle',
-                yaxis: 'y1',
-            } : {},
-        ];
 
         const trendAndSeries = [
             {
@@ -81,8 +42,8 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
                 name: "Trend",
                 showlegend: true,
                 legendgroup: 'trend',
-                yaxis: 'y2',
-                visible: 'legendonly',
+                yaxis: 'y1',
+                visible: true,
             },
             {
                 x: plotPageValues.x,
@@ -93,8 +54,8 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
                 name: `Series${plotPageValues.transform ? ' (Post-Transformation)' : ''}`,
                 showlegend: true,
                 legendgroup: 'trend',
-                yaxis: 'y2',
-                visible: 'legendonly',
+                yaxis: 'y1',
+                visible: true,
             },
             displayConfInterval ? {
                 // confint lower bound: enclosing line (which is hidden) hence 0 opacity (using properties of 'tonexty')
@@ -107,8 +68,8 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
                 type: "scatter",
                 hoverinfo: 'skip',
                 legendgroup: 'trend',
-                yaxis: 'y2',
-                visible: 'legendonly',
+                yaxis: 'y1',
+                visible: true,
             } : {},
             displayConfInterval ? { // confint upper bound
                 x: plotPageValues.x,
@@ -121,10 +82,54 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
                 type: "scatter",
                 hoverinfo: 'skip',
                 legendgroup: 'trend',
+                yaxis: 'y1',
+                visible: true,
+            } : {},
+
+        ];
+
+
+        const cycle = [
+            {
+                x: plotPageValues.x,
+                y: plotPageValues.cycle,
+                type: 'scatter',
+                mode: 'lines+markers',
+                marker: {color: 'blue'},
+                name: "Cycle",
+                showlegend: true,
+                legendgroup: 'cycle',
+                yaxis: 'y2',
+                visible: 'legendonly',
+            },
+            displayConfInterval ? {
+                // confint lower bound: enclosing line (which is hidden) hence 0 opacity (using properties of 'tonexty')
+                x: plotPageValues.x,
+                y: plotPageValues.cycleCILB,
+                fill: "tonexty",
+                fillcolor: "rgba(0, 0, 0, 0)",
+                line: {color: "transparent"},
+                showlegend: false,
+                type: "scatter",
+                hoverinfo: 'skip',
+                legendgroup: 'cycle',
                 yaxis: 'y2',
                 visible: 'legendonly',
             } : {},
-
+            displayConfInterval ? { // confint upper bound
+                x: plotPageValues.x,
+                y: plotPageValues.cycleCIUB,
+                fill: "tonexty",
+                fillcolor: "rgba(0,100,80,0.2)",
+                line: {color: "transparent"},
+                name: 'Cycle CI',
+                showlegend: false,
+                type: "scatter",
+                hoverinfo: 'skip',
+                legendgroup: 'cycle',
+                yaxis: 'y2',
+                visible: 'legendonly',
+            } : {},
         ];
 
         const layout =
@@ -133,11 +138,12 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
                 width: window.screen.width <= 700 ? 450 : 700, // fit to window size
                 margin: {l: 20, r: 20, b: 50, t: 20},
                 xaxis: {automargin: true},
-                yaxis: {automargin: true, tickangle: 'auto'},
+                yaxis: {automargin: true, tickangle: 'auto', zeroline: false,},
                 yaxis2: {
                     overlaying: 'y',
                     side: 'right',
                     automargin: true,
+                    zeroline: false,
                 },
                 legend: {
                     orientation: "h",
@@ -150,7 +156,7 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
         return (
             <Plot
                 layout={layout}
-                data={[...cycle, ...trendAndSeries]}
+                data={[...trendAndSeries, ...cycle, ]}
             />
         )
     }

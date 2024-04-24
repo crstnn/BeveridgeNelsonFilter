@@ -210,7 +210,7 @@ class ParametersForm extends Component {
                         updateTransformationState()
                         this.continue(e)
                     }}
-                >Get Trend Decomposition</Button>
+                >Apply BN Filter</Button>
             </>
         )
     }
