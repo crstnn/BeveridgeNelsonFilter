@@ -36,7 +36,7 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
             legendgroup: 'trend',
             yaxis: 'y1',
             visible: true,
-            isConfInterval: true, // attribute to filter on
+            isConfInterval: true, // custom attr to distinguish confidence intervals
         },
         { // confint upper bound
             x: plotPageValues.x,
@@ -51,7 +51,7 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
             legendgroup: 'trend',
             yaxis: 'y1',
             visible: true,
-            isConfInterval: true, // attribute to filter on
+            isConfInterval: true, // custom attr to distinguish confidence intervals
         },
     ];
 
@@ -100,7 +100,7 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
             legendgroup: 'cycle',
             yaxis: 'y2',
             visible: 'legendonly',
-            isConfInterval: true, // attribute to filter on
+            isConfInterval: true, // custom attr to distinguish confidence intervals
         },
         { // confint upper bound
             x: plotPageValues.x,
@@ -115,7 +115,7 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
             legendgroup: 'cycle',
             yaxis: 'y2',
             visible: 'legendonly',
-            isConfInterval: true, // attribute to filter on
+            isConfInterval: true, // custom attr to distinguish confidence intervals
         },
     ]
 
@@ -143,6 +143,7 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
     const allPlotData = [...trend, ...trendConfInt, ...series, ...cycle, ...cycleConfInt,];
     const plotDataWithoutConfInt = [...trend, ...series, ...cycle,];
     // TODO: remove above
+    // TODO: refine logic when CIs are available
     const [plotData, setPlotData] = useState(displayConfInterval ? allPlotData : plotDataWithoutConfInt);
     const [plotLayout, setPlotLayout] = useState(layout);
 
@@ -164,22 +165,20 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
     );
 
     const handleConfInt = (isDisplayConfInt) => {
-
         const lineVisibilityByGroup = plotData.reduce((acc, plotAttribute) => {
             if (plotAttribute?.isConfInterval !== true)
                 return {...acc, [plotAttribute.legendgroup]: plotAttribute.visible};
-            return acc
+            return acc;
         }, {});
 
-        console.log("handleConfInt", plotData, lineVisibilityByGroup)
+        console.log(plotData)
 
         return plotData.map(
-            plotAttribute =>
-            {
-                if(plotAttribute?.isConfInterval === true) {
-                    if(lineVisibilityByGroup[plotAttribute.legendgroup] === true)
+            plotAttribute => {
+                if (plotAttribute?.isConfInterval === true) {
+                    if (lineVisibilityByGroup[plotAttribute.legendgroup] === true)
                         return {...plotAttribute, visible: isDisplayConfInt};
-                    else if(lineVisibilityByGroup[plotAttribute.legendgroup] === 'legendonly')
+                    else if (lineVisibilityByGroup[plotAttribute.legendgroup] === 'legendonly')
                         return {...plotAttribute, visible: 'legendonly'};
                 }
                 return plotAttribute;
@@ -189,17 +188,31 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
 
     const onLegendClick = (clickData) => {
         // Ensures plotting internal state is consistent with React state
+        // TODO has state prior
+
         setPlotData(clickData.data.map((plotAttr, idx) => ({...clickData[idx], ...plotAttr})));
+
+        console.log("clickData.data", clickData.data)
+
+        const lineVisibilityByGroup = plotData.reduce((acc, plotAttribute) => {
+            if (plotAttribute?.isConfInterval !== true)
+                return {...acc, [plotAttribute.legendgroup]: plotAttribute.visible};
+            return acc
+        }, {});
+
+
     }
 
-    const getPlot = () =>  (
-            <Plot
-                layout={plotLayout}
-                data={plotData}
-                onLegendClick={onLegendClick}
-                onLegendDoubleClick={onLegendClick}
-            />
-        )
+    const getPlot = () => {
+        console.log("getPlot", plotData)
+        return(
+        <Plot
+            layout={plotLayout}
+            data={plotData}
+            onLegendClick={onLegendClick}
+            onLegendDoubleClick={onLegendClick}
+        />
+    )}
 
 
     return (<>
@@ -237,6 +250,7 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
                 variant="outlined"
                 style={styles.button}
                 onClick={back}
+                // TODO: update global state of CI
             >Back</Button>
         </>
     );
