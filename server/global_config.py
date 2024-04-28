@@ -4,7 +4,7 @@ import configparser
 config = configparser.ConfigParser()
 config.read('config.ini')
 
-if 'ON_SERVER' in os.environ:
+if 'IS_PROD' in os.environ:
     print("flask_prod")
 
     FRED_API_KEY = os.environ['FRED_API_KEY'] if 'FRED_API_KEY' in os.environ else ''
