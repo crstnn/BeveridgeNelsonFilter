@@ -4,7 +4,8 @@ import {Button, Checkbox, FormControl, FormControlLabel} from "@mui/material";
 import {CSVLink} from "react-csv";
 import {colsToRows} from "../utils/utils";
 
-const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
+
+const DataPlot = ({plotPageValues, prevStep}) => {
 
     const fileName = "BN_filter_results.csv";
     const [displayConfInterval, setDisplayConfInterval] = useState(plotPageValues.displayConfInterval)
@@ -33,10 +34,10 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
             showlegend: false,
             type: "scatter",
             hoverinfo: 'skip',
+            name: 'trend_ci',
             legendgroup: 'trend',
             yaxis: 'y1',
             visible: true,
-            isConfInterval: true, // custom attr to distinguish confidence intervals
         },
         { // confint upper bound
             x: plotPageValues.x,
@@ -44,14 +45,13 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
             fill: "tonexty",
             fillcolor: "rgba(255,145,0,0.25)",
             line: {color: "transparent"},
-            name: 'Trend CI',
             showlegend: false,
             type: "scatter",
             hoverinfo: 'skip',
+            name: 'trend_ci',
             legendgroup: 'trend',
             yaxis: 'y1',
             visible: true,
-            isConfInterval: true, // custom attr to distinguish confidence intervals
         },
     ];
 
@@ -97,10 +97,10 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
             showlegend: false,
             type: "scatter",
             hoverinfo: 'skip',
+            name: 'cycle_ci',
             legendgroup: 'cycle',
             yaxis: 'y2',
             visible: 'legendonly',
-            isConfInterval: true, // custom attr to distinguish confidence intervals
         },
         { // confint upper bound
             x: plotPageValues.x,
@@ -108,14 +108,13 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
             fill: "tonexty",
             fillcolor: "rgba(0,100,80,0.2)",
             line: {color: "transparent"},
-            name: 'Cycle CI',
             showlegend: false,
             type: "scatter",
             hoverinfo: 'skip',
+            name: 'cycle_ci',
             legendgroup: 'cycle',
             yaxis: 'y2',
             visible: 'legendonly',
-            isConfInterval: true, // custom attr to distinguish confidence intervals
         },
     ]
 
@@ -164,55 +163,71 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
         displayConfInterval ? ["trend_conf_int_upper_bound"].concat(plotPageValues.trendCIUB) : undefined
     );
 
+    const getLineVisibilityByGroup = () => plotData.reduce((acc, plotAttribute) => {
+        if (!plotAttribute.name.endsWith('ci'))
+            return {...acc, [plotAttribute.legendgroup]: plotAttribute.visible};
+        return acc;
+    }, {});
+
     const handleConfInt = (isDisplayConfInt) => {
-        const lineVisibilityByGroup = plotData.reduce((acc, plotAttribute) => {
-            if (plotAttribute?.isConfInterval !== true)
-                return {...acc, [plotAttribute.legendgroup]: plotAttribute.visible};
-            return acc;
-        }, {});
+        const lineVisibilityByGroup = getLineVisibilityByGroup();
 
-        console.log(plotData)
-
-        return plotData.map(
-            plotAttribute => {
-                if (plotAttribute?.isConfInterval === true) {
-                    if (lineVisibilityByGroup[plotAttribute.legendgroup] === true)
-                        return {...plotAttribute, visible: isDisplayConfInt};
-                    else if (lineVisibilityByGroup[plotAttribute.legendgroup] === 'legendonly')
-                        return {...plotAttribute, visible: 'legendonly'};
+        setPlotData(plotData.map(
+                plotAttribute => {
+                    if (plotAttribute.name.endsWith('ci')) {
+                        if (lineVisibilityByGroup[plotAttribute.legendgroup] === true)
+                            return {...plotAttribute, visible: isDisplayConfInt};
+                        else if (lineVisibilityByGroup[plotAttribute.legendgroup] === 'legendonly')
+                            return {...plotAttribute, visible: false};
+                    }
+                    return plotAttribute;
                 }
-                return plotAttribute;
-            }
+            )
         );
+
     }
 
-    const onLegendClick = (clickData) => {
-        // Ensures plotting internal state is consistent with React state
-        // TODO has state prior
+    const onPlotUpdate = (newPlotData) => {
+        const data = newPlotData.data;
 
-        setPlotData(clickData.data.map((plotAttr, idx) => ({...clickData[idx], ...plotAttr})));
+        console.log('onPlotUpdate1', data[0].name, data[0].visible)
 
-        console.log("clickData.data", clickData.data)
+        if (JSON.stringify(data) === JSON.stringify(plotData))
+            return;
 
-        const lineVisibilityByGroup = plotData.reduce((acc, plotAttribute) => {
-            if (plotAttribute?.isConfInterval !== true)
-                return {...acc, [plotAttribute.legendgroup]: plotAttribute.visible};
-            return acc
-        }, {});
+        console.log('onPlotUpdate2')
 
+        const lineVisibilityByGroup = getLineVisibilityByGroup();
+
+        setPlotData(plotData.map(
+                plotAttribute => {
+                    if (plotAttribute.name.endsWith('ci')) {
+                        if (lineVisibilityByGroup[plotAttribute.legendgroup] === true) {
+                            console.log('GOT TO HERE1');
+                            return {...plotAttribute, visible: displayConfInterval};
+                        } else if (lineVisibilityByGroup[plotAttribute.legendgroup] === 'legendonly') {
+                            console.log('GOT TO HERE2');
+                            return {...plotAttribute, visible: false};
+                        }
+
+                    }
+                    return plotAttribute;
+                }
+            )
+        );
 
     }
 
     const getPlot = () => {
         console.log("getPlot", plotData)
-        return(
-        <Plot
-            layout={plotLayout}
-            data={plotData}
-            onLegendClick={onLegendClick}
-            onLegendDoubleClick={onLegendClick}
-        />
-    )}
+        return (
+            <Plot
+                layout={layout}
+                data={plotData}
+                onInitialize={onPlotUpdate}
+            />
+        )
+    }
 
 
     return (<>
@@ -235,7 +250,7 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
                                           onChange={e => {
                                               const isDisplayConfInt = e.target.checked
                                               setDisplayConfInterval(isDisplayConfInt);
-                                              setPlotData(handleConfInt(isDisplayConfInt));
+                                              handleConfInt(isDisplayConfInt);
                                           }}
                                           checked={displayConfInterval}/>}
                     />
@@ -265,4 +280,4 @@ const styles = {
     }
 }
 
-export default DataPlot
+export default DataPlot;
