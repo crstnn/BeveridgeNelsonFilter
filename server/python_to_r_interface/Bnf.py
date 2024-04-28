@@ -1,5 +1,7 @@
 import gc
 
+from python_to_r_interface.utils import convert_to_float
+
 
 class BNF:
     def __init__(self, time_series,
@@ -42,10 +44,10 @@ class BNF:
                                             ib=self.ib,
                                             )
 
-        self.trend = [float(v) for v in bnf_output.rx2('trend')]
-        self.cycle = [float(v) for v in bnf_output.rx2('cycle')]
-        self.cycle_ci = [float(v) for v in bnf_output.rx2('cycle_ci')]
-        self.delta = bnf_output.rx2('delta')[0]
+        self.trend = [convert_to_float(v) for v in bnf_output.rx2('trend')]
+        self.cycle = [convert_to_float(v) for v in bnf_output.rx2('cycle')]
+        self.cycle_ci = [convert_to_float(v) for v in bnf_output.rx2('cycle_ci')]
+        self.delta = convert_to_float(bnf_output.rx2('delta')[0])
 
         # using both garbage collectors to free up space that rpy2 hogs after running ops
         self.r_instance('gc()')
