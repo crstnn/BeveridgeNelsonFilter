@@ -41,6 +41,9 @@ class ParametersForm extends Component {
         } else if (values.dataInputType === "USER" && errors["unprocessedY"] !== undefined) {
             handleChange("alertErrorType")({target: {value: "INPUT_USER_S"}});
             cancelLoad();
+        } else if (values.dataInputType === "USER" && errors["startDate"] !== undefined) {
+            handleChange("alertErrorType")({target: {value: "INPUT_USER_DATE"}});
+            cancelLoad();
         } else if (this.errorsDisplayedCount() === 0) {
             if (values.dataInputType === "FRED") getFREDResults();
             else if (values.dataInputType === "USER") getResults();
