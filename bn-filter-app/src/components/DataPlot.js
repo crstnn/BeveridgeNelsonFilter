@@ -142,13 +142,9 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
 
     const allPlotData = [...trend, ...trendConfInt, ...series, ...cycle, ...cycleConfInt,];
     const plotDataWithoutConfInt = [...trend, ...series, ...cycle,];
-
-    const [plotData, setPlotData] = useState(
-        displayConfInterval ? allPlotData : plotDataWithoutConfInt
-    );
-    const [plotLayout, setPlotLayout] = useState(
-        layout
-    );
+    // TODO: remove above
+    const [plotData, setPlotData] = useState(displayConfInterval ? allPlotData : plotDataWithoutConfInt);
+    const [plotLayout, setPlotLayout] = useState(layout);
 
     const back = e => {
         prevStep();
@@ -168,39 +164,43 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
     );
 
     const handleConfInt = (isDisplayConfInt) => {
+
         const lineVisibilityByGroup = plotData.reduce((acc, plotAttribute) => {
-            if (plotAttribute?.isConfInterval === true)
+            if (plotAttribute?.isConfInterval !== true)
                 return {...acc, [plotAttribute.legendgroup]: plotAttribute.visible};
             return acc
         }, {});
 
-        console.log("GOT TO HERE", plotData, isDisplayConfInt, lineVisibilityByGroup);
+        console.log("handleConfInt", plotData, lineVisibilityByGroup)
 
         return plotData.map(
             plotAttribute =>
             {
-                if(plotAttribute?.isConfInterval === true && lineVisibilityByGroup[plotAttribute.legendgroup] === true) {
-                    console.log("GOT TO HERE2")
-                    return {...plotAttribute, visible: isDisplayConfInt}
+                if(plotAttribute?.isConfInterval === true) {
+                    if(lineVisibilityByGroup[plotAttribute.legendgroup] === true)
+                        return {...plotAttribute, visible: isDisplayConfInt};
+                    else if(lineVisibilityByGroup[plotAttribute.legendgroup] === 'legendonly')
+                        return {...plotAttribute, visible: 'legendonly'};
                 }
-                else {
-                    return plotAttribute
-                }
+                return plotAttribute;
             }
         );
     }
 
+    const onLegendClick = (clickData) => {
+        // Ensures plotting internal state is consistent with React state
+        setPlotData(clickData.data.map((plotAttr, idx) => ({...clickData[idx], ...plotAttr})));
+    }
 
-    const getPlot = () => {
-        console.log('getPlot has been called');
-
-        return (
+    const getPlot = () =>  (
             <Plot
                 layout={plotLayout}
                 data={plotData}
+                onLegendClick={onLegendClick}
+                onLegendDoubleClick={onLegendClick}
             />
         )
-    }
+
 
     return (<>
             <div style={{minHeight: 600,}}>
