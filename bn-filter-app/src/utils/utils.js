@@ -22,7 +22,7 @@ const colsToRows = (...columns) => {
     return retArr;
 };
 
-const confIntZip = (cycle, ci, bound) => cycle.map((x, i) => !isNaN(parseFloat(ci[i])) ? bound === "lb" ? x - ci[i] : /* ub */ x + ci[i] : undefined);
+const confIntZip = (cycle, ci, bound) => cycle.map((x, i) => ci[i] !== null ? bound === "lb" ? x - ci[i] : /* ub */ x + ci[i] : undefined);
 
 const pairToParam = (paramName, currPair) =>
     paramName + currPair[0].toString() + '=' + currPair[1].toString() + '&';
