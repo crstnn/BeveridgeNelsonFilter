@@ -156,7 +156,7 @@ const DataPlot = ({plotPageValues, prevStep}) => {
         return (
             <Plot
                 layout={layout}
-                data={[...trendAndSeries, ...cycle, ]}
+                data={[...trendAndSeries, ...cycle,]}
             />
         )
     }
@@ -164,6 +164,12 @@ const DataPlot = ({plotPageValues, prevStep}) => {
     return (<>
             <div style={{minHeight: 600,}}>
                 <div>
+                    <div className="information">
+                        <p>
+                            Select from the legend of the graph below to toggle between plotting trend and/or cycle. The
+                            scale for the trend/cycle is given on the left/right axis.
+                        </p>
+                    </div>
                     {getPlot()}
                     <p><strong>Delta:</strong> {plotPageValues.deltaCalc.toFixed(4) /* delta reported to 4 d.p. */}</p>
                 </div>

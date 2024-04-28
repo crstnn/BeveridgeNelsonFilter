@@ -20,9 +20,8 @@ class StartMenu extends Component {
                     </ol>
                     <p>
                         Additional information is provided by hovering over the options on the
-                        subsequent pages. Default options are as in Kamber, Morley and Wong (2024). The trend and cycle
-                        gets plotted and can be downloaded as a CSV. Select from the legend to plot trend and/or
-                        cycle.
+                        subsequent pages. Default options are as in Kamber, Morley and Wong (2024). The results
+                        get plotted and can be downloaded as a CSV.
                     </p>
                     <p>
                         <a target="_blank"
