@@ -89,7 +89,7 @@ export const CONFIG = Object.freeze({
                     },
                     {
                         "value": "dm",
-                        "text": "Dynamic Demeaning",
+                        "text": "Dynamic Demeaning (Changing Drift)",
                         "hoverText": "Estimate time-varying drift using rolling window"
                     },
                     {
