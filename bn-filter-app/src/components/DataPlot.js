@@ -123,6 +123,7 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
     const layout =
         {
             autosize: true,
+            uirevision: 'true',
             margin: {l: 20, r: 20, b: 50, t: 30},
             xaxis: {automargin: true},
             yaxis: {automargin: true, tickangle: 'auto', zeroline: false,},
