@@ -179,6 +179,7 @@ export const CONFIG = Object.freeze({
     "alertErrors": {
         "INPUT_USER_M": "The FRED mnemonic input is either empty or incorrect. Check the mnemonic.",
         "INPUT_USER_S": "The user inputted series is either empty or incorrect. Check the data for the series.",
+        "INPUT_USER_DATE": "The user inputted start date is not specified. Add a start date or select 'undated'.",
         "INPUT_PARAM": "At least one of the parameters does not meet the requirements. Check that the parameters are appropriate.",
         "SERVER": SERVER_ERROR,
         "TIMEOUT": SERVER_TIMEOUT,

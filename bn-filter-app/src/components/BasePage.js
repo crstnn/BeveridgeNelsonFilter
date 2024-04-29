@@ -253,7 +253,6 @@ class BasePage extends Component {
             this.fetchResultWithErrorHandling(finalURL)
                 .then(result => {
                     console.log('Success:', result);
-
                     const
                         cycleRes = result["cycle"],
                         trendRes = result["trend"],
@@ -292,7 +291,14 @@ class BasePage extends Component {
             frequencyFRED,
             availableFrequencies
         } = this.state;
-        const dataUserFormPageValues = {unprocessedY, startDate, endDate, frequency, dataInputType, displayConfInterval};
+        const dataUserFormPageValues = {
+            unprocessedY,
+            startDate,
+            endDate,
+            frequency,
+            dataInputType,
+            displayConfInterval
+        };
         const dataFREDFormPageValues = {
             startDateFRED,
             endDateFRED,
@@ -380,7 +386,6 @@ class BasePage extends Component {
                                 setErrorMessage={this.setErrorMessage}
                                 deleteErrorMessage={this.deleteErrorMessage}
                                 handleChange={this.handleChange}
-                                handleCheckboxChange={this.handleCheckboxChange}
                                 valuesUserData={dataUserFormPageValues}
                                 valuesFREDData={dataFREDFormPageValues}
                                 errors={fieldErrorMessages}

@@ -42,7 +42,6 @@ class DataForm extends Component {
             setErrorMessage,
             deleteErrorMessage,
             handleChange,
-            handleCheckboxChange
         } = this.props;
 
         return (
@@ -67,7 +66,6 @@ class DataForm extends Component {
                                 setErrorMessage={setErrorMessage}
                                 deleteErrorMessage={deleteErrorMessage}
                                 handleChange={handleChange}
-                                handleCheckboxChange={handleCheckboxChange}
                                 values={valuesUserData}
                                 errors={errors}
                             />
@@ -76,7 +74,6 @@ class DataForm extends Component {
                                 setErrorMessage={setErrorMessage}
                                 deleteErrorMessage={deleteErrorMessage}
                                 handleChange={handleChange}
-                                handleCheckboxChange={handleCheckboxChange}
                                 values={valuesFREDData}
                                 errors={errors}
                             />
