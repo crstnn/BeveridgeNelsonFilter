@@ -123,7 +123,6 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
     const layout =
         {
             autosize: true,
-            width: window.screen.width <= 700 ? 450 : 700, // fit to window size
             margin: {l: 20, r: 20, b: 50, t: 30},
             xaxis: {automargin: true},
             yaxis: {automargin: true, tickangle: 'auto', zeroline: false,},
@@ -191,6 +190,8 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
             <Plot
                 layout={layout}
                 data={plotData}
+                useResizeHandler={true}
+                style={{maxWidth: 700, marginLeft: 'auto', marginRight: 'auto',}}
             />
         )
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -199,7 +200,6 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
 
     return (<>
             <div style={{minHeight: 600,}}>
-
                 <div className="information">
                     <p>
                         Select from the legend of the plot below to toggle between plotting trend and/or cycle. The
