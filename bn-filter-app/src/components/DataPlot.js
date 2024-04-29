@@ -5,12 +5,12 @@ import {CSVLink} from "react-csv";
 import {colsToRows} from "../utils/utils";
 
 
-const DataPlot = ({plotPageValues, prevStep}) => {
+const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
 
-    console.log("DataPlot")
+    console.log("DataPlot component has rendered");
 
     const fileName = "BN_filter_results.csv";
-    const [displayConfInterval, setDisplayConfInterval] = useState(plotPageValues.displayConfInterval)
+    const [displayConfInterval, setDisplayConfInterval] = useState(plotPageValues.displayConfInterval);
 
     const trend = [{
         x: plotPageValues.x,
@@ -39,7 +39,7 @@ const DataPlot = ({plotPageValues, prevStep}) => {
             name: 'trend_ci',
             legendgroup: 'trend',
             yaxis: 'y1',
-            visible: true,
+            visible: displayConfInterval,
         },
         { // confint upper bound
             x: plotPageValues.x,
@@ -53,7 +53,7 @@ const DataPlot = ({plotPageValues, prevStep}) => {
             name: 'trend_ci',
             legendgroup: 'trend',
             yaxis: 'y1',
-            visible: true,
+            visible: displayConfInterval,
         },
     ];
 
@@ -102,7 +102,7 @@ const DataPlot = ({plotPageValues, prevStep}) => {
             name: 'cycle_ci',
             legendgroup: 'cycle',
             yaxis: 'y2',
-            visible: 'legendonly',
+            visible: displayConfInterval ? 'legendonly' : false,
         },
         { // confint upper bound
             x: plotPageValues.x,
@@ -116,15 +116,15 @@ const DataPlot = ({plotPageValues, prevStep}) => {
             name: 'cycle_ci',
             legendgroup: 'cycle',
             yaxis: 'y2',
-            visible: 'legendonly',
+            visible: displayConfInterval ? 'legendonly' : false,
         },
-    ]
+    ];
 
     const layout =
         {
             autosize: true,
             width: window.screen.width <= 700 ? 450 : 700, // fit to window size
-            margin: {l: 20, r: 20, b: 50, t: 20},
+            margin: {l: 20, r: 20, b: 50, t: 30},
             xaxis: {automargin: true},
             yaxis: {automargin: true, tickangle: 'auto', zeroline: false,},
             yaxis2: {
@@ -138,16 +138,12 @@ const DataPlot = ({plotPageValues, prevStep}) => {
                 xanchor: "center",
                 x: 0.5,
                 y: -0.10,
+                traceorder: 'normal',
             },
-        }
+        };
 
     const allPlotData = [...trend, ...trendConfInt, ...series, ...cycle, ...cycleConfInt,];
-    const plotDataWithoutConfInt = [...trend, ...series, ...cycle,];
-    // TODO: remove above
-    // TODO: refine logic when CIs are available
-    const [plotData, setPlotData] = useState(displayConfInterval ? allPlotData : plotDataWithoutConfInt);
-    // const [plotLayout, setPlotLayout] = useState(layout);
-
+    const [plotData, setPlotData] = useState(allPlotData);
 
     const back = e => {
         prevStep();
@@ -187,7 +183,6 @@ const DataPlot = ({plotPageValues, prevStep}) => {
                 }
             )
         );
-
     }
 
     const plot = useMemo(() => {
@@ -235,8 +230,10 @@ const DataPlot = ({plotPageValues, prevStep}) => {
             <Button
                 variant="outlined"
                 style={styles.button}
-                onClick={back}
-                // TODO: update global state of CI
+                onClick={(e) => {
+                    handleCheckboxChange('displayConfInterval')({target: {checked: displayConfInterval}})
+                    back(e)
+                }}
             >Back</Button>
         </>
     );
