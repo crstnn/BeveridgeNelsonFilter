@@ -158,7 +158,7 @@ export default class FREDDataForm extends Component {
                             title="The options specifiy the data's range and frequency"
                             style={{fontSize: 'large'}}>Options</Divider>
                     </div>
-                    <Grid container direction="column" sx={{minHeight: 340,}}
+                    <Grid container direction="column" sx={{minHeight: 380,}}
                           justifyContent="space-evenly"
                           alignItems="center">
                         <Grid item xs={4}>
