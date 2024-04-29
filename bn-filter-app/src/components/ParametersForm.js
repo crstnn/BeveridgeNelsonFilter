@@ -110,7 +110,7 @@ class ParametersForm extends Component {
 
         return (
             <>
-                <div className="information" style={{marginTop: "35px"}}>
+                <div className="information" style={{marginTop: "35px", marginBottom: "45px"}}>
                     <Divider style={{fontSize: 'x-large'}}>Filter Parameters</Divider>
                 </div>
                 <div style={{
@@ -118,7 +118,7 @@ class ParametersForm extends Component {
                     alignItems: "center",
                     display: "inline-block",
                 }}>
-                    <Grid container alignItems="flex-start" justifyContent="space-evenly" spacing={3}>
+                    <Grid container alignItems="flex-start" justifyContent="space-evenly" spacing={4}>
                         <Grid item xs={7.75}>
                             <FormControl variant="standard" sx={{width: 280}}>
                                 <InputLabel>Signal-to-Noise Ratio (Delta)</InputLabel>
