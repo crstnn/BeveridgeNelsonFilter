@@ -169,7 +169,7 @@ export default class FREDDataForm extends Component {
                             title="This option does not make alterations to the data but changes the display of the graph output"
                             style={{fontSize: 'large'}}>Options</Divider>
                     </div>
-                    <Grid container direction="column" sx={{minHeight: 340,}}
+                    <Grid container direction="column" sx={{minHeight: 380,}}
                           justifyContent="space-evenly"
                           alignItems="center">
                         <Grid item xs={3}>
@@ -200,7 +200,6 @@ export default class FREDDataForm extends Component {
                                 >{this.createFilteredFrequencies()}</Select>
                             </FormControl>
                         </Grid>
-
                         <Grid item xs={3}>
                             <FormControl sx={{marginBottom: 3, marginTop: 2}} variant="standard">
                                 <FormControlLabel label="95% Confidence Intervals"
