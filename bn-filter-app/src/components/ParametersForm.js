@@ -122,8 +122,8 @@ class ParametersForm extends Component {
                     display: "inline-block",
                 }}>
                     <Grid container alignItems="flex-start" justifyContent="space-evenly" spacing={4}>
-                        <Grid item xs={7.75}>
-                            <FormControl variant="standard" sx={{width: 280}}>
+                        <Grid item xs={8}>
+                            <FormControl variant="standard" sx={{width: 295}}>
                                 <InputLabel>Signal-to-Noise Ratio (Delta)</InputLabel>
                                 <Select
                                     label="Signal-to-Noise Ratio (Delta)"
@@ -133,7 +133,7 @@ class ParametersForm extends Component {
                                 >{createMenuItems(field.optionField.deltaSelect.option)}</Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={4.25}>
+                        <Grid item xs={4}>
                             <FormControl variant="standard" sx={{width: 140}}>
                                 <TextField
                                     label={values.deltaSelect === 0 ? "Fixed Delta" : "Minimum Delta"}
@@ -147,8 +147,8 @@ class ParametersForm extends Component {
                                 />
                             </FormControl>
                         </Grid>
-                        <Grid item xs={7.75}>
-                            <FormControl variant="standard" sx={{minWidth: 280}}>
+                        <Grid item xs={8}>
+                            <FormControl variant="standard" sx={{minWidth: 295}}>
                                 <InputLabel>Demeaning</InputLabel>
                                 <Select
                                     label="Demeaning"
@@ -158,7 +158,7 @@ class ParametersForm extends Component {
                                 >{createMenuItems(field.optionField.iterativeDynamicDemeaning.option)}</Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={4.25}>
+                        <Grid item xs={4}>
                             <FormControl variant="standard" sx={{minWidth: 140}}>
                                 <TextField
                                     label="Rolling Window"
