@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {memo, useMemo, useState} from "react";
 import Plot from 'react-plotly.js';
 import {Button, Checkbox, FormControl, FormControlLabel} from "@mui/material";
 import {CSVLink} from "react-csv";
@@ -6,6 +6,8 @@ import {colsToRows} from "../utils/utils";
 
 
 const DataPlot = ({plotPageValues, prevStep}) => {
+
+    console.log("DataPlot")
 
     const fileName = "BN_filter_results.csv";
     const [displayConfInterval, setDisplayConfInterval] = useState(plotPageValues.displayConfInterval)
@@ -144,7 +146,8 @@ const DataPlot = ({plotPageValues, prevStep}) => {
     // TODO: remove above
     // TODO: refine logic when CIs are available
     const [plotData, setPlotData] = useState(displayConfInterval ? allPlotData : plotDataWithoutConfInt);
-    const [plotLayout, setPlotLayout] = useState(layout);
+    // const [plotLayout, setPlotLayout] = useState(layout);
+
 
     const back = e => {
         prevStep();
@@ -163,22 +166,22 @@ const DataPlot = ({plotPageValues, prevStep}) => {
         displayConfInterval ? ["trend_conf_int_upper_bound"].concat(plotPageValues.trendCIUB) : undefined
     );
 
-    const getLineVisibilityByGroup = () => plotData.reduce((acc, plotAttribute) => {
-        if (!plotAttribute.name.endsWith('ci'))
-            return {...acc, [plotAttribute.legendgroup]: plotAttribute.visible};
-        return acc;
-    }, {});
+    const getLineVisibilityByGroup = (data) => data.reduce((acc, plotAttribute) =>
+            !plotAttribute.name.endsWith('ci') ? {...acc, [plotAttribute.legendgroup]: plotAttribute.visible} : acc
+        , {});
 
     const handleConfInt = (isDisplayConfInt) => {
-        const lineVisibilityByGroup = getLineVisibilityByGroup();
+        const lineVisibilityByGroup = getLineVisibilityByGroup(plotData);
 
         setPlotData(plotData.map(
                 plotAttribute => {
                     if (plotAttribute.name.endsWith('ci')) {
                         if (lineVisibilityByGroup[plotAttribute.legendgroup] === true)
                             return {...plotAttribute, visible: isDisplayConfInt};
-                        else if (lineVisibilityByGroup[plotAttribute.legendgroup] === 'legendonly')
+                        else if (lineVisibilityByGroup[plotAttribute.legendgroup] === 'legendonly' && !isDisplayConfInt)
                             return {...plotAttribute, visible: false};
+                        else if (lineVisibilityByGroup[plotAttribute.legendgroup] === 'legendonly' && isDisplayConfInt)
+                            return {...plotAttribute, visible: 'legendonly'};
                     }
                     return plotAttribute;
                 }
@@ -187,47 +190,15 @@ const DataPlot = ({plotPageValues, prevStep}) => {
 
     }
 
-    const onPlotUpdate = (newPlotData) => {
-        const data = newPlotData.data;
-
-        console.log('onPlotUpdate1', data[0].name, data[0].visible)
-
-        if (JSON.stringify(data) === JSON.stringify(plotData))
-            return;
-
-        console.log('onPlotUpdate2')
-
-        const lineVisibilityByGroup = getLineVisibilityByGroup();
-
-        setPlotData(plotData.map(
-                plotAttribute => {
-                    if (plotAttribute.name.endsWith('ci')) {
-                        if (lineVisibilityByGroup[plotAttribute.legendgroup] === true) {
-                            console.log('GOT TO HERE1');
-                            return {...plotAttribute, visible: displayConfInterval};
-                        } else if (lineVisibilityByGroup[plotAttribute.legendgroup] === 'legendonly') {
-                            console.log('GOT TO HERE2');
-                            return {...plotAttribute, visible: false};
-                        }
-
-                    }
-                    return plotAttribute;
-                }
-            )
-        );
-
-    }
-
-    const getPlot = () => {
+    const plot = useMemo(() => {
         console.log("getPlot", plotData)
         return (
             <Plot
                 layout={layout}
                 data={plotData}
-                onInitialize={onPlotUpdate}
             />
         )
-    }
+    }, [displayConfInterval])
 
 
     return (<>
@@ -240,7 +211,7 @@ const DataPlot = ({plotPageValues, prevStep}) => {
                     </p>
                 </div>
                 <div>
-                    {getPlot()}
+                    {plot}
                 </div>
                 <FormControl sx={{marginBottom: 0, marginTop: -1.5}} variant="standard">
                     <FormControlLabel label="95% Confidence Intervals"
@@ -280,4 +251,4 @@ const styles = {
     }
 }
 
-export default DataPlot;
+export default memo(DataPlot);
