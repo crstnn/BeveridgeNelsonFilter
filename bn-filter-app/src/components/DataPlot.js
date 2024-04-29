@@ -1,4 +1,4 @@
-import React, {memo, useMemo, useState} from "react";
+import React, {useMemo, useState} from "react";
 import Plot from 'react-plotly.js';
 import {Button, Checkbox, FormControl, FormControlLabel} from "@mui/material";
 import {CSVLink} from "react-csv";
@@ -249,4 +249,4 @@ const styles = {
     }
 }
 
-export default memo(DataPlot);
+export default DataPlot;
