@@ -123,7 +123,7 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
     const layout =
         {
             autosize: true,
-            uirevision: 'true',
+            uirevision: 'true',  // essential to prevent user interactions being reset on a redrawing of the plot
             margin: {l: 20, r: 20, b: 50, t: 30},
             xaxis: {automargin: true},
             yaxis: {automargin: true, tickangle: 'auto', zeroline: false,},
@@ -191,6 +191,7 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
             <Plot
                 layout={layout}
                 data={plotData}
+                config={{displaylogo: false, modeBarButtonsToRemove: ['resetScale2d']}}
                 useResizeHandler={true}
                 style={{maxWidth: 700, marginLeft: 'auto', marginRight: 'auto',}}
             />
@@ -203,14 +204,14 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
             <div style={{minHeight: 600,}}>
                 <div className="information">
                     <p>
-                        Select from the legend of the plot below to toggle between plotting trend and/or cycle. The
-                        scale for the trend/cycle is given on the left/right axis.
+                        Select from the legend of the interactive plot below to toggle between plotting trend and/or
+                        cycle. The scale for the trend/cycle is given on the left/right axis.
                     </p>
                 </div>
                 <div>
                     {plot}
                 </div>
-                <FormControl sx={{marginBottom: 0, marginTop: -1.5}} variant="standard">
+                <FormControl sx={{marginBottom: 0, marginTop: -1}} variant="standard">
                     <FormControlLabel label="95% Confidence Intervals"
                                       title="Choose to report 95% confidence intervals (in both plot and CSV)"
                                       control={<Checkbox
