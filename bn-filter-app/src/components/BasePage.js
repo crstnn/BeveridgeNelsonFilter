@@ -355,7 +355,7 @@ class BasePage extends Component {
             handleCheckboxChange, handleErrorField
         };
 
-        const {x, y, transformedY, trend, cycleCILB, cycleCIUB, trendCILB, trendCIUB} = this.state;
+        const {x, y, transformedY, trend, cycleCI, cycleCILB, cycleCIUB, trendCILB, trendCIUB} = this.state;
         const plotPageValues = {
             x,
             y,
@@ -365,6 +365,7 @@ class BasePage extends Component {
             deltaCalc,
             transform,
             displayConfInterval,
+            cycleCI,
             cycleCILB,
             cycleCIUB,
             trendCILB,

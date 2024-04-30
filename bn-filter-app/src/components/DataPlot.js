@@ -197,8 +197,13 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
             />
         )
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [displayConfInterval])
+    }, [displayConfInterval]);
 
+
+    const isConfIntNotEstimated = useMemo(() =>
+            plotPageValues.cycleCI.includes(null) || plotPageValues.cycleCI.includes(undefined)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        , [plotPageValues]);
 
     return (<>
             <div style={{minHeight: 600,}}>
@@ -211,9 +216,11 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
                 <div>
                     {plot}
                 </div>
-                <FormControl sx={{marginBottom: 0, marginTop: -1}} variant="standard">
+                <FormControl sx={{marginBottom: 0, marginTop: -1,}} variant="standard">
                     <FormControlLabel label="95% Confidence Intervals"
-                                      title="Choose to report 95% confidence intervals (in both plot and CSV)"
+                                      title={isConfIntNotEstimated ?
+                                          "There was a computational issue when calculating the confidence intervals. Try with a higher value of delta or consider working with the Matlab or R code" :
+                                          "Choose to report 95% confidence intervals (in both plot and CSV)"}
                                       control={<Checkbox
                                           size="small"
                                           onChange={e => {
@@ -221,7 +228,9 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
                                               setDisplayConfInterval(isDisplayConfInt);
                                               handleConfInt(isDisplayConfInt);
                                           }}
-                                          checked={displayConfInterval}/>}
+                                          checked={displayConfInterval && !isConfIntNotEstimated}
+                                          disabled={isConfIntNotEstimated}
+                                      />}
                     />
                 </FormControl>
                 <div style={{marginBottom: 10}}>
