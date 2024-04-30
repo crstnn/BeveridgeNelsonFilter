@@ -1,8 +1,7 @@
 const SERVER_ERROR = <>
     During the running of the BN filter a problem occurred.{' '}
     Check that the selected options are appropriate for the time series{' '}
-    (e.g. different transformations or if minimum delta is low enough) or consider simpler settings (e.g. no confidence
-    intervals, fixed delta, static demeaning).{' '}
+    (e.g. different transformations or if minimum delta is low enough) or consider simpler settings (e.g. fixed delta, static demeaning).{' '}
     MATLAB or R code for the BN filter is available at this <a target="_blank" rel="noopener noreferrer"
                                                                href="https://sites.google.com/site/jamescmorley/code#:~:text=Beveridge%2DNelson%20Filter">link</a>.
 </>
