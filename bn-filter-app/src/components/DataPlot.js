@@ -216,7 +216,7 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
                 <div>
                     {plot}
                 </div>
-                <FormControl sx={{marginBottom: 0, marginTop: -1,}} variant="standard">
+                <FormControl variant="standard">
                     <FormControlLabel label="95% Confidence Intervals"
                                       title={isConfIntNotEstimated ?
                                           "There was a computational issue when calculating the confidence intervals. Try with a higher value of delta or consider working with the Matlab or R code" :
