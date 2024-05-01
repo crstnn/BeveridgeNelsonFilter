@@ -202,7 +202,6 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
 
     const isConfIntNotEstimated = useMemo(() =>
             plotPageValues.cycleCI.includes(null) || plotPageValues.cycleCI.includes(undefined)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         , [plotPageValues]);
 
     return (<>
