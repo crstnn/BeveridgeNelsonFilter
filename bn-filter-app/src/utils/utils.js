@@ -1,7 +1,7 @@
 import {MenuItem} from "@mui/material";
 import React from "react";
 
-const colsToRows = (...columns) => {
+export const colsToRows = (...columns) => {
 
     columns = columns.filter(x => x !== undefined)
 
@@ -22,14 +22,14 @@ const colsToRows = (...columns) => {
     return retArr;
 };
 
-const confIntZip = (cycle, ci, bound) => cycle.map((x, i) => ci[i] !== null ? bound === "lb" ? x - ci[i] : /* ub */ x + ci[i] : undefined);
+export const confIntZip = (cycle, ci, bound) => cycle.map((x, i) => ci[i] !== null ? bound === "lb" ? x - ci[i] : /* ub */ x + ci[i] : undefined);
 
-const pairToParam = (paramName, currPair) =>
+export const pairToParam = (paramName, currPair) =>
     paramName + currPair[0].toString() + '=' + currPair[1].toString() + '&';
 
-const pairArrayToParamStr = arr => arr.reduce(pairToParam, '?');
+export const pairArrayToParamStr = arr => arr.reduce(pairToParam, '?');
 
-async function fetchWithTimeout(url, timeout = 20000) { // 20 second timeout
+export async function fetchWithTimeout(url, timeout = 20000) { // 20 second timeout
     const
         controller = new AbortController(),
         timeoutID = setTimeout(() => controller.abort(), timeout),
@@ -38,12 +38,10 @@ async function fetchWithTimeout(url, timeout = 20000) { // 20 second timeout
     return f;
 }
 
-const createMenuItems = option => option.map((item) => <MenuItem value={item.value}>{item.text}</MenuItem>)
+export const createMenuItems = option => option.map((item) => <MenuItem value={item.value}>{item.text}</MenuItem>)
 
-const createHoverText = option => {
+export const createHoverText = option => {
     const hoverText = {};
     option.forEach(x => hoverText[x.value] = x.hoverText);
     return fieldItem => hoverText[fieldItem];
 }
-
-export {colsToRows, confIntZip, fetchWithTimeout, pairArrayToParamStr, createMenuItems, createHoverText}

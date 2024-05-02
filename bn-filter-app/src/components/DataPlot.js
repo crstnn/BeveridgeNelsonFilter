@@ -7,12 +7,16 @@ import {colsToRows} from "../utils/utils";
 
 const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
 
-    console.log("DataPlot component has rendered");
-
     const fileName = "BN_filter_results.csv";
     const [displayConfInterval, setDisplayConfInterval] = useState(plotPageValues.displayConfInterval);
+    // Used to trigger re-render of plot. This circumvents react-plotly's plot refreshing convention.
+    const [revisionNumber, setRevisionNumber] = useState(0);
+    const incrementRevisionNumber = () => setRevisionNumber(revisionNumber + 1);
 
-    const trend = [{
+    const visibleAxisDisplay = {showgrid: true, visible: true, zeroline: true};
+    const invisibleAxisDisplay = {showgrid: false, visible: false, zeroline: false};
+
+    const trend = {
         x: plotPageValues.x,
         y: plotPageValues.trend,
         type: 'scatter',
@@ -23,7 +27,7 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
         legendgroup: 'trend',
         yaxis: 'y1',
         visible: true,
-    }];
+    };
 
     const trendConfInt = [
         {
@@ -57,7 +61,7 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
         },
     ];
 
-    const series = [
+    const series =
         {
             x: plotPageValues.x,
             y: plotPageValues.transformedY,
@@ -69,11 +73,10 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
             legendgroup: 'trend',
             yaxis: 'y1',
             visible: true,
-        },
-    ];
+        };
 
 
-    const cycle = [
+    const cycle =
         {
             x: plotPageValues.x,
             y: plotPageValues.cycle,
@@ -85,8 +88,7 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
             legendgroup: 'cycle',
             yaxis: 'y2',
             visible: 'legendonly',
-        },
-    ];
+        };
 
     const cycleConfInt = [
         {
@@ -124,14 +126,17 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
         {
             autosize: true,
             uirevision: 'true',  // essential to prevent user interactions being reset on a redrawing of the plot
-            margin: {l: 20, r: 20, b: 50, t: 30},
+            margin: {l: 30, r: 30, b: 50, t: 30},
             xaxis: {automargin: true},
-            yaxis: {automargin: true, tickangle: 'auto', zeroline: false,},
+            yaxis: {
+                tickangle: 'auto',
+                ...(trend.visible === true ? visibleAxisDisplay : invisibleAxisDisplay),
+            },
             yaxis2: {
                 overlaying: 'y',
                 side: 'right',
                 automargin: true,
-                zeroline: false,
+                ...(cycle.visible === true ? visibleAxisDisplay : invisibleAxisDisplay),
             },
             legend: {
                 orientation: "h",
@@ -142,8 +147,9 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
             },
         };
 
-    const allPlotData = [...trend, ...trendConfInt, ...series, ...cycle, ...cycleConfInt,];
+    const allPlotData = [trend, ...trendConfInt, series, cycle, ...cycleConfInt,];
     const [plotData, setPlotData] = useState(allPlotData);
+    const [plotLayout, setPlotLayout] = useState(layout);
 
     const back = e => {
         prevStep();
@@ -167,6 +173,8 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
         , {});
 
     const handleConfInt = (isDisplayConfInt) => {
+        setDisplayConfInterval(isDisplayConfInt);
+
         const lineVisibilityByGroup = getLineVisibilityByGroup(plotData);
 
         setPlotData(plotData.map(
@@ -183,26 +191,41 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
                 }
             )
         );
+        incrementRevisionNumber();
+    }
+
+    const onLegendClick = ({curveNumber}) => {
+        const curveData = plotData[curveNumber]
+        const axisDisplayProperties = curveData.visible === true ? invisibleAxisDisplay : visibleAxisDisplay;
+        const axisOfCurve = curveData.yaxis.slice(-1) === '2' ? 2 : 1;
+        const axisOfCurveKey = `yaxis${axisOfCurve === 2 ? '2' : ''}`;
+        const newLayout = {
+            ...plotLayout,
+            [axisOfCurveKey]: {...plotLayout[axisOfCurveKey], ...axisDisplayProperties,}
+        };
+
+        setPlotLayout(newLayout);
+        incrementRevisionNumber();
     }
 
     const plot = useMemo(() => {
-        console.log("getPlot", plotData)
         return (
             <Plot
-                layout={layout}
+                layout={plotLayout}
                 data={plotData}
                 config={{displaylogo: false, modeBarButtonsToRemove: ['resetScale2d']}}
                 useResizeHandler={true}
                 style={{maxWidth: 700, marginLeft: 'auto', marginRight: 'auto',}}
+                onLegendClick={onLegendClick}
+                onLegendDoubleClick={() => false} // disabled
             />
-        )
+        );
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [displayConfInterval]);
+    }, [revisionNumber]);
 
-
-    const isConfIntNotEstimated = useMemo(() =>
-            plotPageValues.cycleCI.includes(null) || plotPageValues.cycleCI.includes(undefined)
-        , [plotPageValues]);
+    const {cycleCI} = plotPageValues;
+    const isConfIntNotEstimated = useMemo(() => cycleCI.includes(null) || cycleCI.includes(undefined),
+        [cycleCI]);
 
     return (<>
             <div style={{minHeight: 600,}}>
@@ -222,11 +245,7 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
                                           "Choose to report 95% confidence intervals (in both plot and CSV)"}
                                       control={<Checkbox
                                           size="small"
-                                          onChange={e => {
-                                              const isDisplayConfInt = e.target.checked
-                                              setDisplayConfInterval(isDisplayConfInt);
-                                              handleConfInt(isDisplayConfInt);
-                                          }}
+                                          onChange={e => handleConfInt(e.target.checked)}
                                           checked={displayConfInterval && !isConfIntNotEstimated}
                                           disabled={isConfIntNotEstimated}
                                       />}
