@@ -1,9 +1,20 @@
 import './styles/App.css';
 import BasePage from './components/BasePage';
-import React from "react";
+import React, {useEffect} from "react";
+import {CONFIG} from "./config.js";
+import ReactGA from 'react-ga4';
+
+const {analytics: {GA}} = CONFIG;
+
+ReactGA.initialize(GA.BASE_PAGE_TRACKING_ID);
 
 
-function App() {
+const App = () => {
+
+    useEffect(() => {
+        console.log('registered App for GA');
+        ReactGA.send({hitType: "pageview", page: window.location.pathname});
+    }, []);
 
     return (
         <>

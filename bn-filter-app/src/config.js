@@ -188,5 +188,6 @@ export const CONFIG = Object.freeze({
         "bnfUserSpecifiedDataSlug": "/bnf/user-specified-time-series",
         "bnfFredDataSlug": "/bnf/fred-time-series",
         "fredDataSlug": "/fred-time-series"
-    }
+    },
+    "analytics" : {"GA" : {"BASE_PAGE_TRACKING_ID": "G-VTLKJFKVCH"}}
 });
