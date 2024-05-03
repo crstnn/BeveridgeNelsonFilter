@@ -172,7 +172,7 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
             !plotAttribute.name.endsWith('ci') ? {...acc, [plotAttribute.legendgroup]: plotAttribute.visible} : acc
         , {});
 
-    const handleConfInt = (isDisplayConfInt) => {
+    const handleConfIntervalDisplay = (isDisplayConfInt) => {
         setDisplayConfInterval(isDisplayConfInt);
 
         const lineVisibilityByGroup = getLineVisibilityByGroup(plotData);
@@ -194,7 +194,8 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
         incrementRevisionNumber();
     }
 
-    const onLegendClick = ({curveNumber}) => {
+    const handleYAxisDisplay = ({curveNumber}) => {
+        // Note that `onLegendClick` occurs before the plot state for that event is reflected (in the state).
         const curveData = plotData[curveNumber]
         const axisDisplayProperties = curveData.visible === true ? invisibleAxisDisplay : visibleAxisDisplay;
         const axisOfCurve = curveData.yaxis.slice(-1) === '2' ? 2 : 1;
@@ -216,7 +217,7 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
                 config={{displaylogo: false, modeBarButtonsToRemove: ['resetScale2d']}}
                 useResizeHandler={true}
                 style={{maxWidth: 700, marginLeft: 'auto', marginRight: 'auto',}}
-                onLegendClick={onLegendClick}
+                onLegendClick={handleYAxisDisplay}
                 onLegendDoubleClick={() => false} // disabled
             />
         );
@@ -245,7 +246,7 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
                                           "Choose to report 95% confidence intervals (in both plot and CSV)"}
                                       control={<Checkbox
                                           size="small"
-                                          onChange={e => handleConfInt(e.target.checked)}
+                                          onChange={e => handleConfIntervalDisplay(e.target.checked)}
                                           checked={displayConfInterval && !isConfIntNotEstimated}
                                           disabled={isConfIntNotEstimated}
                                       />}
