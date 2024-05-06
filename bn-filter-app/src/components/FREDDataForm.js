@@ -149,6 +149,7 @@ export default class FREDDataForm extends Component {
                 </div>
                 <div style={{
                     width: "420px",
+                    marginTop: "10px",
                     alignItems: "center",
                     display: "inline-block",
                 }}>
@@ -156,7 +157,7 @@ export default class FREDDataForm extends Component {
                     <div className="dataInformation">
                         <Divider
                             title="The options specifiy the data's range and frequency"
-                            style={{fontSize: 'large'}}>Options</Divider>
+                            style={{fontSize: 'large', marginTop: "20px"}}>Options</Divider>
                     </div>
                     <Grid container direction="column" sx={{minHeight: 340,}}
                           justifyContent="space-evenly"

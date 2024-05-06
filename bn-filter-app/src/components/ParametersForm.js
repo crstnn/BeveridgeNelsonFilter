@@ -66,9 +66,9 @@ class ParametersForm extends Component {
         return (
             <>
                 <div className="information">
-                    <Divider style={{fontSize: 'x-large'}}>Transformations</Divider>
+                    <Divider style={{fontSize: 'x-large', marginTop: "25px"}}>Transformations</Divider>
                 </div>
-                <Grid container direction="column" justifyContent="space-evenly" alignItems="center" spacing={3}>
+                <Grid container direction="column" justifyContent="space-evenly" alignItems="center" spacing={4}>
                     <Grid item xs={4}>
                         <FormControl variant="standard">
                             <FormControlLabel label="Natural Logarithm"
