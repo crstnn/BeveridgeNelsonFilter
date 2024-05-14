@@ -35,6 +35,12 @@ class StartMenu extends Component {
                            href="https://github.com/crstnn/BeveridgeNelsonFilter">
                             Link to GitHub repository</a>
                     </p>
+                    <p>
+                        <a target="_blank"
+                           rel="noopener noreferrer"
+                           href="https://forums.eviews.com/viewtopic.php?f=23&p=70928&sid=05f203388e73a52492e7596d20b69a0d#p70928">
+                            Link to EViews add-in</a>
+                    </p>
                 </div>
 
                 <Button
