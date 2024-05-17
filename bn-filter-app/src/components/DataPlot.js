@@ -126,7 +126,7 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
         {
             autosize: true,
             uirevision: 'true',  // essential to prevent user interactions being reset on a redrawing of the plot
-            margin: {l: 30, r: 30, b: 50, t: 30},
+            margin: {l: 30, r: 30, b: 70, t: 30},
             xaxis: {automargin: true},
             yaxis: {
                 tickangle: 'auto',
@@ -142,9 +142,27 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
                 orientation: "h",
                 xanchor: "center",
                 x: 0.5,
-                y: -0.10,
+                y: -0.08,
                 traceorder: 'normal',
             },
+            ...(plotPageValues.dataInputType === 'FRED' && {
+                annotations: [
+                    {
+                        font: {
+                            color: 'grey',
+                            size: 9
+                        },
+                        xref: 'paper',
+                        yref: 'paper',
+                        x: 1,
+                        xanchor: 'right',
+                        y: -0.16,
+                        yanchor: 'top',
+                        text: `Series: ${plotPageValues.mnemonic}`,
+                        showarrow: false
+                    }
+                ]
+            }),
         };
 
     const allPlotData = [trend, ...trendConfInt, series, cycle, ...cycleConfInt,];
