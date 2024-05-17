@@ -14,8 +14,8 @@ const {field, URL} = CONFIG;
 class BasePage extends Component {
     state = {
         step: 1,
-        dataInputType: "FRED",
-        mnemonic: "",
+        dataInputType: 'FRED',
+        mnemonic: '',
         unprocessedY: '',
         x: [], // dates
         y: [], // time series
