@@ -16,7 +16,7 @@ const BasePage = () => {
     const [step, setStep] = useState(1);
     const [isLoading, setIsLoading] = useState(null);
 
-    const [state, setStateKey] = useReducer((state, newState) => ({...state, ...newState}),
+    const [state, setState] = useReducer((state, newState) => ({...state, ...newState}),
         {
             dataInputType: 'FRED',
             mnemonic: '',
@@ -103,15 +103,15 @@ const BasePage = () => {
     }
 
     const handleChange = input => e => {
-        setStateKey({[input]: e.target.value});
+        setState({[input]: e.target.value});
     }
 
     const handleCheckboxChange = input => e => {
-        setStateKey({[input]: e.target.checked});
+        setState({[input]: e.target.checked});
     }
 
     const setErrorMessage = (input, message) => {
-        setStateKey({
+        setState({
             fieldErrorMessages: {
                 ...fieldErrorMessages,
                 [input]: message
@@ -122,7 +122,7 @@ const BasePage = () => {
     const deleteErrorMessage = input => {
         const fieldErrorMessagesTemp = {...fieldErrorMessages};
         delete fieldErrorMessagesTemp[input];
-        setStateKey({fieldErrorMessages: fieldErrorMessagesTemp});
+        setState({fieldErrorMessages: fieldErrorMessagesTemp});
     }
 
     const isEmptyString = (v, input) => {
@@ -163,7 +163,7 @@ const BasePage = () => {
 
     const handleErrorField = isCorrectEntry => (input, v) => {
         if (isCorrectEntry) deleteErrorMessage(input);
-        setStateKey({[input]: v});
+        setState({[input]: v});
     }
 
     const validateField = (arr, input, e) => {
@@ -203,14 +203,14 @@ const BasePage = () => {
     const fetchResultWithErrorHandling = async (finalURL) => {
         return fetchWithTimeout(finalURL)
             .catch(e => {
-                setStateKey({alertErrorType: "TIMEOUT"});
+                setState({alertErrorType: "TIMEOUT"});
                 prevStep();
                 cancelLoading();
                 throw e;
             })
             .then((response) => {
                 if (response.status !== 200) {
-                    setStateKey({alertErrorType: "SERVER"});
+                    setState({alertErrorType: "SERVER"});
                     prevStep();
                     cancelLoading();
                     throw new Error("bad status");
@@ -246,7 +246,7 @@ const BasePage = () => {
                     trendRes = result["trend"],
                     ciRes = result["cycle_ci"];
 
-                setStateKey({
+                setState({
                     x: result["dates"],
                     y: result["original_y"],
                     transformedY: result["transformed_y"],
@@ -272,7 +272,7 @@ const BasePage = () => {
             .split(",")
             .filter(x => x !== "")
 
-        setStateKey({y});
+        setState({y});
 
         const paramStr = pairArrayToParamStr([['processed_y', y]].concat(bnfParamArr()));
 
@@ -280,7 +280,7 @@ const BasePage = () => {
 
         console.log(finalURL);
 
-        setStateKey({loading: true}, async () => {
+        setState({loading: true}, async () => {
             fetchResultWithErrorHandling(finalURL)
                 .then(result => {
                     console.log('Success:', result);
@@ -289,7 +289,7 @@ const BasePage = () => {
                         trendRes = result["trend"],
                         ciRes = result["cycle_ci"];
 
-                    setStateKey({
+                    setState({
                         x: frequency !== "n" ? // dated axis or numbered axis
                             DateAbstract.createDate(frequency, startDate).getDateSeries(cycleRes.length).map(DateAbstract.truncatedDate)
                             : Array.from({length: cycleRes.length}, (_, i) => i + 1),
@@ -395,6 +395,7 @@ const BasePage = () => {
                             setErrorMessage={setErrorMessage}
                             deleteErrorMessage={deleteErrorMessage}
                             handleChange={handleChange}
+                            setState={setState}
                             valuesUserData={dataUserFormPageValues}
                             valuesFREDData={dataFREDFormPageValues}
                             errors={fieldErrorMessages}

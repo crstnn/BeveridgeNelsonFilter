@@ -41,7 +41,7 @@ export default class FREDDataForm extends Component {
 
         this.setState({loading: true}, async () => {
 
-            const {handleChange, setErrorMessage, deleteErrorMessage} = this.props;
+            const {setState, setErrorMessage, deleteErrorMessage} = this.props;
 
             const responseSuccess = () => {
                 this.setState(
@@ -84,13 +84,16 @@ export default class FREDDataForm extends Component {
                     console.log("Response - endDate: ", endDate);
 
                     deleteErrorMessage("mnemonic");
-                    handleChange('availableFrequencies')({target: {value: result["available_frequencies"]}});
-                    handleChange('frequencyFRED')({target: {value: result["available_frequencies"][0]}});
-                    handleChange('mnemonic')({target: {value: this.state.mnemonic}});
-                    handleChange('startDateFRED')({target: {value: startDate}});
-                    handleChange('endDateFRED')({target: {value: endDate}});
-                    handleChange('minDate')({target: {value: startDate}});
-                    handleChange('maxDate')({target: {value: endDate}});
+
+                    setState({
+                        availableFrequencies: result["available_frequencies"],
+                        frequencyFRED: result["available_frequencies"][0],
+                        mnemonic: this.state.mnemonic,
+                        startDateFRED: startDate,
+                        endDateFRED: endDate,
+                        minDate: startDate,
+                        maxDate: endDate,
+                    });
                     responseSuccess();
 
                 }).catch((error) => {

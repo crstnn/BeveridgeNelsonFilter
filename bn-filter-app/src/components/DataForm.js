@@ -4,7 +4,7 @@ import '../styles/App.css';
 import FREDDataForm from "./FREDDataForm";
 import UserDataForm from "./UserDataForm";
 
-const DataForm = ({errors, valuesUserData, valuesFREDData, handleChange, deleteErrorMessage, setErrorMessage, prevStep, nextStep}) => {
+const DataForm = ({errors, valuesUserData, valuesFREDData, handleChange, deleteErrorMessage, setErrorMessage, setState, prevStep, nextStep}) => {
 
     const toggleDataInputType = e => {
         const
@@ -61,6 +61,7 @@ const DataForm = ({errors, valuesUserData, valuesFREDData, handleChange, deleteE
                             setErrorMessage={setErrorMessage}
                             deleteErrorMessage={deleteErrorMessage}
                             handleChange={handleChange}
+                            setState={setState}
                             values={valuesFREDData}
                             errors={errors}
                         />
