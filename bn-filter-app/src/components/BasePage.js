@@ -1,4 +1,4 @@
-import React, {Component, useEffect, useReducer, useState} from 'react';
+import React, {useEffect, useReducer, useState} from 'react';
 import StartMenu from './StartMenu';
 import ParametersForm from "./ParametersForm";
 import DataForm from "./DataForm";
@@ -95,8 +95,12 @@ const BasePage = () => {
         fieldErrorMessages,
     } = state;
 
-    const nextStep = () => {setStep(step + 1)};
-    const prevStep = () => {setStep(step - 1)};
+    const nextStep = () => {
+        setStep(step + 1)
+    };
+    const prevStep = () => {
+        setStep(step - 1)
+    };
 
     const cancelLoading = () => {
         setIsLoading(null);
@@ -261,8 +265,8 @@ const BasePage = () => {
                 });
                 setIsLoading(false);
             }).catch((error) => {
-            console.log(error);
-        });
+                console.log(error);
+            });
     }
 
     const getResultsForUserSpecifiedData = async () => {
@@ -377,7 +381,7 @@ const BasePage = () => {
 
     useEffect(() => {
         console.log('here', location.pathname)
-        if(location.pathname.endsWith('/apply')) {
+        if (location.pathname.endsWith('/apply')) {
             // TODO
             navigate('/') // base
         }

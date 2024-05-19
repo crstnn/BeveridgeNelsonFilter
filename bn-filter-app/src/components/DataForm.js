@@ -1,10 +1,20 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {Button, Divider, Grid, ToggleButton, ToggleButtonGroup,} from "@mui/material";
 import '../styles/App.css';
 import FREDDataForm from "./FREDDataForm";
 import UserDataForm from "./UserDataForm";
 
-const DataForm = ({errors, valuesUserData, valuesFREDData, handleChange, deleteErrorMessage, setErrorMessage, setState, prevStep, nextStep}) => {
+const DataForm = ({
+                      errors,
+                      valuesUserData,
+                      valuesFREDData,
+                      handleChange,
+                      deleteErrorMessage,
+                      setErrorMessage,
+                      setState,
+                      prevStep,
+                      nextStep
+                  }) => {
 
     const toggleDataInputType = e => {
         const
