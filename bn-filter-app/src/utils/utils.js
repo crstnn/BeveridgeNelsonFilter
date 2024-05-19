@@ -1,5 +1,6 @@
 import {MenuItem} from "@mui/material";
 import React from "react";
+import {useLocation} from "react-router-dom";
 
 export const colsToRows = (...columns) => {
 
@@ -44,4 +45,12 @@ export const createHoverText = option => {
     const hoverText = {};
     option.forEach(x => hoverText[x.value] = x.hoverText);
     return fieldItem => hoverText[fieldItem];
+}
+
+export const usePreserveQueryParams = () => {
+    const location = useLocation();
+    return (path) => {
+        const searchParams = location.search;
+        return `${path}${searchParams}`;
+    };
 }

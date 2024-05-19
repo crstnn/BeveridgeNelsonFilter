@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import StartMenu from './StartMenu';
 import ParametersForm from "./ParametersForm";
 import DataForm from "./DataForm";
@@ -8,11 +8,12 @@ import Error from "./Error";
 import {CONFIG} from "../config.js";
 import {DateAbstract} from "../utils/date";
 import {confIntZip, fetchWithTimeout, pairArrayToParamStr} from "../utils/utils";
+import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
 
 const {field, URL} = CONFIG;
 
-class BasePage extends Component {
-    state = {
+const BasePage = () => {
+    const [state, setState] = useState({
         step: 1,
         dataInputType: 'FRED',
         mnemonic: '',
@@ -51,137 +52,139 @@ class BasePage extends Component {
         loading: true,
         alertErrorType: null, // overarching alert text
         fieldErrorMessages: {},
-    }
+    })
 
-    nextStep = () => {
-        const {step} = this.state;
-        this.setState({
+    const setStateKey = (obj) => {setState({...state, ...obj})}
+
+    const nextStep = () => {
+        const {step} = state;
+        setStateKey({
             step: step + 1
         });
     }
 
-    prevStep = () => {
-        const {step} = this.state;
-        this.setState({
+    const prevStep = () => {
+        const {step} = state;
+        setStateKey({
             step: step - 1
         });
     }
 
-    cancelLoading = () => {
-        this.setState({loading: null});
+    const cancelLoading = () => {
+        setStateKey({loading: null});
     }
 
-    handleChange = input => e => {
-        this.setState({[input]: e.target.value});
+    const handleChange = input => e => {
+        setStateKey({[input]: e.target.value});
     }
 
-    handleCheckboxChange = input => e => {
-        this.setState({[input]: e.target.checked});
+    const handleCheckboxChange = input => e => {
+        setStateKey({[input]: e.target.checked});
     }
 
-    setErrorMessage = (input, message) => {
-        this.setState({
+    const setErrorMessage = (input, message) => {
+        setStateKey({
             fieldErrorMessages: {
-                ...this.state.fieldErrorMessages,
+                ...state.fieldErrorMessages,
                 [input]: message
             }
         });
     }
 
-    deleteErrorMessage = input => {
-        const fieldErrorMessagesTemp = {...this.state.fieldErrorMessages};
+    const deleteErrorMessage = input => {
+        const fieldErrorMessagesTemp = {...state.fieldErrorMessages};
         delete fieldErrorMessagesTemp[input];
-        this.setState({fieldErrorMessages: fieldErrorMessagesTemp});
+        setStateKey({fieldErrorMessages: fieldErrorMessagesTemp});
     }
 
-    isEmptyString = (v, input) => {
+    const isEmptyString = (v, input) => {
         if (v === "") {
-            this.setErrorMessage(input, "Must not be empty");
+            setErrorMessage(input, "Must not be empty");
             return true;
         }
         return false;
     }
 
-    isNotANum = (v, input) => {
+    const isNotANum = (v, input) => {
         if (isNaN(v)) {
-            this.setErrorMessage(input, "Must be numeric");
+            setErrorMessage(input, "Must be numeric");
             return true;
         }
         return false;
     }
 
-    isNotAnInt = (v, input) => {
+    const isNotAnInt = (v, input) => {
         if ((v % 1) !== 0) {
-            this.setErrorMessage(input, "Must be an integer");
+            setErrorMessage(input, "Must be an integer");
             return true;
         }
         return false;
     }
 
-    isExceedsMinMax = (v, input) => {
+    const isExceedsMinMax = (v, input) => {
         if (field.freeText[input].min !== null && v < field.freeText[input].min) {
-            this.setErrorMessage(input, `Must be ≥ ${field.freeText[input].min}`);
+            setErrorMessage(input, `Must be ≥ ${field.freeText[input].min}`);
             return true;
         }
         if (field.freeText[input].max !== null && v > field.freeText[input].max) {
-            this.setErrorMessage(input, `Must be ≤ ${field.freeText[input].max}`);
+            setErrorMessage(input, `Must be ≤ ${field.freeText[input].max}`);
             return true;
         }
         return false;
     }
 
-    handleErrorField = isCorrectEntry => (input, v) => {
-        if (isCorrectEntry) this.deleteErrorMessage(input);
-        this.setState({[input]: v});
+    const handleErrorField = isCorrectEntry => (input, v) => {
+        if (isCorrectEntry) deleteErrorMessage(input);
+        setStateKey({[input]: v});
     }
 
-    validateField = (arr, input, e) => {
+    const validateField = (arr, input, e) => {
         // functions earlier in the array take precedence. [first_validated...last_validated]
         const v = e.target.value;
         const isIncorrectEntry = arr.reduce((total, currentValue) =>
             total ? true : currentValue(v, input) || total, false)
-        this.handleErrorField(!isIncorrectEntry)(input, v)
+        handleErrorField(!isIncorrectEntry)(input, v)
     }
 
-    handleNumberFieldChange = input => e => {
-        this.validateField([this.isEmptyString, this.isNotANum, this.isExceedsMinMax,], input, e);
+    const handleNumberFieldChange = input => e => {
+        validateField([isEmptyString, isNotANum, isExceedsMinMax,], input, e);
     }
 
-    handleIntegerNumberFieldChange = input => e => {
-        this.validateField([this.isEmptyString, this.isNotAnInt, this.isNotANum, this.isExceedsMinMax,], input, e);
+    const handleIntegerNumberFieldChange = input => e => {
+        validateField([isEmptyString, isNotAnInt, isNotANum, isExceedsMinMax,], input, e);
     }
 
-    handleChangeValidation = input => e => validationArr => {
-        this.validateField(validationArr, input, e);
+    const handleChangeValidation = input => e => validationArr => {
+        validateField(validationArr, input, e);
     }
 
-    bnfParamArr = () => [['window', this.state.rollingWindow],
-        ['delta_select', this.state.deltaSelect],
-        ['delta', this.state.delta],
-        ['ib', this.state.iterativeBackcasting],
-        ['demean', this.state.demean],].concat(
-        [['transform', this.state.transform]].concat(
-            this.state.transform ? [
-                    ['p_code', this.state.pCode],
-                    ['d_code', this.state.dCode],
-                    ['take_log', this.state.takeLog]]
+    const bnfParamArr = () => [['window', state.rollingWindow],
+        ['delta_select', state.deltaSelect],
+        ['delta', state.delta],
+        ['ib', state.iterativeBackcasting],
+        ['demean', state.demean],].concat(
+        [['transform', state.transform]].concat(
+            state.transform ? [
+                    ['p_code', state.pCode],
+                    ['d_code', state.dCode],
+                    ['take_log', state.takeLog]]
                 : []
         )
     )
 
-    fetchResultWithErrorHandling = async (finalURL) => {
+    const fetchResultWithErrorHandling = async (finalURL) => {
         return fetchWithTimeout(finalURL)
             .catch(e => {
-                this.setState({alertErrorType: "TIMEOUT"});
-                this.prevStep();
-                this.cancelLoading();
+                setStateKey({alertErrorType: "TIMEOUT"});
+                prevStep();
+                cancelLoading();
                 throw e;
             })
             .then((response) => {
                 if (response.status !== 200) {
-                    this.setState({alertErrorType: "SERVER"});
-                    this.prevStep();
-                    this.cancelLoading();
+                    setStateKey({alertErrorType: "SERVER"});
+                    prevStep();
+                    cancelLoading();
                     throw new Error("bad status");
                 } else {
                     return response.json();
@@ -190,22 +193,22 @@ class BasePage extends Component {
 
     }
 
-    getResultsForFREDData = async () => {
+    const getResultsForFREDData = async () => {
 
         const paramStr = pairArrayToParamStr(
-            [['fred_abbr', this.state.mnemonic],
-                ['freq', this.state.frequencyFRED],
-                ['obs_start', DateAbstract.truncatedDate(this.state.startDateFRED)],
-                ['obs_end', DateAbstract.truncatedDate(this.state.endDateFRED)],
-            ].concat(this.bnfParamArr())
+            [['fred_abbr', state.mnemonic],
+                ['freq', state.frequencyFRED],
+                ['obs_start', DateAbstract.truncatedDate(state.startDateFRED)],
+                ['obs_end', DateAbstract.truncatedDate(state.endDateFRED)],
+            ].concat(bnfParamArr())
         );
 
         const finalURL = URL.baseBackendURL + URL.bnfFredDataSlug + paramStr;
 
         console.log(finalURL);
 
-        this.setState({loading: true}, async () => {
-            this.fetchResultWithErrorHandling(finalURL)
+        setStateKey({loading: true}, async () => {
+            fetchResultWithErrorHandling(finalURL)
                 .then(result => {
                     console.log('Success:', result);
 
@@ -214,7 +217,7 @@ class BasePage extends Component {
                         trendRes = result["trend"],
                         ciRes = result["cycle_ci"];
 
-                    this.setState({
+                    setStateKey({
                         x: result["dates"],
                         y: result["original_y"],
                         transformedY: result["transformed_y"],
@@ -234,23 +237,23 @@ class BasePage extends Component {
         });
     }
 
-    getResultsForUserSpecifiedData = async () => {
+    const getResultsForUserSpecifiedData = async () => {
 
         // dealing with all operating system's newline characters
-        const y = this.state.unprocessedY.replace(/(,?(\r\n|\n|\r))|(,\s)/gm, ",")
+        const y = state.unprocessedY.replace(/(,?(\r\n|\n|\r))|(,\s)/gm, ",")
             .split(",")
             .filter(x => x !== "")
 
-        this.setState({y});
+        setStateKey({y});
 
-        const paramStr = pairArrayToParamStr([['processed_y', y]].concat(this.bnfParamArr()));
+        const paramStr = pairArrayToParamStr([['processed_y', y]].concat(bnfParamArr()));
 
         const finalURL = URL.baseBackendURL + URL.bnfUserSpecifiedDataSlug + paramStr;
 
         console.log(finalURL);
 
-        this.setState({loading: true}, async () => {
-            this.fetchResultWithErrorHandling(finalURL)
+        setStateKey({loading: true}, async () => {
+            fetchResultWithErrorHandling(finalURL)
                 .then(result => {
                     console.log('Success:', result);
                     const
@@ -258,9 +261,9 @@ class BasePage extends Component {
                         trendRes = result["trend"],
                         ciRes = result["cycle_ci"];
 
-                    this.setState({
-                        x: this.state.frequency !== "n" ? // dated axis or numbered axis
-                            DateAbstract.createDate(this.state.frequency, this.state.startDate).getDateSeries(cycleRes.length).map(DateAbstract.truncatedDate)
+                    setStateKey({
+                        x: state.frequency !== "n" ? // dated axis or numbered axis
+                            DateAbstract.createDate(state.frequency, state.startDate).getDateSeries(cycleRes.length).map(DateAbstract.truncatedDate)
                             : Array.from({length: cycleRes.length}, (_, i) => i + 1),
                         transformedY: result["transformed_y"],
                         trend: trendRes,
@@ -279,155 +282,176 @@ class BasePage extends Component {
         });
     }
 
+    const {
+        step,
+        dataInputType,
+        mnemonic,
+        unprocessedY,
+        x,
+        y,
+        transformedY,
+        delta,
+        deltaSelect,
+        demean,
+        iterativeBackcasting,
+        rollingWindow,
+        frequency,
+        startDate,
+        endDate,
+        startDateFRED,
+        minDate,
+        maxDate,
+        endDateFRED,
+        availableFrequencies,
+        frequencyFRED,
+        transform,
+        dCode,
+        pCode,
+        takeLog,
+        cycle,
+        trend,
+        displayConfInterval,
+        cycleCI,
+        deltaCalc,
+        cycleCILB,
+        cycleCIUB,
+        trendCILB,
+        trendCIUB,
+        loading,
+        alertErrorType,
+        fieldErrorMessages,
+    } = state;
 
-    render() {
-        const {unprocessedY, startDate, endDate, frequency, dataInputType, displayConfInterval} = this.state;
-        const {
-            startDateFRED,
-            endDateFRED,
-            minDate,
-            maxDate,
-            mnemonic,
-            frequencyFRED,
-            availableFrequencies
-        } = this.state;
-        const dataUserFormPageValues = {
-            unprocessedY,
-            startDate,
-            endDate,
-            frequency,
-            dataInputType,
-            displayConfInterval
-        };
-        const dataFREDFormPageValues = {
-            startDateFRED,
-            endDateFRED,
-            minDate,
-            maxDate,
-            mnemonic,
-            frequencyFRED,
-            dataInputType,
-            availableFrequencies,
-            displayConfInterval
-        };
 
-        const {
-            step,
-            delta,
-            deltaSelect,
-            demean,
-            iterativeBackcasting,
-            rollingWindow,
-            transform,
-            dCode,
-            pCode,
-            takeLog,
-            cycle,
-            deltaCalc,
-            fieldErrorMessages,
-            loading,
-            serverError,
-            alertErrorType,
-        } = this.state;
-        const parametersFormPageValues = {
-            unprocessedY,
-            delta,
-            deltaSelect,
-            demean,
-            iterativeBackcasting,
-            rollingWindow,
-            transform,
-            dCode,
-            pCode,
-            takeLog,
-            loading,
-            serverError,
-            dataInputType,
-            alertErrorType,
-        };
 
-        const {
-            handleChange, handleNumberFieldChange, handleIntegerNumberFieldChange,
-            handleCheckboxChange, handleErrorField
-        } = this;
-        const handlers = {
-            handleChange, handleNumberFieldChange, handleIntegerNumberFieldChange,
-            handleCheckboxChange, handleErrorField
-        };
+    const dataUserFormPageValues = {
+        unprocessedY,
+        startDate,
+        endDate,
+        frequency,
+        dataInputType,
+        displayConfInterval
+    };
+    const dataFREDFormPageValues = {
+        startDateFRED,
+        endDateFRED,
+        minDate,
+        maxDate,
+        mnemonic,
+        frequencyFRED,
+        dataInputType,
+        availableFrequencies,
+        displayConfInterval
+    };
 
-        const {x, y, transformedY, trend, cycleCI, cycleCILB, cycleCIUB, trendCILB, trendCIUB} = this.state;
-        const plotPageValues = {
-            x,
-            y,
-            transformedY,
-            cycle,
-            trend,
-            deltaCalc,
-            transform,
-            displayConfInterval,
-            cycleCI,
-            cycleCILB,
-            cycleCIUB,
-            trendCILB,
-            trendCIUB,
-            frequency,
-            startDate,
-            dataInputType,
-            mnemonic
-        };
+    const parametersFormPageValues = {
+        unprocessedY,
+        delta,
+        deltaSelect,
+        demean,
+        iterativeBackcasting,
+        rollingWindow,
+        transform,
+        dCode,
+        pCode,
+        takeLog,
+        loading,
+        dataInputType,
+        alertErrorType,
+    };
 
-        return (
-            <>
-                {(() => {
-                    switch (step) {
-                        case 2:
-                            return <DataForm
-                                nextStep={this.nextStep}
-                                prevStep={this.prevStep}
-                                setErrorMessage={this.setErrorMessage}
-                                deleteErrorMessage={this.deleteErrorMessage}
-                                handleChange={this.handleChange}
-                                valuesUserData={dataUserFormPageValues}
-                                valuesFREDData={dataFREDFormPageValues}
-                                errors={fieldErrorMessages}
-                            />
-                        case 3:
-                            return (
-                                <>
-                                    <ParametersForm
-                                        nextStep={this.nextStep}
-                                        prevStep={this.prevStep}
-                                        cancelLoad={this.cancelLoading}
-                                        handlers={handlers}
-                                        getResults={this.getResultsForUserSpecifiedData}
-                                        getFREDResults={this.getResultsForFREDData}
-                                        values={parametersFormPageValues}
-                                        errors={fieldErrorMessages}
-                                    />
-                                </>
-                            )
-                        case 4:
-                            return (
-                                <>
-                                    {this.state.loading ? Loading() : <DataPlot
-                                        prevStep={this.prevStep}
-                                        plotPageValues={plotPageValues}
-                                        handleCheckboxChange={this.handleCheckboxChange}
-                                    />
-                                    }
-                                </>
-                            )
-                        default: // case 1
-                            return <StartMenu
-                                nextStep={this.nextStep}
-                                handleChange={this.handleChange}
-                            />
-                    }
-                })()}
-            </>
-        )
 
-    }
+    const handlers = {
+        handleChange, handleNumberFieldChange, handleIntegerNumberFieldChange,
+        handleCheckboxChange, handleErrorField
+    };
+
+    const plotPageValues = {
+        x,
+        y,
+        transformedY,
+        cycle,
+        trend,
+        deltaCalc,
+        transform,
+        displayConfInterval,
+        cycleCI,
+        cycleCILB,
+        cycleCIUB,
+        trendCILB,
+        trendCIUB,
+        frequency,
+        startDate,
+        dataInputType,
+        mnemonic
+    };
+
+    const [searchParams, setSearchParams] = useSearchParams();
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        console.log('here', location.pathname)
+        if(location.pathname.endsWith('/apply')) {
+            // TODO
+            navigate('/') // base
+        }
+
+    }, [location]);
+
+    console.log(state)
+
+    return (
+        <>
+            {(() => {
+                switch (step) {
+                    case 2:
+                        return <DataForm
+                            nextStep={nextStep}
+                            prevStep={prevStep}
+                            setErrorMessage={setErrorMessage}
+                            deleteErrorMessage={deleteErrorMessage}
+                            handleChange={handleChange}
+                            valuesUserData={dataUserFormPageValues}
+                            valuesFREDData={dataFREDFormPageValues}
+                            errors={fieldErrorMessages}
+                        />
+                    case 3:
+                        return (
+                            <>
+                                <ParametersForm
+                                    nextStep={nextStep}
+                                    prevStep={prevStep}
+                                    cancelLoad={cancelLoading}
+                                    handlers={handlers}
+                                    getResults={getResultsForUserSpecifiedData}
+                                    getFREDResults={getResultsForFREDData}
+                                    values={parametersFormPageValues}
+                                    errors={fieldErrorMessages}
+                                />
+                            </>
+                        )
+                    case 4:
+                        return (
+                            <>
+                                {loading ? Loading() : <DataPlot
+                                    prevStep={prevStep}
+                                    plotPageValues={plotPageValues}
+                                    handleCheckboxChange={handleCheckboxChange}
+                                />
+                                }
+                            </>
+                        )
+                    default: // case 1
+                        return <StartMenu
+                            nextStep={nextStep}
+                            handleChange={handleChange}
+                        />
+                }
+            })()}
+        </>
+    )
+
 }
 
 export default BasePage

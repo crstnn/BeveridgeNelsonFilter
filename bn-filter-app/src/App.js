@@ -3,6 +3,7 @@ import BasePage from './components/BasePage';
 import React, {useEffect} from "react";
 import {CONFIG} from "./config.js";
 import ReactGA from 'react-ga4';
+import {Route, Routes} from "react-router-dom";
 
 const {analytics: {GA}} = CONFIG;
 
@@ -34,7 +35,12 @@ const App = () => {
                         Kamber, Morley, and Wong (2024)</a>.
                     </p>
                 </div>
-                <BasePage/>
+
+                <Routes>
+                    // Routes to BasePage when '/' or '/apply'
+                    <Route path="/apply?/" element={<BasePage/>}/>
+                </Routes>
+
             </div>
             <div style={styles.footer}>
                 <a href="https://sites.google.com/site/guneskamber" rel="noopener noreferrer" target="_blank">

@@ -17,6 +17,7 @@
     "react-ga4": "^2.1.0",
     "react-loader-spinner": "^6.1.6",
     "react-plotly.js": "^2.6.0",
+    "react-router-dom": "^6.23.1",
     "react-scripts": "^5.0.1",
     "web-vitals": "^3.5.2"
   },

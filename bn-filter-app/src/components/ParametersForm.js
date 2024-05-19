@@ -30,8 +30,15 @@ class ParametersForm extends Component {
 
     errorsDisplayedCount = () => Object.keys(this.props.errors).map(key => this.isErrorDisplaying(key)).filter(x => x).length;
 
+    updateTransformationState = () => {
+        const {values, handlers: {handleChange}} = this.props;
+        const isTransformApplied = !(values.takeLog === false && values.dCode === 'nd' && values.pCode === 'np');
+        handleChange('transform')({target: {value: isTransformApplied}});
+    }
+
     continue = e => {
-        e.preventDefault();
+        e?.preventDefault();
+        this.updateTransformationState();
         const {getResults, getFREDResults, handlers, values, errors, cancelLoad, nextStep} = this.props;
         const {handleChange} = handlers;
 
@@ -179,14 +186,7 @@ class ParametersForm extends Component {
     }
 
     render() {
-
-        const {values, handlers} = this.props;
-        const {handleChange} = handlers;
-
-        const updateTransformationState = () => {
-            const isTransformApplied = !(values.takeLog === false && values.dCode === 'nd' && values.pCode === 'np');
-            handleChange('transform')({target: {value: isTransformApplied}});
-        }
+        const {values, handlers: {handleChange}} = this.props;
 
         return (
             <>
@@ -209,10 +209,7 @@ class ParametersForm extends Component {
                 <Button
                     variant="contained"
                     style={styles.button}
-                    onClick={(e) => {
-                        updateTransformationState()
-                        this.continue(e)
-                    }}
+                    onClick={this.continue}
                 >Apply BN Filter</Button>
             </>
         )
