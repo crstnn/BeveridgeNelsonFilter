@@ -1,4 +1,4 @@
-import React, {Component, useEffect, useState} from 'react';
+import React, {Component, useEffect, useReducer, useState} from 'react';
 import StartMenu from './StartMenu';
 import ParametersForm from "./ParametersForm";
 import DataForm from "./DataForm";
@@ -13,65 +13,93 @@ import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
 const {field, URL} = CONFIG;
 
 const BasePage = () => {
-    const [state, setState] = useState({
-        step: 1,
-        dataInputType: 'FRED',
-        mnemonic: '',
-        unprocessedY: '',
-        x: [], // dates
-        y: [], // time series
-        transformedY: [], // transformed y (only will differ from `y` if a transform is applied)
-        delta: field.freeText.delta.default,
-        deltaSelect: 2,
-        demean: field.optionField.iterativeDynamicDemeaning.default,
-        iterativeBackcasting: true,
-        rollingWindow: field.freeText.rollingWindow.default,
-        frequency: field.optionField.frequencyManual.default, // periodicity
-        startDate: null,
-        endDate: null,
-        startDateFRED: null,
-        minDate: null,
-        maxDate: null,
-        endDateFRED: null,
-        availableFrequencies: [],
-        frequencyFRED: field.optionField.frequencyFRED.default,
-        transform: true, // transforms to data before bnf
-        dCode: field.optionField.dCode.default,
-        pCode: field.optionField.pCode.default,
-        takeLog: true,
-        // bnf output (from API)
-        cycle: [],
-        trend: [],
-        displayConfInterval: true,
-        cycleCI: [],
-        deltaCalc: undefined,
-        cycleCILB: [],
-        cycleCIUB: [],
-        trendCILB: [],
-        trendCIUB: [],
-        loading: true,
-        alertErrorType: null, // overarching alert text
-        fieldErrorMessages: {},
-    })
+    const [step, setStep] = useState(1);
+    const [isLoading, setIsLoading] = useState(null);
 
-    const setStateKey = (obj) => {setState({...state, ...obj})}
+    const [state, setStateKey] = useReducer((state, newState) => ({...state, ...newState}),
+        {
+            dataInputType: 'FRED',
+            mnemonic: '',
+            unprocessedY: '',
+            x: [], // dates
+            y: [], // time series
+            transformedY: [], // transformed y (only will differ from `y` if a transform is applied)
+            delta: field.freeText.delta.default,
+            deltaSelect: 2,
+            demean: field.optionField.iterativeDynamicDemeaning.default,
+            iterativeBackcasting: true,
+            rollingWindow: field.freeText.rollingWindow.default,
+            frequency: field.optionField.frequencyManual.default, // periodicity
+            startDate: null,
+            endDate: null,
+            startDateFRED: null,
+            minDate: null,
+            maxDate: null,
+            endDateFRED: null,
+            availableFrequencies: [],
+            frequencyFRED: field.optionField.frequencyFRED.default,
+            transform: true, // transforms to data before bnf
+            dCode: field.optionField.dCode.default,
+            pCode: field.optionField.pCode.default,
+            takeLog: true,
+            // bnf output (from API)
+            cycle: [],
+            trend: [],
+            displayConfInterval: true,
+            cycleCI: [],
+            deltaCalc: undefined,
+            cycleCILB: [],
+            cycleCIUB: [],
+            trendCILB: [],
+            trendCIUB: [],
+            alertErrorType: null, // overarching alert text
+            fieldErrorMessages: {},
+        }
+    );
 
-    const nextStep = () => {
-        const {step} = state;
-        setStateKey({
-            step: step + 1
-        });
-    }
+    const {
+        dataInputType,
+        mnemonic,
+        unprocessedY,
+        x,
+        y,
+        transformedY,
+        delta,
+        deltaSelect,
+        demean,
+        iterativeBackcasting,
+        rollingWindow,
+        frequency,
+        startDate,
+        endDate,
+        startDateFRED,
+        minDate,
+        maxDate,
+        endDateFRED,
+        availableFrequencies,
+        frequencyFRED,
+        transform,
+        dCode,
+        pCode,
+        takeLog,
+        cycle,
+        trend,
+        displayConfInterval,
+        cycleCI,
+        deltaCalc,
+        cycleCILB,
+        cycleCIUB,
+        trendCILB,
+        trendCIUB,
+        alertErrorType,
+        fieldErrorMessages,
+    } = state;
 
-    const prevStep = () => {
-        const {step} = state;
-        setStateKey({
-            step: step - 1
-        });
-    }
+    const nextStep = () => {setStep(step + 1)};
+    const prevStep = () => {setStep(step - 1)};
 
     const cancelLoading = () => {
-        setStateKey({loading: null});
+        setIsLoading(null);
     }
 
     const handleChange = input => e => {
@@ -85,14 +113,14 @@ const BasePage = () => {
     const setErrorMessage = (input, message) => {
         setStateKey({
             fieldErrorMessages: {
-                ...state.fieldErrorMessages,
+                ...fieldErrorMessages,
                 [input]: message
             }
         });
     }
 
     const deleteErrorMessage = input => {
-        const fieldErrorMessagesTemp = {...state.fieldErrorMessages};
+        const fieldErrorMessagesTemp = {...fieldErrorMessages};
         delete fieldErrorMessagesTemp[input];
         setStateKey({fieldErrorMessages: fieldErrorMessagesTemp});
     }
@@ -158,16 +186,16 @@ const BasePage = () => {
         validateField(validationArr, input, e);
     }
 
-    const bnfParamArr = () => [['window', state.rollingWindow],
-        ['delta_select', state.deltaSelect],
-        ['delta', state.delta],
-        ['ib', state.iterativeBackcasting],
-        ['demean', state.demean],].concat(
-        [['transform', state.transform]].concat(
-            state.transform ? [
-                    ['p_code', state.pCode],
-                    ['d_code', state.dCode],
-                    ['take_log', state.takeLog]]
+    const bnfParamArr = () => [['window', rollingWindow],
+        ['delta_select', deltaSelect],
+        ['delta', delta],
+        ['ib', iterativeBackcasting],
+        ['demean', demean],].concat(
+        [['transform', transform]].concat(
+            transform ? [
+                    ['p_code', pCode],
+                    ['d_code', dCode],
+                    ['take_log', takeLog]]
                 : []
         )
     )
@@ -196,10 +224,10 @@ const BasePage = () => {
     const getResultsForFREDData = async () => {
 
         const paramStr = pairArrayToParamStr(
-            [['fred_abbr', state.mnemonic],
-                ['freq', state.frequencyFRED],
-                ['obs_start', DateAbstract.truncatedDate(state.startDateFRED)],
-                ['obs_end', DateAbstract.truncatedDate(state.endDateFRED)],
+            [['fred_abbr', mnemonic],
+                ['freq', frequencyFRED],
+                ['obs_start', DateAbstract.truncatedDate(startDateFRED)],
+                ['obs_end', DateAbstract.truncatedDate(endDateFRED)],
             ].concat(bnfParamArr())
         );
 
@@ -207,40 +235,40 @@ const BasePage = () => {
 
         console.log(finalURL);
 
-        setStateKey({loading: true}, async () => {
-            fetchResultWithErrorHandling(finalURL)
-                .then(result => {
-                    console.log('Success:', result);
+        setIsLoading(true)
 
-                    const
-                        cycleRes = result["cycle"],
-                        trendRes = result["trend"],
-                        ciRes = result["cycle_ci"];
+        await fetchResultWithErrorHandling(finalURL)
+            .then(result => {
+                console.log('Success:', result);
 
-                    setStateKey({
-                        x: result["dates"],
-                        y: result["original_y"],
-                        transformedY: result["transformed_y"],
-                        trend: trendRes,
-                        cycle: cycleRes,
-                        cycleCI: ciRes,
-                        deltaCalc: result["delta"],
-                        cycleCILB: confIntZip(cycleRes, ciRes, "lb"),
-                        cycleCIUB: confIntZip(cycleRes, ciRes, "ub"),
-                        trendCILB: confIntZip(trendRes, ciRes, "lb"),
-                        trendCIUB: confIntZip(trendRes, ciRes, "ub"),
-                        loading: false,
-                    });
-                }).catch((error) => {
-                console.log(error);
-            });
+                const
+                    cycleRes = result["cycle"],
+                    trendRes = result["trend"],
+                    ciRes = result["cycle_ci"];
+
+                setStateKey({
+                    x: result["dates"],
+                    y: result["original_y"],
+                    transformedY: result["transformed_y"],
+                    trend: trendRes,
+                    cycle: cycleRes,
+                    cycleCI: ciRes,
+                    deltaCalc: result["delta"],
+                    cycleCILB: confIntZip(cycleRes, ciRes, "lb"),
+                    cycleCIUB: confIntZip(cycleRes, ciRes, "ub"),
+                    trendCILB: confIntZip(trendRes, ciRes, "lb"),
+                    trendCIUB: confIntZip(trendRes, ciRes, "ub"),
+                });
+                setIsLoading(false);
+            }).catch((error) => {
+            console.log(error);
         });
     }
 
     const getResultsForUserSpecifiedData = async () => {
 
         // dealing with all operating system's newline characters
-        const y = state.unprocessedY.replace(/(,?(\r\n|\n|\r))|(,\s)/gm, ",")
+        const y = unprocessedY.replace(/(,?(\r\n|\n|\r))|(,\s)/gm, ",")
             .split(",")
             .filter(x => x !== "")
 
@@ -262,8 +290,8 @@ const BasePage = () => {
                         ciRes = result["cycle_ci"];
 
                     setStateKey({
-                        x: state.frequency !== "n" ? // dated axis or numbered axis
-                            DateAbstract.createDate(state.frequency, state.startDate).getDateSeries(cycleRes.length).map(DateAbstract.truncatedDate)
+                        x: frequency !== "n" ? // dated axis or numbered axis
+                            DateAbstract.createDate(frequency, startDate).getDateSeries(cycleRes.length).map(DateAbstract.truncatedDate)
                             : Array.from({length: cycleRes.length}, (_, i) => i + 1),
                         transformedY: result["transformed_y"],
                         trend: trendRes,
@@ -281,48 +309,6 @@ const BasePage = () => {
             });
         });
     }
-
-    const {
-        step,
-        dataInputType,
-        mnemonic,
-        unprocessedY,
-        x,
-        y,
-        transformedY,
-        delta,
-        deltaSelect,
-        demean,
-        iterativeBackcasting,
-        rollingWindow,
-        frequency,
-        startDate,
-        endDate,
-        startDateFRED,
-        minDate,
-        maxDate,
-        endDateFRED,
-        availableFrequencies,
-        frequencyFRED,
-        transform,
-        dCode,
-        pCode,
-        takeLog,
-        cycle,
-        trend,
-        displayConfInterval,
-        cycleCI,
-        deltaCalc,
-        cycleCILB,
-        cycleCIUB,
-        trendCILB,
-        trendCIUB,
-        loading,
-        alertErrorType,
-        fieldErrorMessages,
-    } = state;
-
-
 
     const dataUserFormPageValues = {
         unprocessedY,
@@ -355,7 +341,6 @@ const BasePage = () => {
         dCode,
         pCode,
         takeLog,
-        loading,
         dataInputType,
         alertErrorType,
     };
@@ -399,8 +384,6 @@ const BasePage = () => {
 
     }, [location]);
 
-    console.log(state)
-
     return (
         <>
             {(() => {
@@ -434,7 +417,7 @@ const BasePage = () => {
                     case 4:
                         return (
                             <>
-                                {loading ? Loading() : <DataPlot
+                                {isLoading ? Loading() : <DataPlot
                                     prevStep={prevStep}
                                     plotPageValues={plotPageValues}
                                     handleCheckboxChange={handleCheckboxChange}
