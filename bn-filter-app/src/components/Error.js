@@ -1,17 +1,13 @@
 import {Alert} from "@mui/material";
-import React, {Component} from "react";
+import React from "react";
 
-class Error extends Component {
+const Error = ({close, tagName}) => (
+    <div style={{margin: "2px 20%"}}>
+        <Alert variant="filled" severity="error"
+               onClose={close}>
+            {tagName}
+        </Alert>
+    </div>)
 
-    render() {
-        return (
-            <div style={{margin: "2px 20%"}}>
-                <Alert variant="filled" severity="error"
-                       onClose={this.props.close}>
-                    {this.props.tagName}
-                </Alert>
-            </div>)
-    }
-}
 
 export default Error

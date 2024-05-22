@@ -40,21 +40,28 @@ class ParametersForm extends Component {
         e?.preventDefault();
         this.updateTransformationState();
         const {getResults, getFREDResults, handlers, values, errors, cancelLoad, nextStep} = this.props;
-        const {handleChange} = handlers;
+        const {step, dataInputType} = values;
+        const {handleChange, setState} = handlers;
 
-        if (values.dataInputType === "FRED" && errors["mnemonic"] !== undefined) {
+        const onErrorCallback = () => {
+            setState({step}) // keep on current step if error
+            cancelLoad();
+        }
+
+        if (dataInputType === "FRED" && errors["mnemonic"] !== undefined) {
             handleChange("alertErrorType")({target: {value: "INPUT_USER_M"}});
             cancelLoad();
-        } else if (values.dataInputType === "USER" && errors["unprocessedY"] !== undefined) {
+        } else if (dataInputType === "USER" && errors["unprocessedY"] !== undefined) {
             handleChange("alertErrorType")({target: {value: "INPUT_USER_S"}});
             cancelLoad();
-        } else if (values.dataInputType === "USER" && errors["startDate"] !== undefined) {
+        } else if (dataInputType === "USER" && errors["startDate"] !== undefined) {
             handleChange("alertErrorType")({target: {value: "INPUT_USER_DATE"}});
             cancelLoad();
         } else if (this.errorsDisplayedCount() === 0) {
-            if (values.dataInputType === "FRED") getFREDResults();
-            else if (values.dataInputType === "USER") getResults();
             nextStep();
+            if (dataInputType === "FRED") getFREDResults({onErrorCallback});
+            else if (dataInputType === "USER") getResults({onErrorCallback});
+
         } else {
             handleChange("alertErrorType")({target: {value: "INPUT_PARAM"}});
             cancelLoad();
@@ -186,16 +193,16 @@ class ParametersForm extends Component {
     }
 
     render() {
-        const {values, handlers: {handleChange}} = this.props;
+        const {values, handlers: {setState}} = this.props;
 
         return (
             <>
                 <div style={{minHeight: 600,}}>
-                    {values.loading === null ?
+                    {values.isLoading === null ?
                         <Error
                             tagName={alertErrors[values.alertErrorType]}
                             close={() => {
-                                handleChange("loading")({target: {value: false}})
+                                setState({isLoading: false});
                             }}/>
                         : null}
                     {this.preAnalysisTransformations()}

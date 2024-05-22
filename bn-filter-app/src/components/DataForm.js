@@ -8,13 +8,13 @@ const DataForm = ({
                       errors,
                       valuesUserData,
                       valuesFREDData,
-                      handleChange,
+                      handlers,
                       deleteErrorMessage,
                       setErrorMessage,
-                      setState,
                       prevStep,
                       nextStep
                   }) => {
+    const {handleChange, setState} = handlers;
 
     const toggleDataInputType = e => {
         const

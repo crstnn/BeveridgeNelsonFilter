@@ -170,8 +170,8 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
     const [plotLayout, setPlotLayout] = useState(layout);
 
     const back = e => {
-        prevStep();
         e.preventDefault();
+        prevStep();
     }
 
     const getCSVData = () => colsToRows(

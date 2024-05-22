@@ -1,4 +1,4 @@
-import React, {useEffect, useReducer, useState} from 'react';
+import React, {useEffect, useReducer} from 'react';
 import StartMenu from './StartMenu';
 import ParametersForm from "./ParametersForm";
 import DataForm from "./DataForm";
@@ -13,11 +13,9 @@ import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
 const {field, URL} = CONFIG;
 
 const BasePage = () => {
-    const [step, setStep] = useState(1);
-    const [isLoading, setIsLoading] = useState(null);
-
     const [state, setState] = useReducer((state, newState) => ({...state, ...newState}),
         {
+            step: 1,
             dataInputType: 'FRED',
             mnemonic: '',
             unprocessedY: '',
@@ -54,10 +52,12 @@ const BasePage = () => {
             trendCIUB: [],
             alertErrorType: null, // overarching alert text
             fieldErrorMessages: {},
+            isLoading: false,
         }
     );
 
     const {
+        step,
         dataInputType,
         mnemonic,
         unprocessedY,
@@ -93,17 +93,18 @@ const BasePage = () => {
         trendCIUB,
         alertErrorType,
         fieldErrorMessages,
+        isLoading,
     } = state;
 
     const nextStep = () => {
-        setStep(step + 1)
+        setState({step: step + 1})
     };
     const prevStep = () => {
-        setStep(step - 1)
+        setState({step: step - 1})
     };
 
     const cancelLoading = () => {
-        setIsLoading(null);
+        setState({isLoading: null})
     }
 
     const handleChange = input => e => {
@@ -204,19 +205,17 @@ const BasePage = () => {
         )
     )
 
-    const fetchResultWithErrorHandling = async (finalURL) => {
-        return fetchWithTimeout(finalURL)
+    const fetchResultWithErrorHandling = async ({url, onErrorCallback}) => {
+        return fetchWithTimeout(url)
             .catch(e => {
                 setState({alertErrorType: "TIMEOUT"});
-                prevStep();
-                cancelLoading();
+                onErrorCallback();
                 throw e;
             })
             .then((response) => {
                 if (response.status !== 200) {
                     setState({alertErrorType: "SERVER"});
-                    prevStep();
-                    cancelLoading();
+                    onErrorCallback();
                     throw new Error("bad status");
                 } else {
                     return response.json();
@@ -225,7 +224,7 @@ const BasePage = () => {
 
     }
 
-    const getResultsForFREDData = async () => {
+    const getResultsForFREDData = async ({onErrorCallback}) => {
 
         const paramStr = pairArrayToParamStr(
             [['fred_abbr', mnemonic],
@@ -239,9 +238,9 @@ const BasePage = () => {
 
         console.log(finalURL);
 
-        setIsLoading(true)
+        setState({isLoading: true});
 
-        await fetchResultWithErrorHandling(finalURL)
+        await fetchResultWithErrorHandling({url: finalURL, onErrorCallback})
             .then(result => {
                 console.log('Success:', result);
 
@@ -263,13 +262,13 @@ const BasePage = () => {
                     trendCILB: confIntZip(trendRes, ciRes, "lb"),
                     trendCIUB: confIntZip(trendRes, ciRes, "ub"),
                 });
-                setIsLoading(false);
+                setState({isLoading: false});
             }).catch((error) => {
                 console.log(error);
             });
     }
 
-    const getResultsForUserSpecifiedData = async () => {
+    const getResultsForUserSpecifiedData = async ({onErrorCallback}) => {
 
         // dealing with all operating system's newline characters
         const y = unprocessedY.replace(/(,?(\r\n|\n|\r))|(,\s)/gm, ",")
@@ -284,34 +283,35 @@ const BasePage = () => {
 
         console.log(finalURL);
 
-        setState({loading: true}, async () => {
-            fetchResultWithErrorHandling(finalURL)
-                .then(result => {
-                    console.log('Success:', result);
-                    const
-                        cycleRes = result["cycle"],
-                        trendRes = result["trend"],
-                        ciRes = result["cycle_ci"];
+        setState({isLoading: true});
 
-                    setState({
-                        x: frequency !== "n" ? // dated axis or numbered axis
-                            DateAbstract.createDate(frequency, startDate).getDateSeries(cycleRes.length).map(DateAbstract.truncatedDate)
-                            : Array.from({length: cycleRes.length}, (_, i) => i + 1),
-                        transformedY: result["transformed_y"],
-                        trend: trendRes,
-                        cycle: cycleRes,
-                        cycleCI: ciRes,
-                        deltaCalc: result["delta"],
-                        cycleCILB: confIntZip(cycleRes, ciRes, "lb"),
-                        cycleCIUB: confIntZip(cycleRes, ciRes, "ub"),
-                        trendCILB: confIntZip(trendRes, ciRes, "lb"),
-                        trendCIUB: confIntZip(trendRes, ciRes, "ub"),
-                        loading: false,
-                    });
-                }).catch((error) => {
+        await fetchResultWithErrorHandling({url: finalURL, onErrorCallback})
+            .then(result => {
+                console.log('Success:', result);
+                const
+                    cycleRes = result["cycle"],
+                    trendRes = result["trend"],
+                    ciRes = result["cycle_ci"];
+
+                setState({
+                    x: frequency !== "n" ? // dated axis or numbered axis
+                        DateAbstract.createDate(frequency, startDate).getDateSeries(cycleRes.length).map(DateAbstract.truncatedDate)
+                        : Array.from({length: cycleRes.length}, (_, i) => i + 1),
+                    transformedY: result["transformed_y"],
+                    trend: trendRes,
+                    cycle: cycleRes,
+                    cycleCI: ciRes,
+                    deltaCalc: result["delta"],
+                    cycleCILB: confIntZip(cycleRes, ciRes, "lb"),
+                    cycleCIUB: confIntZip(cycleRes, ciRes, "ub"),
+                    trendCILB: confIntZip(trendRes, ciRes, "lb"),
+                    trendCIUB: confIntZip(trendRes, ciRes, "ub"),
+                });
+                setState({isLoading: false});
+            }).catch((error) => {
                 console.log(error);
             });
-        });
+
     }
 
     const dataUserFormPageValues = {
@@ -335,6 +335,7 @@ const BasePage = () => {
     };
 
     const parametersFormPageValues = {
+        isLoading,
         unprocessedY,
         delta,
         deltaSelect,
@@ -347,12 +348,13 @@ const BasePage = () => {
         takeLog,
         dataInputType,
         alertErrorType,
+        step,
     };
 
 
     const handlers = {
         handleChange, handleNumberFieldChange, handleIntegerNumberFieldChange,
-        handleCheckboxChange, handleErrorField
+        handleCheckboxChange, handleErrorField, setState,
     };
 
     const plotPageValues = {
@@ -398,8 +400,7 @@ const BasePage = () => {
                             prevStep={prevStep}
                             setErrorMessage={setErrorMessage}
                             deleteErrorMessage={deleteErrorMessage}
-                            handleChange={handleChange}
-                            setState={setState}
+                            handlers={handlers}
                             valuesUserData={dataUserFormPageValues}
                             valuesFREDData={dataFREDFormPageValues}
                             errors={fieldErrorMessages}
@@ -422,7 +423,7 @@ const BasePage = () => {
                     case 4:
                         return (
                             <>
-                                {isLoading ? Loading() : <DataPlot
+                                {isLoading ? <Loading/> : <DataPlot
                                     prevStep={prevStep}
                                     plotPageValues={plotPageValues}
                                     handleCheckboxChange={handleCheckboxChange}
