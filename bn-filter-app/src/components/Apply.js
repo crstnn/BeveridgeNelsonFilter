@@ -1,8 +1,9 @@
 import {useNavigate, useSearchParams} from "react-router-dom";
 import {keyValueArraysToObject, maybeConvertStringToBool, maybeConvertStringToNumber} from "../utils/utils";
-import {FRED, LOADING_STEP, MODEL_QUERY_PARAMS} from "../utils/consts";
+import {DateAbstract} from "../utils/date";
+import {FRED, LOADING_STEP, MODEL_QUERY_PARAMS, PARAMETERS_STEP} from "../utils/consts";
 
-const Apply = ({handlers}) => {
+const Apply = ({getResults, cancelLoading, handlers}) => {
     const {setState} = handlers;
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
@@ -10,10 +11,11 @@ const Apply = ({handlers}) => {
     const queryParamValues = MODEL_QUERY_PARAMS
         .map(x => searchParams.get(x))
         .map(maybeConvertStringToBool)
-        .map(maybeConvertStringToNumber);
+        .map(maybeConvertStringToNumber)
+        .map(DateAbstract.maybeConvertStringToDate);
     const queryParams = keyValueArraysToObject(MODEL_QUERY_PARAMS, queryParamValues);
 
-    console.log(queryParams)
+    console.log(queryParams);
 
 
     // set loading page
@@ -24,17 +26,14 @@ const Apply = ({handlers}) => {
         ...queryParams,
     });
 
-    navigate('/') // base
+    navigate('/'); // base
 
-    // TODO
+    const onFetchErrorCallback = () => {
+        setState({PARAMETERS_STEP});
+        cancelLoading();
+    }
 
-    // setTimeout(() => {
-    //     setState({
-    //         step: 2,
-    //     });
-    // }, 5000)
-
-
+    getResults(() => 0, () => null, onFetchErrorCallback)();
 }
 
-export default Apply
+export default Apply;

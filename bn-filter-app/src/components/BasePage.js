@@ -10,7 +10,7 @@ import {DateAbstract} from "../utils/date";
 import {confIntZip, extractModelParams, fetchWithTimeout, pairArrayToParamStr} from "../utils/utils";
 import Apply from "./Apply";
 import {useLocation} from "react-router-dom";
-import {FRED} from "../utils/consts";
+import {FRED, USER} from "../utils/consts";
 
 const {field, URL} = CONFIG;
 
@@ -58,51 +58,11 @@ const BasePage = () => {
         }
     );
 
-    const {
-        step,
-        dataInputType,
-        mnemonic,
-        unprocessedY,
-        x,
-        y,
-        transformedY,
-        delta,
-        deltaSelect,
-        demean,
-        iterativeBackcasting,
-        rollingWindow,
-        frequency,
-        startDate,
-        endDate,
-        startDateFRED,
-        minDate,
-        maxDate,
-        endDateFRED,
-        availableFrequencies,
-        frequencyFRED,
-        transform,
-        dCode,
-        pCode,
-        takeLog,
-        cycle,
-        trend,
-        displayConfInterval,
-        cycleCI,
-        deltaCalc,
-        cycleCILB,
-        cycleCIUB,
-        trendCILB,
-        trendCIUB,
-        alertErrorType,
-        fieldErrorMessages,
-        isLoading,
-    } = state;
-
     const nextStep = () => {
-        setState({step: step + 1})
+        setState({step: state.step + 1})
     };
     const prevStep = () => {
-        setState({step: step - 1})
+        setState({step: state.step - 1})
     };
 
     const cancelLoading = () => {
@@ -120,16 +80,16 @@ const BasePage = () => {
     const setErrorMessage = (input, message) => {
         setState({
             fieldErrorMessages: {
-                ...fieldErrorMessages,
+                ...state.fieldErrorMessages,
                 [input]: message
             }
         });
     }
 
     const deleteErrorMessage = input => {
-        const fieldErrorMessagesTemp = {...fieldErrorMessages};
-        delete fieldErrorMessagesTemp[input];
-        setState({fieldErrorMessages: fieldErrorMessagesTemp});
+        const fem = {...state.fieldErrorMessages};
+        delete fem[input];
+        setState({fieldErrorMessages: fem});
     }
 
     const isEmptyString = (v, input) => {
@@ -190,31 +150,31 @@ const BasePage = () => {
     }
 
     const bnfParamArr = () => [
-        ['window', rollingWindow],
-        ['delta_select', deltaSelect],
-        ['delta', delta],
-        ['ib', iterativeBackcasting],
-        ['demean', demean],].concat(
-        [['transform', transform]].concat(
-            transform ? [
-                    ['p_code', pCode],
-                    ['d_code', dCode],
-                    ['take_log', takeLog]]
+        ['window', state.rollingWindow],
+        ['delta_select', state.deltaSelect],
+        ['delta', state.delta],
+        ['ib', state.iterativeBackcasting],
+        ['demean', state.demean],].concat(
+        [['transform', state.transform]].concat(
+            state.transform ? [
+                    ['p_code', state.pCode],
+                    ['d_code', state.dCode],
+                    ['take_log', state.takeLog]]
                 : []
         )
     );
 
-    const fetchResultWithErrorHandling = async ({url, onErrorCallback}) => {
+    const fetchResultWithErrorHandling = async ({url, onFetchErrorCallback}) => {
         return fetchWithTimeout(url)
             .catch(e => {
                 setState({alertErrorType: "TIMEOUT"});
-                onErrorCallback();
+                onFetchErrorCallback();
                 throw e;
             })
             .then((response) => {
                 if (response.status !== 200) {
                     setState({alertErrorType: "SERVER"});
-                    onErrorCallback();
+                    onFetchErrorCallback();
                     throw new Error("bad status");
                 } else {
                     return response.json();
@@ -223,13 +183,13 @@ const BasePage = () => {
 
     }
 
-    const getResultsForFREDData = async ({onErrorCallback}) => {
+    const getResultsForFREDData = async ({onFetchErrorCallback}) => {
 
         const paramStr = pairArrayToParamStr(
-            [['fred_abbr', mnemonic],
-                ['freq', frequencyFRED],
-                ['obs_start', DateAbstract.truncatedDate(startDateFRED)],
-                ['obs_end', DateAbstract.truncatedDate(endDateFRED)],
+            [['fred_abbr', state.mnemonic],
+                ['freq', state.frequencyFRED],
+                ['obs_start', DateAbstract.truncatedDate(state.startDateFRED)],
+                ['obs_end', DateAbstract.truncatedDate(state.endDateFRED)],
             ].concat(bnfParamArr())
         );
 
@@ -239,7 +199,7 @@ const BasePage = () => {
 
         setState({isLoading: true});
 
-        await fetchResultWithErrorHandling({url: finalURL, onErrorCallback})
+        await fetchResultWithErrorHandling({url: finalURL, onFetchErrorCallback})
             .then(result => {
                 console.log('Success:', result);
 
@@ -267,10 +227,10 @@ const BasePage = () => {
             });
     }
 
-    const getResultsForUserSpecifiedData = async ({onErrorCallback}) => {
+    const getResultsForUserSpecifiedData = async ({onFetchErrorCallback}) => {
 
         // dealing with all operating system's newline characters
-        const y = unprocessedY.replace(/(,?(\r\n|\n|\r))|(,\s)/gm, ",")
+        const y = state.unprocessedY.replace(/(,?(\r\n|\n|\r))|(,\s)/gm, ",")
             .split(",")
             .filter(x => x !== "");
 
@@ -284,7 +244,7 @@ const BasePage = () => {
 
         setState({isLoading: true});
 
-        await fetchResultWithErrorHandling({url: finalURL, onErrorCallback})
+        await fetchResultWithErrorHandling({url: finalURL, onFetchErrorCallback})
             .then(result => {
                 console.log('Success:', result);
                 const
@@ -293,8 +253,8 @@ const BasePage = () => {
                     ciRes = result["cycle_ci"];
 
                 setState({
-                    x: frequency !== "n" ? // dated axis or numbered axis
-                        DateAbstract.createDate(frequency, startDate).getDateSeries(cycleRes.length).map(DateAbstract.truncatedDate)
+                    x: state.frequency !== "n" ? // dated axis or numbered axis
+                        DateAbstract.createDate(state.frequency, state.startDate).getDateSeries(cycleRes.length).map(DateAbstract.truncatedDate)
                         : Array.from({length: cycleRes.length}, (_, i) => i + 1),
                     transformedY: result["transformed_y"],
                     trend: trendRes,
@@ -313,80 +273,53 @@ const BasePage = () => {
 
     }
 
-    const dataUserFormPageValues = {
-        unprocessedY,
-        startDate,
-        endDate,
-        frequency,
-        dataInputType,
-        displayConfInterval
-    };
-    const dataFREDFormPageValues = {
-        startDateFRED,
-        endDateFRED,
-        minDate,
-        maxDate,
-        mnemonic,
-        frequencyFRED,
-        dataInputType,
-        availableFrequencies,
-        displayConfInterval
-    };
+    const updateTransformationState = () => {
+        const isTransformApplied = !(state.takeLog === false && state.dCode === 'nd' && state.pCode === 'np');
+        setState({"transform": isTransformApplied});
+    }
 
-    const parametersFormPageValues = {
-        isLoading,
-        unprocessedY,
-        delta,
-        deltaSelect,
-        demean,
-        iterativeBackcasting,
-        rollingWindow,
-        transform,
-        dCode,
-        pCode,
-        takeLog,
-        dataInputType,
-        alertErrorType,
-        step,
-    };
+    const getResults = (errorsDisplayedCount, onSuccessCallback, onFetchErrorCallback) => e => {
+        console.log("GOT TO HERE", state.mnemonic)
+        e?.preventDefault();
 
+        updateTransformationState();
+
+        if (state.dataInputType === FRED && state.fieldErrorMessages["mnemonic"] !== undefined) {
+            setState({"alertErrorType": "INPUT_USER_M"});
+            cancelLoading();
+        } else if (state.dataInputType === USER && state.fieldErrorMessages["unprocessedY"] !== undefined) {
+            setState({"alertErrorType": "INPUT_USER_S"});
+            cancelLoading();
+        } else if (state.dataInputType === USER && state.fieldErrorMessages["startDate"] !== undefined) {
+            setState({"alertErrorType": "INPUT_USER_DATE"});
+            cancelLoading();
+        } else if (errorsDisplayedCount() === 0) {
+            onSuccessCallback();
+            if (state.dataInputType === FRED) getResultsForFREDData({onFetchErrorCallback});
+            else if (state.dataInputType === USER) getResultsForUserSpecifiedData({onFetchErrorCallback});
+        } else {
+            setState({"alertErrorType": "INPUT_PARAM"});
+            cancelLoading();
+        }
+    }
 
     const handlers = {
         handleChange, handleNumberFieldChange, handleIntegerNumberFieldChange,
         handleCheckboxChange, handleErrorField, setState,
     };
 
-    const plotPageValues = {
-        x,
-        y,
-        transformedY,
-        cycle,
-        trend,
-        deltaCalc,
-        transform,
-        displayConfInterval,
-        cycleCI,
-        cycleCILB,
-        cycleCIUB,
-        trendCILB,
-        trendCIUB,
-        frequency,
-        startDate,
-        dataInputType,
-        mnemonic
-    };
-
     const location = useLocation();
 
     if (location.pathname.endsWith('/apply')) {
         // handle application of bnf (deeplink)
-        return <Apply handlers={handlers}/>
+        // return <Apply getResults={getResults} cancelLoading={cancelLoading} handlers={handlers}/>
+        return Apply({getResults, cancelLoading, handlers})
     }
 
     return (
         <>
             {(() => {
-                switch (step) {
+                switch (state.step) {
                     case 2:
                         return <DataForm
                             nextStep={nextStep}
@@ -394,29 +327,28 @@ const BasePage = () => {
                             setErrorMessage={setErrorMessage}
                             deleteErrorMessage={deleteErrorMessage}
                             handlers={handlers}
-                            valuesUserData={dataUserFormPageValues}
-                            valuesFREDData={dataFREDFormPageValues}
-                            errors={fieldErrorMessages}
+                            valuesUserData={{...state}}
+                            valuesFREDData={{...state}}
+                            errors={state.fieldErrorMessages}
                         />
                     case 3:
                         return (
                             <ParametersForm
                                 nextStep={nextStep}
                                 prevStep={prevStep}
-                                cancelLoad={cancelLoading}
+                                cancelLoading={cancelLoading}
                                 handlers={handlers}
-                                getResults={getResultsForUserSpecifiedData}
-                                getFREDResults={getResultsForFREDData}
-                                values={parametersFormPageValues}
-                                errors={fieldErrorMessages}
+                                getResults={getResults}
+                                values={{...state}}
+                                errors={state.fieldErrorMessages}
                             />
                         )
                     case 4:
                         return (
                             <>
-                                {isLoading ? <Loading/> : <DataPlot
+                                {state.isLoading ? <Loading/> : <DataPlot
                                     prevStep={prevStep}
-                                    plotPageValues={plotPageValues}
+                                    plotPageValues={{...state}}
                                     modelParams={extractModelParams(state)}
                                     handleCheckboxChange={handleCheckboxChange}
                                 />

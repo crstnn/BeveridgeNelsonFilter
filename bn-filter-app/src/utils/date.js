@@ -19,6 +19,14 @@ class DateAbstract extends Date {
 
     static truncatedDate = date => `${date.getFullYear()}-${DateAbstract.toFixedTwoDigits(date.getMonth() + 1)}-${DateAbstract.toFixedTwoDigits(date.getDate())}`;
 
+    static maybeConvertStringToDate = str => {
+        if (/^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/.test(str)) {
+            const parsedDate = str.split("-").map(x => Number(x))
+            return new Date(parsedDate[0], parsedDate[1] - 1, parsedDate[2])
+        }
+        return str;
+    }
+
     nextTimePeriod = () => {
         throw new Error("Child class must implement this method");
     };

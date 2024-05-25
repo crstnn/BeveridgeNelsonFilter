@@ -14,6 +14,7 @@ export const MODEL_QUERY_PARAMS = [
     'displayConfInterval',
 ];
 
+export const PARAMETERS_STEP = 3;
 export const LOADING_STEP = 4;
 
 export const FRED = 'FRED';
