@@ -310,9 +310,9 @@ const BasePage = ({initialState}) => {
     };
 
     useEffect(() => {
-        console.log("HERE2", state)
+        console.log("apply useEffect", state)
         if(state.isDeeplinkApply) {
-            console.log("HERE3")
+            console.log("apply useEffect isDeeplinkApply=true")
             const onFetchErrorCallback = () => {
                 setState({PARAMETERS_STEP});
                 cancelLoading();

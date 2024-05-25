@@ -27,7 +27,9 @@ const App = () => {
     let [initialState, setInitialState] = useState({});
 
     useEffect(() => {
+        console.log("deeplink apply useEffect")
         if (location.pathname.endsWith('/apply')) {
+            console.log("deeplink apply useEffect /apply=true")
             const queryParamValues = MODEL_QUERY_PARAMS
                 .map(x => searchParams.get(x))
                 .map(maybeConvertStringToBool)
@@ -68,7 +70,6 @@ const App = () => {
                 </div>
 
                 <Routes>
-                    {/* Routes to BasePage when '/' or '/apply' */}
                     <Route path="/" element={<BasePage {...{initialState: initialState}}/>}/>
                 </Routes>
 
