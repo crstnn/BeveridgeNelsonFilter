@@ -3,28 +3,27 @@ import {DesktopDatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import {TextField} from "@mui/material";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFnsV3";
 
-function CustomDatePicker(props) {
-    const date = props.date;
+const DatePicker = ({date, label, minDate, maxDate, title, updateDate, isDisabled}) => {
 
     const handleDateChange = newValue => {
-        props.updateDate({target: {value: newValue}});
+        updateDate({target: {value: newValue}});
     };
 
     return (
         <div>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DesktopDatePicker
-                    label={props.label}
+                    label={label}
                     inputFormat="dd/MM/yyyy"
                     value={date}
-                    minDate={props.minDate}
-                    maxDate={props.maxDate}
+                    minDate={minDate}
+                    maxDate={maxDate}
                     InputProps={{style: {width: 220}}}
                     onChange={handleDateChange}
-                    disabled={props.isDisabled}
+                    disabled={isDisabled}
                     renderInput={(params) =>
                         <TextField {...params}
-                                   title={props.title}
+                                   title={title}
                                    InputLabelProps={{shrink: true}}
                                    inputProps={{...params.inputProps, placeholder: "DD/MM/YYYY"}}/>}
                 />
@@ -33,4 +32,4 @@ function CustomDatePicker(props) {
     );
 }
 
-export default CustomDatePicker;
+export default DatePicker;
