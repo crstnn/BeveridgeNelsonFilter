@@ -1,4 +1,4 @@
-import React, {useReducer} from 'react';
+import React, {useEffect, useReducer} from 'react';
 import StartMenu from './StartMenu';
 import ParametersForm from "./ParametersForm";
 import DataForm from "./DataForm";
@@ -8,15 +8,14 @@ import Error from "./Error";
 import {CONFIG} from "../config.js";
 import {DateAbstract} from "../utils/date";
 import {confIntZip, extractModelParams, fetchWithTimeout, pairArrayToParamStr} from "../utils/utils";
-import Apply from "./Apply";
-import {useLocation} from "react-router-dom";
-import {FRED, USER} from "../utils/consts";
+import {FRED, PARAMETERS_STEP, USER} from "../utils/consts";
 
 const {field, URL} = CONFIG;
 
-const BasePage = () => {
+const BasePage = ({initialState}) => {
     const [state, setState] = useReducer((state, newState) => ({...state, ...newState}),
         {
+            isDeeplinkApply: false,
             step: 1,
             dataInputType: FRED,
             mnemonic: '',
@@ -55,8 +54,11 @@ const BasePage = () => {
             alertErrorType: null, // overarching alert text
             fieldErrorMessages: {},
             isLoading: false,
+            ...initialState,
         }
     );
+
+    console.log("HERE1", initialState)
 
     const nextStep = () => {
         setState({step: state.step + 1})
@@ -279,7 +281,6 @@ const BasePage = () => {
     }
 
     const getResults = (errorsDisplayedCount, onSuccessCallback, onFetchErrorCallback) => e => {
-        console.log("GOT TO HERE", state.mnemonic)
         e?.preventDefault();
 
         updateTransformationState();
@@ -308,13 +309,18 @@ const BasePage = () => {
         handleCheckboxChange, handleErrorField, setState,
     };
 
-    const location = useLocation();
+    useEffect(() => {
+        console.log("HERE2", state)
+        if(state.isDeeplinkApply) {
+            console.log("HERE3")
+            const onFetchErrorCallback = () => {
+                setState({PARAMETERS_STEP});
+                cancelLoading();
+            }
 
-    if (location.pathname.endsWith('/apply')) {
-        // handle application of bnf (deeplink)
-        // return <Apply getResults={getResults} cancelLoading={cancelLoading} handlers={handlers}/>
-        return Apply({getResults, cancelLoading, handlers})
-    }
+            getResults(() => 0, () => null, onFetchErrorCallback)();
+        }
+    }, []);
 
     return (
         <>

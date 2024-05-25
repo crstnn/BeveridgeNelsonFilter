@@ -1,9 +1,12 @@
 import './styles/App.css';
 import BasePage from './components/BasePage';
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {CONFIG} from "./config.js";
 import ReactGA from 'react-ga4';
-import {Route, Routes} from "react-router-dom";
+import {Route, Routes, useLocation, useNavigate, useSearchParams} from "react-router-dom";
+import {FRED, LOADING_STEP, MODEL_QUERY_PARAMS} from "./utils/consts";
+import {keyValueArraysToObject, maybeConvertStringToBool, maybeConvertStringToNumber} from "./utils/utils";
+import {DateAbstract} from "./utils/date";
 
 const {analytics: {GA}} = CONFIG;
 
@@ -15,6 +18,34 @@ const App = () => {
     useEffect(() => {
         console.log('registered App for GA');
         ReactGA.send({hitType: "pageview", page: window.location.pathname});
+    }, []);
+
+    const location = useLocation();
+    const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
+
+    let [initialState, setInitialState] = useState({});
+
+    useEffect(() => {
+        if (location.pathname.endsWith('/apply')) {
+            const queryParamValues = MODEL_QUERY_PARAMS
+                .map(x => searchParams.get(x))
+                .map(maybeConvertStringToBool)
+                .map(maybeConvertStringToNumber)
+                .map(DateAbstract.maybeConvertStringToDate);
+            const queryParams = keyValueArraysToObject(MODEL_QUERY_PARAMS, queryParamValues);
+
+
+            setInitialState({
+                isDeeplinkApply: true,
+                step: LOADING_STEP,
+                isLoading: true,
+                dataInputType: FRED,
+                ...queryParams,
+            });
+
+            navigate('/')
+        }
     }, []);
 
     return (
@@ -38,7 +69,7 @@ const App = () => {
 
                 <Routes>
                     {/* Routes to BasePage when '/' or '/apply' */}
-                    <Route path="/apply?/" element={<BasePage/>}/>
+                    <Route path="/" element={<BasePage {...{initialState: initialState}}/>}/>
                 </Routes>
 
             </div>
