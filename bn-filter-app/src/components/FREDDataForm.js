@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {Divider, FormControl, FormGroup, FormHelperText, Grid, InputLabel, Select, TextField,} from "@mui/material";
-import CustomDatePicker from "../pickers/CustomDatePicker";
+import DatePicker from "../pickers/DatePicker";
 import {CONFIG} from "../config.js";
 import {createMenuItems, fetchWithTimeout, pairArrayToParamStr} from "../utils/utils";
 import Error from "./Error";
@@ -164,7 +164,7 @@ export default class FREDDataForm extends Component {
                           justifyContent="space-evenly"
                           alignItems="center">
                         <Grid item xs={4}>
-                            <CustomDatePicker
+                            <DatePicker
                                 label={"Start Date"}
                                 title={"Series' start date (inclusive). Determined by FRED"}
                                 date={values.startDateFRED}
@@ -173,7 +173,7 @@ export default class FREDDataForm extends Component {
                                 updateDate={handleChange('startDateFRED')}/>
                         </Grid>
                         <Grid item xs={4}>
-                            <CustomDatePicker
+                            <DatePicker
                                 label={"End Date"}
                                 title={"Series' end date (inclusive). Determined by FRED"}
                                 date={values.endDateFRED}

@@ -37,7 +37,7 @@ const App = () => {
                 </div>
 
                 <Routes>
-                    // Routes to BasePage when '/' or '/apply'
+                    {/* Routes to BasePage when '/' or '/apply' */}
                     <Route path="/apply?/" element={<BasePage/>}/>
                 </Routes>
 

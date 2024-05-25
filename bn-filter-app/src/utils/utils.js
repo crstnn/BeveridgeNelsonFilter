@@ -1,5 +1,7 @@
 import {MenuItem} from "@mui/material";
 import React from "react";
+import {MODEL_QUERY_PARAMS} from "./consts";
+import {DateAbstract} from "./date";
 
 export const colsToRows = (...columns) => {
 
@@ -22,9 +24,11 @@ export const colsToRows = (...columns) => {
     return retArr;
 };
 
-export const confIntZip = (cycle, ci, bound) => cycle.map((x, i) => ci[i] !== null ? bound === "lb" ? x - ci[i] : /* ub */ x + ci[i] : undefined);
+const zip = (array1, array2) => array1.map((k, i) => [k, array2[i]]);
 
-export const pairToParam = (paramName, currPair) =>
+export const confIntZip = (cycle, ci, bound) => cycle.map((x, i) => ci[i] !== null ? bound === "lower" ? x - ci[i] : /* upper */ x + ci[i] : undefined);
+
+const pairToParam = (paramName, currPair) =>
     paramName + currPair[0].toString() + '=' + currPair[1].toString() + '&';
 
 export const pairArrayToParamStr = arr => arr.reduce(pairToParam, '?');
@@ -45,3 +49,25 @@ export const createHoverText = option => {
     option.forEach(x => hoverText[x.value] = x.hoverText);
     return fieldItem => hoverText[fieldItem];
 }
+
+export const maybeConvertStringToBool = str => {
+    if (str?.toLowerCase?.() === 'true') return true;
+    else if (str?.toLowerCase?.() === 'false') return false;
+    return str;
+}
+
+export const maybeConvertStringToNumber = str => {
+    if (/^[0-9]+[.]?[0-9]*$/.test(str)) return parseFloat(str);
+    return str;
+}
+
+export const keyValueArraysToObject = (keyArray, valueArray) =>
+    Object.fromEntries(keyArray.map((_, i) => [keyArray[i], valueArray[i]]));
+
+export const extractModelParams = valueObject => zip(MODEL_QUERY_PARAMS,
+    MODEL_QUERY_PARAMS.map(
+        key => valueObject?.[key] instanceof Date ? DateAbstract.truncatedDate(valueObject?.[key]) : valueObject?.[key]
+    )
+);
+
+export const buildModelApplicationUrl = paramPairs => `${window.location.origin}/apply${pairArrayToParamStr(paramPairs)}`;

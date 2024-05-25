@@ -3,6 +3,7 @@ import {Button, Divider, Grid, ToggleButton, ToggleButtonGroup,} from "@mui/mate
 import '../styles/App.css';
 import FREDDataForm from "./FREDDataForm";
 import UserDataForm from "./UserDataForm";
+import {FRED, USER} from "../utils/consts";
 
 const DataForm = ({
                       errors,
@@ -19,9 +20,9 @@ const DataForm = ({
     const toggleDataInputType = e => {
         const
             isMnemonicErrorDisplaying =
-                () => errors["mnemonic"] !== undefined && valuesFREDData.dataInputType === "FRED",
+                () => errors["mnemonic"] !== undefined && valuesFREDData.dataInputType === FRED,
             isUserSeriesErrorDisplaying =
-                () => errors["unprocessedY"] !== undefined && valuesUserData.dataInputType === "USER";
+                () => errors["unprocessedY"] !== undefined && valuesUserData.dataInputType === USER;
 
         if (isMnemonicErrorDisplaying()) deleteErrorMessage("mnemonic");
         if (isUserSeriesErrorDisplaying()) deleteErrorMessage("unprocessedY");
@@ -32,13 +33,12 @@ const DataForm = ({
     const next = e => {
         e.preventDefault();
         nextStep();
-        if (valuesFREDData.dataInputType === "FRED" && valuesFREDData.mnemonic === "") {
+        if (valuesFREDData.dataInputType === FRED && valuesFREDData.mnemonic === "") {
             setErrorMessage("mnemonic", "A mnemonic must be specified");
         }
-        if (valuesUserData.dataInputType === "USER" && valuesUserData.unprocessedY === "") {
+        if (valuesUserData.dataInputType === USER && valuesUserData.unprocessedY === "") {
             setErrorMessage("unprocessedY", "time series field cannot be empty");
         }
-        console.log(valuesUserData)
     }
 
     return (
@@ -52,13 +52,13 @@ const DataForm = ({
                             exclusive
                             onChange={toggleDataInputType}
                         >
-                            <ToggleButton value="FRED">FRED Series</ToggleButton>
-                            <ToggleButton value="USER">User Series</ToggleButton>
+                            <ToggleButton value={FRED}>FRED Series</ToggleButton>
+                            <ToggleButton value={USER}>User Series</ToggleButton>
                         </ToggleButtonGroup>
                     </Divider>
                 </div>
                 {(() => {
-                    if (valuesUserData.dataInputType === "USER")
+                    if (valuesUserData.dataInputType === USER)
                         return <UserDataForm
                             setErrorMessage={setErrorMessage}
                             deleteErrorMessage={deleteErrorMessage}
@@ -66,7 +66,7 @@ const DataForm = ({
                             values={valuesUserData}
                             errors={errors}
                         />
-                    else if (valuesUserData.dataInputType === "FRED")
+                    else if (valuesUserData.dataInputType === FRED)
                         return <FREDDataForm
                             setErrorMessage={setErrorMessage}
                             deleteErrorMessage={deleteErrorMessage}

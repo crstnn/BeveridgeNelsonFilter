@@ -1,4 +1,4 @@
-import React, {useEffect, useReducer} from 'react';
+import React, {useReducer} from 'react';
 import StartMenu from './StartMenu';
 import ParametersForm from "./ParametersForm";
 import DataForm from "./DataForm";
@@ -7,8 +7,10 @@ import Loading from "./Loading";
 import Error from "./Error";
 import {CONFIG} from "../config.js";
 import {DateAbstract} from "../utils/date";
-import {confIntZip, fetchWithTimeout, pairArrayToParamStr} from "../utils/utils";
-import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
+import {confIntZip, extractModelParams, fetchWithTimeout, pairArrayToParamStr} from "../utils/utils";
+import Apply from "./Apply";
+import {useLocation} from "react-router-dom";
+import {FRED} from "../utils/consts";
 
 const {field, URL} = CONFIG;
 
@@ -16,7 +18,7 @@ const BasePage = () => {
     const [state, setState] = useReducer((state, newState) => ({...state, ...newState}),
         {
             step: 1,
-            dataInputType: 'FRED',
+            dataInputType: FRED,
             mnemonic: '',
             unprocessedY: '',
             x: [], // dates
@@ -187,11 +189,8 @@ const BasePage = () => {
         validateField([isEmptyString, isNotAnInt, isNotANum, isExceedsMinMax,], input, e);
     }
 
-    const handleChangeValidation = input => e => validationArr => {
-        validateField(validationArr, input, e);
-    }
-
-    const bnfParamArr = () => [['window', rollingWindow],
+    const bnfParamArr = () => [
+        ['window', rollingWindow],
         ['delta_select', deltaSelect],
         ['delta', delta],
         ['ib', iterativeBackcasting],
@@ -203,7 +202,7 @@ const BasePage = () => {
                     ['take_log', takeLog]]
                 : []
         )
-    )
+    );
 
     const fetchResultWithErrorHandling = async ({url, onErrorCallback}) => {
         return fetchWithTimeout(url)
@@ -257,12 +256,12 @@ const BasePage = () => {
                     cycle: cycleRes,
                     cycleCI: ciRes,
                     deltaCalc: result["delta"],
-                    cycleCILB: confIntZip(cycleRes, ciRes, "lb"),
-                    cycleCIUB: confIntZip(cycleRes, ciRes, "ub"),
-                    trendCILB: confIntZip(trendRes, ciRes, "lb"),
-                    trendCIUB: confIntZip(trendRes, ciRes, "ub"),
+                    cycleCILB: confIntZip(cycleRes, ciRes, "lower"),
+                    cycleCIUB: confIntZip(cycleRes, ciRes, "upper"),
+                    trendCILB: confIntZip(trendRes, ciRes, "lower"),
+                    trendCIUB: confIntZip(trendRes, ciRes, "upper"),
+                    isLoading: false,
                 });
-                setState({isLoading: false});
             }).catch((error) => {
                 console.log(error);
             });
@@ -273,7 +272,7 @@ const BasePage = () => {
         // dealing with all operating system's newline characters
         const y = unprocessedY.replace(/(,?(\r\n|\n|\r))|(,\s)/gm, ",")
             .split(",")
-            .filter(x => x !== "")
+            .filter(x => x !== "");
 
         setState({y});
 
@@ -302,12 +301,12 @@ const BasePage = () => {
                     cycle: cycleRes,
                     cycleCI: ciRes,
                     deltaCalc: result["delta"],
-                    cycleCILB: confIntZip(cycleRes, ciRes, "lb"),
-                    cycleCIUB: confIntZip(cycleRes, ciRes, "ub"),
-                    trendCILB: confIntZip(trendRes, ciRes, "lb"),
-                    trendCIUB: confIntZip(trendRes, ciRes, "ub"),
+                    cycleCILB: confIntZip(cycleRes, ciRes, "lower"),
+                    cycleCIUB: confIntZip(cycleRes, ciRes, "upper"),
+                    trendCILB: confIntZip(trendRes, ciRes, "lower"),
+                    trendCIUB: confIntZip(trendRes, ciRes, "upper"),
+                    isLoading: false,
                 });
-                setState({isLoading: false});
             }).catch((error) => {
                 console.log(error);
             });
@@ -377,18 +376,12 @@ const BasePage = () => {
         mnemonic
     };
 
-    const [searchParams, setSearchParams] = useSearchParams();
     const location = useLocation();
-    const navigate = useNavigate();
 
-    useEffect(() => {
-        console.log('here', location.pathname)
-        if (location.pathname.endsWith('/apply')) {
-            // TODO
-            navigate('/') // base
-        }
-
-    }, [location]);
+    if (location.pathname.endsWith('/apply')) {
+        // handle application of bnf (deeplink)
+        return <Apply handlers={handlers}/>
+    }
 
     return (
         <>
@@ -407,18 +400,16 @@ const BasePage = () => {
                         />
                     case 3:
                         return (
-                            <>
-                                <ParametersForm
-                                    nextStep={nextStep}
-                                    prevStep={prevStep}
-                                    cancelLoad={cancelLoading}
-                                    handlers={handlers}
-                                    getResults={getResultsForUserSpecifiedData}
-                                    getFREDResults={getResultsForFREDData}
-                                    values={parametersFormPageValues}
-                                    errors={fieldErrorMessages}
-                                />
-                            </>
+                            <ParametersForm
+                                nextStep={nextStep}
+                                prevStep={prevStep}
+                                cancelLoad={cancelLoading}
+                                handlers={handlers}
+                                getResults={getResultsForUserSpecifiedData}
+                                getFREDResults={getResultsForFREDData}
+                                values={parametersFormPageValues}
+                                errors={fieldErrorMessages}
+                            />
                         )
                     case 4:
                         return (
@@ -426,16 +417,18 @@ const BasePage = () => {
                                 {isLoading ? <Loading/> : <DataPlot
                                     prevStep={prevStep}
                                     plotPageValues={plotPageValues}
+                                    modelParams={extractModelParams(state)}
                                     handleCheckboxChange={handleCheckboxChange}
                                 />
                                 }
                             </>
                         )
                     default: // case 1
-                        return <StartMenu
-                            nextStep={nextStep}
-                            handleChange={handleChange}
-                        />
+                        return (
+                            <StartMenu
+                                nextStep={nextStep}
+                                handleChange={handleChange}
+                            />)
                 }
             })()}
         </>

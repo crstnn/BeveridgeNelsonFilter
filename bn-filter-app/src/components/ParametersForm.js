@@ -14,6 +14,7 @@ import '../styles/App.css';
 import {CONFIG} from "../config.js";
 import Error from "./Error";
 import {createHoverText, createMenuItems} from "../utils/utils";
+import {FRED, USER} from "../utils/consts";
 
 const {field, alertErrors} = CONFIG;
 
@@ -44,23 +45,23 @@ class ParametersForm extends Component {
         const {handleChange, setState} = handlers;
 
         const onErrorCallback = () => {
-            setState({step}) // keep on current step if error
+            setState({step}); // keep on current step if error
             cancelLoad();
         }
 
-        if (dataInputType === "FRED" && errors["mnemonic"] !== undefined) {
+        if (dataInputType === FRED && errors["mnemonic"] !== undefined) {
             handleChange("alertErrorType")({target: {value: "INPUT_USER_M"}});
             cancelLoad();
-        } else if (dataInputType === "USER" && errors["unprocessedY"] !== undefined) {
+        } else if (dataInputType === USER && errors["unprocessedY"] !== undefined) {
             handleChange("alertErrorType")({target: {value: "INPUT_USER_S"}});
             cancelLoad();
-        } else if (dataInputType === "USER" && errors["startDate"] !== undefined) {
+        } else if (dataInputType === USER && errors["startDate"] !== undefined) {
             handleChange("alertErrorType")({target: {value: "INPUT_USER_DATE"}});
             cancelLoad();
         } else if (this.errorsDisplayedCount() === 0) {
             nextStep();
-            if (dataInputType === "FRED") getFREDResults({onErrorCallback});
-            else if (dataInputType === "USER") getResults({onErrorCallback});
+            if (dataInputType === FRED) getFREDResults({onErrorCallback});
+            else if (dataInputType === USER) getResults({onErrorCallback});
 
         } else {
             handleChange("alertErrorType")({target: {value: "INPUT_PARAM"}});

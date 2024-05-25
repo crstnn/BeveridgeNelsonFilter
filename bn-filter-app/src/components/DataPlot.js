@@ -1,12 +1,13 @@
 import React, {useMemo, useState} from "react";
 import Plot from 'react-plotly.js';
-import {Button, Checkbox, FormControl, FormControlLabel} from "@mui/material";
+import {Button, Checkbox, FormControl, FormControlLabel, Grid} from "@mui/material";
 import {CSVLink} from "react-csv";
-import {colsToRows} from "../utils/utils";
+import {buildModelApplicationUrl, colsToRows} from "../utils/utils";
+import ShareButton from "./ShareButton";
+import {FRED} from "../utils/consts";
 
 
-const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
-
+const DataPlot = ({handleCheckboxChange, plotPageValues, modelParams, prevStep}) => {
     const fileName = "BN_filter_results.csv";
     const [displayConfInterval, setDisplayConfInterval] = useState(plotPageValues.displayConfInterval);
     // Used to trigger re-render of plot. This circumvents react-plotly's plot refreshing convention.
@@ -145,7 +146,7 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
                 y: -0.08,
                 traceorder: 'normal',
             },
-            ...(plotPageValues.dataInputType === 'FRED' && {
+            ...(plotPageValues.dataInputType === FRED && {
                 annotations: [
                     {
                         font: {
@@ -176,8 +177,8 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
 
     const getCSVData = () => colsToRows(
         ["date"].concat(plotPageValues.x),
-        [`${plotPageValues.dataInputType === "FRED" ? `${plotPageValues.mnemonic}_` : ''}original_series`].concat(plotPageValues.y),
-        plotPageValues.transform ? [`${plotPageValues.dataInputType === "FRED" ? `${plotPageValues.mnemonic}_` : ''}transformed_series`].concat(plotPageValues.transformedY) : undefined,
+        [`${plotPageValues.dataInputType === FRED ? `${plotPageValues.mnemonic}_` : ''}original_series`].concat(plotPageValues.y),
+        plotPageValues.transform ? [`${plotPageValues.dataInputType === FRED ? `${plotPageValues.mnemonic}_` : ''}transformed_series`].concat(plotPageValues.transformedY) : undefined,
         ["trend"].concat(plotPageValues.trend),
         ["cycle"].concat(plotPageValues.cycle),
         displayConfInterval ? ["cycle_conf_int_lower_bound"].concat(plotPageValues.cycleCILB) : undefined,
@@ -275,15 +276,24 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, prevStep}) => {
                 </div>
                 <CSVLink style={{textDecoration: "underline", marginBottom: 7}}
                          filename={fileName} data={getCSVData()}>Download as CSV</CSVLink>
+
             </div>
-            <Button
-                variant="outlined"
-                style={styles.button}
-                onClick={(e) => {
-                    handleCheckboxChange('displayConfInterval')({target: {checked: displayConfInterval}})
-                    back(e)
-                }}
-            >Back</Button>
+            <Grid container direction="column" justifyContent="space-evenly"
+                  alignItems="center">
+                <Grid item xs={3}>
+                    <Button
+                        variant="outlined"
+                        style={styles.button}
+                        onClick={(e) => {
+                            handleCheckboxChange('displayConfInterval')({target: {checked: displayConfInterval}})
+                            back(e)
+                        }}
+                    >Back</Button>
+                    {plotPageValues.dataInputType === FRED &&
+                        <ShareButton buttonText={"Share Results"} styles={styles}
+                                     lazyShareUrl={_ => buildModelApplicationUrl(modelParams)}/>}
+                </Grid>
+            </Grid>
         </>
     );
 
@@ -294,6 +304,10 @@ const styles = {
         minHeight: "45px",
         minWidth: "100px",
         margin: "15px 20px 100px",
+    },
+    shareList: {
+        border: "1px solid #d3d3d3",
+        borderBottom: "none",
     }
 }
 
