@@ -14,6 +14,7 @@ import '../styles/App.css';
 import {CONFIG} from "../config.js";
 import Error from "./Error";
 import {createHoverText, createMenuItems} from "../utils/utils";
+import {PARAMETERS_STEP} from "../utils/consts";
 
 const {field, alertErrors} = CONFIG;
 
@@ -36,8 +37,7 @@ const ParametersForm = ({handlers, values, errors, prevStep, nextStep, cancelLoa
     }
 
     const onFetchErrorCallback = () => {
-        const step = {values};
-        setState({step}); // keep on current step if error
+        setState({step: PARAMETERS_STEP}); // keep on current step if error
         cancelLoading();
     }
 

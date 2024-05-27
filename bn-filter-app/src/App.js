@@ -3,7 +3,7 @@ import BasePage from './components/BasePage';
 import React, {useEffect, useState} from "react";
 import {CONFIG} from "./config.js";
 import ReactGA from 'react-ga4';
-import {Route, Routes, useLocation, useNavigate, useSearchParams} from "react-router-dom";
+import {Route, Routes, useNavigate, useSearchParams} from "react-router-dom";
 import {FRED, LOADING_STEP, MODEL_QUERY_PARAMS} from "./utils/consts";
 import {keyValueArraysToObject, maybeConvertStringToBool, maybeConvertStringToNumber} from "./utils/utils";
 import {DateAbstract} from "./utils/date";
@@ -20,15 +20,14 @@ const App = () => {
         ReactGA.send({hitType: "pageview", page: window.location.pathname});
     }, []);
 
-    const location = useLocation();
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
     let [initialState, setInitialState] = useState({});
 
     useEffect(() => {
-        console.log("deeplink apply useEffect")
-        if (location.pathname.endsWith('/apply')) {
+        console.log("deeplink apply useEffect" + window.location.pathname)
+        if (window.location.pathname.endsWith('/apply')) {
             console.log("deeplink apply useEffect /apply=true")
             const queryParamValues = MODEL_QUERY_PARAMS
                 .map(x => searchParams.get(x))
@@ -71,7 +70,7 @@ const App = () => {
                 </div>
 
                 <Routes>
-                    <Route path="/" element={<BasePage {...{initialState: initialState}}/>}/>
+                    <Route path="" element={<BasePage {...{initialState: initialState}}/>}/>
                 </Routes>
 
             </div>
