@@ -4,7 +4,7 @@ import React, {useEffect, useState} from "react";
 import {CONFIG} from "./config.js";
 import ReactGA from 'react-ga4';
 import {Route, Routes, useNavigate, useSearchParams} from "react-router-dom";
-import {FRED, LOADING_STEP, MODEL_QUERY_PARAMS} from "./utils/consts";
+import {FRED, LOADING_STEP, MODEL_PARAMS, MODEL_QUERY_PARAMS} from "./utils/consts";
 import {keyValueArraysToObject, maybeConvertStringToBool, maybeConvertStringToNumber} from "./utils/utils";
 import {DateAbstract} from "./utils/date";
 
@@ -34,15 +34,15 @@ const App = () => {
                 .map(maybeConvertStringToBool)
                 .map(maybeConvertStringToNumber)
                 .map(DateAbstract.maybeConvertStringToDate);
-            const queryParams = keyValueArraysToObject(MODEL_QUERY_PARAMS, queryParamValues);
 
+            const modelParams = keyValueArraysToObject(MODEL_PARAMS, queryParamValues);
 
             setInitialState({
                 isDeeplinkApply: true,
                 step: LOADING_STEP,
                 isLoading: true,
                 dataInputType: FRED,
-                ...queryParams,
+                ...modelParams,
             });
 
             navigate('/')

@@ -1,6 +1,6 @@
 import {MenuItem} from "@mui/material";
 import React from "react";
-import {MODEL_QUERY_PARAMS} from "./consts";
+import {MODEL_PARAMS, MODEL_QUERY_PARAMS} from "./consts";
 import {DateAbstract} from "./date";
 
 export const colsToRows = (...columns) => {
@@ -65,9 +65,12 @@ export const keyValueArraysToObject = (keyArray, valueArray) =>
     Object.fromEntries(keyArray.map((_, i) => [keyArray[i], valueArray[i]]));
 
 export const extractModelParams = valueObject => zip(MODEL_QUERY_PARAMS,
-    MODEL_QUERY_PARAMS.map(
+    MODEL_PARAMS.map(
         key => valueObject?.[key] instanceof Date ? DateAbstract.truncatedDate(valueObject?.[key]) : valueObject?.[key]
     )
 );
 
-export const buildModelApplicationUrl = paramPairs => `${window.location.origin}/apply${pairArrayToParamStr(paramPairs)}`;
+export const buildModelApplicationUrl = paramPairs => {
+    console.log(paramPairs)
+    return `${window.location.origin}/apply${pairArrayToParamStr(paramPairs)}`
+};
