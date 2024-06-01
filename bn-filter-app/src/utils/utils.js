@@ -31,7 +31,7 @@ export const confIntZip = (cycle, ci, bound) => cycle.map((x, i) => ci[i] !== nu
 const pairToParam = (paramName, currPair) =>
     paramName + currPair[0].toString() + '=' + currPair[1].toString() + '&';
 
-export const pairArrayToParamStr = arr => arr.reduce(pairToParam, '?');
+export const pairArrayToParamStr = arr => arr.reduce(pairToParam, '?').slice(0, -1);
 
 export async function fetchWithTimeout(url, timeout = 20000) { // 20 second timeout
     const
@@ -65,7 +65,7 @@ export const keyValueArraysToObject = (keyArray, valueArray) =>
     Object.fromEntries(keyArray.map((_, i) => [keyArray[i], valueArray[i]]));
 
 export const extractModelParams = valueObject => {
-    const isTransformApplied = valueObject['transform'] === true
+    const isTransformApplied = valueObject['t'] === true
 
     const queryParams = isTransformApplied ? [...MODEL_QUERY_PARAMS, ...TRANSFORMATION_QUERY_PARAMS] : MODEL_QUERY_PARAMS
     const params = isTransformApplied ? [...MODEL_PARAMS, ...TRANSFORMATION_PARAMS] : MODEL_PARAMS

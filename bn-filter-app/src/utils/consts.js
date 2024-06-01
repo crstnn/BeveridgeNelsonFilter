@@ -1,15 +1,15 @@
 export const MODEL_QUERY_PARAMS = [
-    'mnemonicFRED',
-    'startDate',
-    'endDate',
-    'frequency',
-    'delta',
-    'deltaSelect',
-    'demean',
-    'iterativeBackcasting',
-    'rollingWindow',
-    'displayConfInt',
-    'transform'
+    'm',
+    'sd',
+    'ed',
+    'f',
+    'd',
+    'ds',
+    'dm',
+    'ib',
+    'rw',
+    'dci',
+    't'
 ];
 
 export const MODEL_PARAMS = [
@@ -26,13 +26,19 @@ export const MODEL_PARAMS = [
     'transform'
 ];
 
-export const TRANSFORMATION_PARAMS = [
+export const TRANSFORMATION_QUERY_PARAMS = [
     'pCode',
     'dCode',
     'takeLog',
 ];
 
-export const TRANSFORMATION_QUERY_PARAMS = TRANSFORMATION_PARAMS;
+
+export const TRANSFORMATION_PARAMS = [
+    'pc',
+    'dc',
+    'tl',
+];
+
 
 export const NO_TRANSFORMATION_KEY_VALUES = {
     'pCode': 'np',

@@ -45,7 +45,7 @@ const App = () => {
 
             const modelParamsFromQueryString = keyValueArraysToObject([...MODEL_PARAMS, TRANSFORMATION_PARAMS], queryParamValues);
 
-            const isTransformApplied = modelParamsFromQueryString['transform'] === true
+            const isTransformApplied = modelParamsFromQueryString['t'] === true
 
             const modelParams = isTransformApplied ? modelParamsFromQueryString : {...modelParamsFromQueryString, ...NO_TRANSFORMATION_KEY_VALUES,}
 
