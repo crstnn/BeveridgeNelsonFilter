@@ -1,3 +1,4 @@
+// ordering must align with `MODEL_PARAMS`
 export const MODEL_QUERY_PARAMS = [
     'm',
     'sd',
@@ -12,6 +13,7 @@ export const MODEL_QUERY_PARAMS = [
     't'
 ];
 
+// ordering must align with `MODEL_QUERY_PARAMS`
 export const MODEL_PARAMS = [
     'mnemonic',
     'startDateFRED',
@@ -26,13 +28,14 @@ export const MODEL_PARAMS = [
     'transform'
 ];
 
+// ordering must align with `TRANSFORMATION_PARAMS`
 export const TRANSFORMATION_QUERY_PARAMS = [
     'pCode',
     'dCode',
     'takeLog',
 ];
 
-
+// ordering must align with `TRANSFORMATION_QUERY_PARAMS`
 export const TRANSFORMATION_PARAMS = [
     'pc',
     'dc',
