@@ -34,9 +34,7 @@ const App = () => {
     let [initialState, setInitialState] = useState({});
 
     useEffect(() => {
-        console.log("deeplink apply useEffect" + window.location.pathname)
         if (window.location.pathname.endsWith('/apply')) {
-            console.log("deeplink apply useEffect /apply=true")
             const queryParamValues = [...MODEL_QUERY_PARAMS, TRANSFORMATION_QUERY_PARAMS]
                 .map(x => searchParams.get(x))
                 .map(maybeConvertStringToBool)
