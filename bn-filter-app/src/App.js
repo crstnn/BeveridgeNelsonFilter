@@ -4,7 +4,15 @@ import React, {useEffect, useState} from "react";
 import {CONFIG} from "./config.js";
 import ReactGA from 'react-ga4';
 import {Route, Routes, useNavigate, useSearchParams} from "react-router-dom";
-import {FRED, LOADING_STEP, MODEL_PARAMS, MODEL_QUERY_PARAMS} from "./utils/consts";
+import {
+    FRED,
+    LOADING_STEP,
+    MODEL_PARAMS,
+    MODEL_QUERY_PARAMS,
+    NO_TRANSFORMATION_KEY_VALUES,
+    TRANSFORMATION_PARAMS,
+    TRANSFORMATION_QUERY_PARAMS
+} from "./utils/consts";
 import {keyValueArraysToObject, maybeConvertStringToBool, maybeConvertStringToNumber} from "./utils/utils";
 import {DateAbstract} from "./utils/date";
 
@@ -29,13 +37,17 @@ const App = () => {
         console.log("deeplink apply useEffect" + window.location.pathname)
         if (window.location.pathname.endsWith('/apply')) {
             console.log("deeplink apply useEffect /apply=true")
-            const queryParamValues = MODEL_QUERY_PARAMS
+            const queryParamValues = [...MODEL_QUERY_PARAMS, TRANSFORMATION_QUERY_PARAMS]
                 .map(x => searchParams.get(x))
                 .map(maybeConvertStringToBool)
                 .map(maybeConvertStringToNumber)
                 .map(DateAbstract.maybeConvertStringToDate);
 
-            const modelParams = keyValueArraysToObject(MODEL_PARAMS, queryParamValues);
+            const modelParamsFromQueryString = keyValueArraysToObject([...MODEL_PARAMS, TRANSFORMATION_PARAMS], queryParamValues);
+
+            const isTransformApplied = modelParamsFromQueryString['transform'] === true
+
+            const modelParams = isTransformApplied ? modelParamsFromQueryString : {...modelParamsFromQueryString, ...NO_TRANSFORMATION_KEY_VALUES,}
 
             setInitialState({
                 isDeeplinkApply: true,
@@ -70,7 +82,7 @@ const App = () => {
                 </div>
 
                 <Routes>
-                    <Route path="" element={<BasePage {...{initialState: initialState}}/>}/>
+                    <Route path="/" element={<BasePage {...{initialState: initialState}}/>}/>
                 </Routes>
 
             </div>

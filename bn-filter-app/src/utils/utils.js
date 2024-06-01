@@ -1,6 +1,6 @@
 import {MenuItem} from "@mui/material";
 import React from "react";
-import {MODEL_PARAMS, MODEL_QUERY_PARAMS} from "./consts";
+import {MODEL_PARAMS, MODEL_QUERY_PARAMS, TRANSFORMATION_PARAMS, TRANSFORMATION_QUERY_PARAMS} from "./consts";
 import {DateAbstract} from "./date";
 
 export const colsToRows = (...columns) => {
@@ -64,13 +64,18 @@ export const maybeConvertStringToNumber = str => {
 export const keyValueArraysToObject = (keyArray, valueArray) =>
     Object.fromEntries(keyArray.map((_, i) => [keyArray[i], valueArray[i]]));
 
-export const extractModelParams = valueObject => zip(MODEL_QUERY_PARAMS,
-    MODEL_PARAMS.map(
-        key => valueObject?.[key] instanceof Date ? DateAbstract.truncatedDate(valueObject?.[key]) : valueObject?.[key]
-    )
-);
+export const extractModelParams = valueObject => {
+    const isTransformApplied = valueObject['transform'] === true
 
-export const buildModelApplicationUrl = paramPairs => {
-    console.log(paramPairs)
-    return `${window.location.origin}/apply${pairArrayToParamStr(paramPairs)}`
+    const queryParams = isTransformApplied ? [...MODEL_QUERY_PARAMS, ...TRANSFORMATION_QUERY_PARAMS] : MODEL_QUERY_PARAMS
+    const params = isTransformApplied ? [...MODEL_PARAMS, ...TRANSFORMATION_PARAMS] : MODEL_PARAMS
+
+    return zip(queryParams,
+        params.map(
+            key => valueObject?.[key] instanceof Date ? DateAbstract.truncatedDate(valueObject?.[key]) : valueObject?.[key]
+        )
+    );
 };
+
+
+export const buildModelApplicationUrl = paramPairs => `${window.location.origin}/apply${pairArrayToParamStr(paramPairs)}`;

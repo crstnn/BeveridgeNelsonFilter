@@ -8,10 +8,8 @@ export const MODEL_QUERY_PARAMS = [
     'demean',
     'iterativeBackcasting',
     'rollingWindow',
-    'pCode',
-    'dCode',
-    'takeLog',
     'displayConfInt',
+    'transform'
 ];
 
 export const MODEL_PARAMS = [
@@ -24,11 +22,23 @@ export const MODEL_PARAMS = [
     'demean',
     'iterativeBackcasting',
     'rollingWindow',
+    'displayConfInterval',
+    'transform'
+];
+
+export const TRANSFORMATION_PARAMS = [
     'pCode',
     'dCode',
     'takeLog',
-    'displayConfInterval',
 ];
+
+export const TRANSFORMATION_QUERY_PARAMS = TRANSFORMATION_PARAMS;
+
+export const NO_TRANSFORMATION_KEY_VALUES = {
+    'pCode': 'np',
+    'dCode': 'nd',
+    'takeLog': false,
+};
 
 export const PARAMETERS_STEP = 3;
 export const LOADING_STEP = 4;
