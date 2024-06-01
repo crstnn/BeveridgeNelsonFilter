@@ -43,9 +43,9 @@ const App = () => {
 
             const modelParamsFromQueryString = keyValueArraysToObject([...MODEL_PARAMS, TRANSFORMATION_PARAMS], queryParamValues);
 
-            const isTransformApplied = modelParamsFromQueryString['t'] === true
+            const isTransformApplied = modelParamsFromQueryString['t'] === true;
 
-            const modelParams = isTransformApplied ? modelParamsFromQueryString : {...modelParamsFromQueryString, ...NO_TRANSFORMATION_KEY_VALUES,}
+            const modelParams = isTransformApplied ? modelParamsFromQueryString : {...modelParamsFromQueryString, ...NO_TRANSFORMATION_KEY_VALUES,};
 
             setInitialState({
                 isDeeplinkApply: true,
@@ -55,7 +55,7 @@ const App = () => {
                 ...modelParams,
             });
 
-            navigate('/')
+            navigate('/');
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

@@ -65,10 +65,10 @@ export const keyValueArraysToObject = (keyArray, valueArray) =>
     Object.fromEntries(keyArray.map((_, i) => [keyArray[i], valueArray[i]]));
 
 export const extractModelParams = valueObject => {
-    const isTransformApplied = valueObject['t'] === true
+    const isTransformApplied = valueObject['t'] === true;
 
-    const queryParams = isTransformApplied ? [...MODEL_QUERY_PARAMS, ...TRANSFORMATION_QUERY_PARAMS] : MODEL_QUERY_PARAMS
-    const params = isTransformApplied ? [...MODEL_PARAMS, ...TRANSFORMATION_PARAMS] : MODEL_PARAMS
+    const queryParams = isTransformApplied ? [...MODEL_QUERY_PARAMS, ...TRANSFORMATION_QUERY_PARAMS] : MODEL_QUERY_PARAMS;
+    const params = isTransformApplied ? [...MODEL_PARAMS, ...TRANSFORMATION_PARAMS] : MODEL_PARAMS;
 
     return zip(queryParams,
         params.map(
