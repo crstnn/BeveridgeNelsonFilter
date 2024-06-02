@@ -2,8 +2,9 @@ import React, {useMemo, useState} from "react";
 import Plot from 'react-plotly.js';
 import {Button, Checkbox, FormControl, FormControlLabel, Grid} from "@mui/material";
 import {CSVLink} from "react-csv";
-import {colsToRows} from "../utils/utils";
+import {buildModelApplicationUrl, colsToRows} from "../utils/utils";
 import {FRED} from "../utils/consts";
+import ShareButton from "./ShareButton";
 
 
 const DataPlot = ({handleCheckboxChange, plotPageValues, modelParams, prevStep}) => {
@@ -288,9 +289,9 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, modelParams, prevStep})
                             back(e)
                         }}
                     >Back</Button>
-                    {/*{plotPageValues.dataInputType === FRED &&*/}
-                    {/*    <ShareButton buttonText={"Share Results"} styles={styles}*/}
-                    {/*                 lazyShareUrl={_ => buildModelApplicationUrl(modelParams)}/>}*/}
+                    {plotPageValues.dataInputType === FRED &&
+                        <ShareButton buttonText={"Share Results"} styles={styles}
+                                     lazyShareUrl={_ => buildModelApplicationUrl(modelParams)}/>}
                 </Grid>
             </Grid>
         </>
