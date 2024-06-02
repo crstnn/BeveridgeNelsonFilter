@@ -40,7 +40,6 @@ export default class FREDDataForm extends Component {
             finalURL = URL.baseBackendURL + URL.fredDataSlug + paramStr;
 
         this.setState({loading: true}, async () => {
-
             const {setState, setErrorMessage, deleteErrorMessage} = this.props;
 
             const responseSuccess = () => {
@@ -53,6 +52,7 @@ export default class FREDDataForm extends Component {
 
             fetchWithTimeout(finalURL)
                 .catch(e => {
+                    setState({mnemonic: this.state.mnemonic})
                     this.setState(
                         {
                             timeoutError: true,
@@ -62,6 +62,7 @@ export default class FREDDataForm extends Component {
                     throw e;
                 })
                 .then((response) => {
+                    setState({mnemonic: this.state.mnemonic})
                     if (response.status !== 200) {
                         responseSuccess();
                         setErrorMessage("mnemonic", "This mnemonic is not available");
