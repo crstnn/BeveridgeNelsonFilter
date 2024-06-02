@@ -84,6 +84,7 @@ const App = () => {
 
                 <Routes>
                     <Route path="/" element={<BasePage {...{initialState: initialState}}/>}/>
+                    <Route path="/apply" element={<></>}/>
                 </Routes>
 
             </div>
