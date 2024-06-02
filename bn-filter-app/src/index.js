@@ -4,15 +4,15 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 import {createRoot} from 'react-dom/client';
-import {BrowserRouter} from 'react-router-dom';
+import {HashRouter} from 'react-router-dom';
 
 const container = document.getElementById('root');
 const root = createRoot(container);
 root.render(
     <React.StrictMode>
-        <BrowserRouter> {/* @NOTE: using of 404-page workaround for GH Pages working solution */}
+        <HashRouter future={{v7_startTransition: true}}>
             <App/>
-        </BrowserRouter>
+        </HashRouter>
     </React.StrictMode>
 );
 

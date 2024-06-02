@@ -78,4 +78,4 @@ export const extractModelParams = valueObject => {
 };
 
 
-export const buildModelApplicationUrl = paramPairs => `${window.location.origin}/apply${pairArrayToParamStr(paramPairs)}`;
+export const buildModelApplicationUrl = paramPairs => `${window.location.origin}/#/apply${pairArrayToParamStr(paramPairs)}`;

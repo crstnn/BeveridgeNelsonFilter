@@ -34,7 +34,7 @@ const App = () => {
     let [initialState, setInitialState] = useState({});
 
     useEffect(() => {
-        if (window.location.pathname.endsWith('/apply')) {
+        if (window.location.hash.startsWith('#/apply')) {
             const queryParamValues = [...MODEL_QUERY_PARAMS, ...TRANSFORMATION_QUERY_PARAMS]
                 .map(x => searchParams.get(x))
                 .map(maybeConvertStringToBool)
@@ -58,7 +58,7 @@ const App = () => {
                 });
             }
 
-            navigate('/');
+            navigate('', {replace: true});
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
