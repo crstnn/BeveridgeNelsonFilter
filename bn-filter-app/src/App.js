@@ -61,7 +61,7 @@ const App = () => {
             navigate('', {replace: true});
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [window.location.hash]);
 
     return (
         <>
