@@ -308,7 +308,7 @@ const BasePage = ({initialState}) => {
     };
 
     useEffect(() => {
-        if(state.isDeeplinkApply) {
+        if (state.isDeeplinkApply) {
             const onFetchErrorCallback = () => {
                 setState({step: PARAMETERS_STEP});
                 cancelLoading();
