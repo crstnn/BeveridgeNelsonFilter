@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {Divider, FormControl, FormGroup, FormHelperText, Grid, InputLabel, Select, TextField,} from "@mui/material";
-import CustomDatePicker from "../pickers/CustomDatePicker";
+import DatePicker from "../pickers/DatePicker";
 import {CONFIG} from "../config.js";
 import {createMenuItems, fetchWithTimeout, pairArrayToParamStr} from "../utils/utils";
 import Error from "./Error";
@@ -40,8 +40,7 @@ export default class FREDDataForm extends Component {
             finalURL = URL.baseBackendURL + URL.fredDataSlug + paramStr;
 
         this.setState({loading: true}, async () => {
-
-            const {handleChange, setErrorMessage, deleteErrorMessage} = this.props;
+            const {setState, setErrorMessage, deleteErrorMessage} = this.props;
 
             const responseSuccess = () => {
                 this.setState(
@@ -53,6 +52,7 @@ export default class FREDDataForm extends Component {
 
             fetchWithTimeout(finalURL)
                 .catch(e => {
+                    setState({mnemonic: this.state.mnemonic})
                     this.setState(
                         {
                             timeoutError: true,
@@ -62,6 +62,7 @@ export default class FREDDataForm extends Component {
                     throw e;
                 })
                 .then((response) => {
+                    setState({mnemonic: this.state.mnemonic})
                     if (response.status !== 200) {
                         responseSuccess();
                         setErrorMessage("mnemonic", "This mnemonic is not available");
@@ -80,17 +81,20 @@ export default class FREDDataForm extends Component {
                         startDate = new Date(parsedStartDate[0], parsedStartDate[1] - 1, parsedStartDate[2]),
                         endDate = new Date(parsedEndDate[0], parsedEndDate[1] - 1, parsedEndDate[2]);
 
-                    console.log("Response - startDate: ", startDate)
-                    console.log("Response - endDate: ", endDate)
+                    console.log("Response - startDate: ", startDate);
+                    console.log("Response - endDate: ", endDate);
 
                     deleteErrorMessage("mnemonic");
-                    handleChange('availableFrequencies')({target: {value: result["available_frequencies"]}});
-                    handleChange('frequencyFRED')({target: {value: result["available_frequencies"][0]}});
-                    handleChange('mnemonic')({target: {value: this.state.mnemonic}});
-                    handleChange('startDateFRED')({target: {value: startDate}});
-                    handleChange('endDateFRED')({target: {value: endDate}});
-                    handleChange('minDate')({target: {value: startDate}});
-                    handleChange('maxDate')({target: {value: endDate}});
+
+                    setState({
+                        availableFrequencies: result["available_frequencies"],
+                        frequencyFRED: result["available_frequencies"][0],
+                        mnemonic: this.state.mnemonic,
+                        startDateFRED: startDate,
+                        endDateFRED: endDate,
+                        minDate: startDate,
+                        maxDate: endDate,
+                    });
                     responseSuccess();
 
                 }).catch((error) => {
@@ -108,7 +112,6 @@ export default class FREDDataForm extends Component {
                 if (!showText()) return "​";
                 return errors['mnemonic'] !== undefined ? errors['mnemonic'] : "This mnemonic is available";
             };
-
 
         return (
             <Grid container direction="column" sx={{minHeight: 80, marginBottom: 1}}
@@ -134,7 +137,6 @@ export default class FREDDataForm extends Component {
             </Grid>
         )
     }
-
 
     render() {
         const {values, handleChange} = this.props;
@@ -163,7 +165,7 @@ export default class FREDDataForm extends Component {
                           justifyContent="space-evenly"
                           alignItems="center">
                         <Grid item xs={4}>
-                            <CustomDatePicker
+                            <DatePicker
                                 label={"Start Date"}
                                 title={"Series' start date (inclusive). Determined by FRED"}
                                 date={values.startDateFRED}
@@ -172,7 +174,7 @@ export default class FREDDataForm extends Component {
                                 updateDate={handleChange('startDateFRED')}/>
                         </Grid>
                         <Grid item xs={4}>
-                            <CustomDatePicker
+                            <DatePicker
                                 label={"End Date"}
                                 title={"Series' end date (inclusive). Determined by FRED"}
                                 date={values.endDateFRED}

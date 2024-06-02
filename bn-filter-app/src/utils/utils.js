@@ -1,5 +1,7 @@
 import {MenuItem} from "@mui/material";
 import React from "react";
+import {MODEL_PARAMS, MODEL_QUERY_PARAMS, TRANSFORMATION_PARAMS, TRANSFORMATION_QUERY_PARAMS} from "./consts";
+import {DateAbstract} from "./date";
 
 export const colsToRows = (...columns) => {
 
@@ -22,12 +24,14 @@ export const colsToRows = (...columns) => {
     return retArr;
 };
 
-export const confIntZip = (cycle, ci, bound) => cycle.map((x, i) => ci[i] !== null ? bound === "lb" ? x - ci[i] : /* ub */ x + ci[i] : undefined);
+const zip = (array1, array2) => array1.map((k, i) => [k, array2[i]]);
 
-export const pairToParam = (paramName, currPair) =>
+export const confIntZip = (cycle, ci, bound) => cycle.map((x, i) => ci[i] !== null ? bound === "lower" ? x - ci[i] : /* upper */ x + ci[i] : undefined);
+
+const pairToParam = (paramName, currPair) =>
     paramName + currPair[0].toString() + '=' + currPair[1].toString() + '&';
 
-export const pairArrayToParamStr = arr => arr.reduce(pairToParam, '?');
+export const pairArrayToParamStr = arr => arr.reduce(pairToParam, '?').slice(0, -1);
 
 export async function fetchWithTimeout(url, timeout = 20000) { // 20 second timeout
     const
@@ -45,3 +49,33 @@ export const createHoverText = option => {
     option.forEach(x => hoverText[x.value] = x.hoverText);
     return fieldItem => hoverText[fieldItem];
 }
+
+export const maybeConvertStringToBool = str => {
+    if (str?.toLowerCase?.() === 'true') return true;
+    else if (str?.toLowerCase?.() === 'false') return false;
+    return str;
+}
+
+export const maybeConvertStringToNumber = str => {
+    if (/^[0-9]+[.]?[0-9]*$/.test(str)) return parseFloat(str);
+    return str;
+}
+
+export const keyValueArraysToObject = (keyArray, valueArray) =>
+    Object.fromEntries(keyArray.map((_, i) => [keyArray[i], valueArray[i]]));
+
+export const extractModelParams = valueObject => {
+    const isTransformApplied = valueObject['transform'] === true;
+
+    const queryParams = isTransformApplied ? [...MODEL_QUERY_PARAMS, ...TRANSFORMATION_QUERY_PARAMS] : MODEL_QUERY_PARAMS;
+    const params = isTransformApplied ? [...MODEL_PARAMS, ...TRANSFORMATION_PARAMS] : MODEL_PARAMS;
+
+    return zip(queryParams,
+        params.map(
+            key => valueObject?.[key] instanceof Date ? DateAbstract.truncatedDate(valueObject?.[key]) : valueObject?.[key]
+        )
+    );
+};
+
+
+export const buildModelApplicationUrl = paramPairs => `${window.location.origin}/apply${pairArrayToParamStr(paramPairs)}`;

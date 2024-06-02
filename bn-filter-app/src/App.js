@@ -1,8 +1,20 @@
 import './styles/App.css';
 import BasePage from './components/BasePage';
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {CONFIG} from "./config.js";
 import ReactGA from 'react-ga4';
+import {Route, Routes, useNavigate, useSearchParams} from "react-router-dom";
+import {
+    FRED,
+    LOADING_STEP,
+    MODEL_PARAMS,
+    MODEL_QUERY_PARAMS,
+    NO_TRANSFORMATION_KEY_VALUES,
+    TRANSFORMATION_PARAMS,
+    TRANSFORMATION_QUERY_PARAMS
+} from "./utils/consts";
+import {keyValueArraysToObject, maybeConvertStringToBool, maybeConvertStringToNumber} from "./utils/utils";
+import {DateAbstract} from "./utils/date";
 
 const {analytics: {GA}} = CONFIG;
 
@@ -14,6 +26,41 @@ const App = () => {
     useEffect(() => {
         console.log('registered App for GA');
         ReactGA.send({hitType: "pageview", page: window.location.pathname});
+    }, []);
+
+    const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
+
+    let [initialState, setInitialState] = useState({});
+
+    useEffect(() => {
+        if (window.location.pathname.endsWith('/apply')) {
+            const queryParamValues = [...MODEL_QUERY_PARAMS, ...TRANSFORMATION_QUERY_PARAMS]
+                .map(x => searchParams.get(x))
+                .map(maybeConvertStringToBool)
+                .map(maybeConvertStringToNumber)
+                .map(DateAbstract.maybeConvertStringToDate);
+
+            const modelParamsFromQueryString = keyValueArraysToObject([...MODEL_PARAMS, ...TRANSFORMATION_PARAMS], queryParamValues);
+
+            const isTransformApplied = modelParamsFromQueryString['transform'] === true;
+
+            const modelParams = isTransformApplied ? modelParamsFromQueryString : {...modelParamsFromQueryString, ...NO_TRANSFORMATION_KEY_VALUES,};
+
+            if (!Object.values(modelParams).some(e => e === null)) {
+                // if missing/malformed query param keys don't apply deeplink
+                setInitialState({
+                    isDeeplinkApply: true,
+                    step: LOADING_STEP,
+                    isLoading: true,
+                    dataInputType: FRED,
+                    ...modelParams,
+                });
+            }
+
+            navigate('/');
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
@@ -34,7 +81,11 @@ const App = () => {
                         Kamber, Morley, and Wong (2024)</a>.
                     </p>
                 </div>
-                <BasePage/>
+
+                <Routes>
+                    <Route path="/" element={<BasePage {...{initialState: initialState}}/>}/>
+                </Routes>
+
             </div>
             <div style={styles.footer}>
                 <a href="https://sites.google.com/site/guneskamber" rel="noopener noreferrer" target="_blank">

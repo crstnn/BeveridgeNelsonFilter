@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {
     Button,
     Checkbox,
@@ -14,53 +14,34 @@ import '../styles/App.css';
 import {CONFIG} from "../config.js";
 import Error from "./Error";
 import {createHoverText, createMenuItems} from "../utils/utils";
+import {PARAMETERS_STEP} from "../utils/consts";
 
 const {field, alertErrors} = CONFIG;
 
-class ParametersForm extends Component {
+const ParametersForm = ({handlers, values, errors, prevStep, nextStep, cancelLoading, getResults}) => {
 
-    isDisabled = {
-        rollingWindow: () => ["nd", "sm"].includes(this.props.values.demean),
-        delta: () => false, // this.props.values.deltaSelect !== 0,
+    const isDisabled = {
+        rollingWindow: () => ["nd", "sm"].includes(values.demean),
+        delta: () => false, // values.deltaSelect !== 0,
     };
 
-    isError = field => this.props.errors[field] !== undefined;
+    const isError = field => errors[field] !== undefined;
 
-    isErrorDisplaying = field => this.isError(field) && (this.isDisabled[field] === undefined || !this.isDisabled[field]());
+    const isErrorDisplaying = field => isError(field) && (isDisabled[field] === undefined || !isDisabled[field]());
 
-    errorsDisplayedCount = () => Object.keys(this.props.errors).map(key => this.isErrorDisplaying(key)).filter(x => x).length;
+    const errorsDisplayedCount = () => Object.keys(errors).map(key => isErrorDisplaying(key)).filter(x => x).length;
 
-    continue = e => {
+    const back = e => {
         e.preventDefault();
-        const {getResults, getFREDResults, handlers, values, errors, cancelLoad, nextStep} = this.props;
-        const {handleChange} = handlers;
-
-        if (values.dataInputType === "FRED" && errors["mnemonic"] !== undefined) {
-            handleChange("alertErrorType")({target: {value: "INPUT_USER_M"}});
-            cancelLoad();
-        } else if (values.dataInputType === "USER" && errors["unprocessedY"] !== undefined) {
-            handleChange("alertErrorType")({target: {value: "INPUT_USER_S"}});
-            cancelLoad();
-        } else if (values.dataInputType === "USER" && errors["startDate"] !== undefined) {
-            handleChange("alertErrorType")({target: {value: "INPUT_USER_DATE"}});
-            cancelLoad();
-        } else if (this.errorsDisplayedCount() === 0) {
-            if (values.dataInputType === "FRED") getFREDResults();
-            else if (values.dataInputType === "USER") getResults();
-            nextStep();
-        } else {
-            handleChange("alertErrorType")({target: {value: "INPUT_PARAM"}});
-            cancelLoad();
-        }
+        prevStep();
     }
 
-    back = e => {
-        e.preventDefault();
-        this.props.prevStep();
+    const onFetchErrorCallback = () => {
+        setState({step: PARAMETERS_STEP}); // keep on current step if error
+        cancelLoading();
     }
 
-    preAnalysisTransformations = () => {
-        const {values, handlers} = this.props;
+    const preAnalysisTransformations = () => {
         const {handleChange, handleCheckboxChange} = handlers;
 
         return (
@@ -104,12 +85,8 @@ class ParametersForm extends Component {
             </>)
     }
 
-    bnFilterParameters = () => {
-
-        const
-            {values, handlers} = this.props,
-            {handleChange, handleNumberFieldChange, handleIntegerNumberFieldChange} = handlers,
-            errors = this.props.errors;
+    const bnFilterParameters = () => {
+        const {handleChange, handleNumberFieldChange, handleIntegerNumberFieldChange} = handlers;
 
         return (
             <>
@@ -140,9 +117,9 @@ class ParametersForm extends Component {
                                     title={values.deltaSelect === 0 ? "Fixed delta for estimation" : "Minimum threshold start point for grid search (with grid increments of 0.0005). Lowest possible minimum will depend on time series, including length of sample period, with higher minimum needed for shorter time series."}
                                     onChange={handleNumberFieldChange('delta')}
                                     value={values.delta}
-                                    disabled={this.isDisabled['delta']()}
-                                    error={this.isErrorDisplaying('delta')}
-                                    helperText={this.isErrorDisplaying('delta') ?
+                                    disabled={isDisabled['delta']()}
+                                    error={isErrorDisplaying('delta')}
+                                    helperText={isErrorDisplaying('delta') ?
                                         errors['delta'] : "​" /* zero whitespace to prevent height difference when error displays */}
                                 />
                             </FormControl>
@@ -165,9 +142,9 @@ class ParametersForm extends Component {
                                     title="Only active when using dynamic demeaning. Upper bound is two less than the number of observations. A rolling window of 40 is suggested for quarterly macroeconomic data to average over effects of business cycles on mean growth, but appropriate value will depend on frequency of data, timeframe over which cyclical movements should average out, and sufficient observations to estimate drift precisely."
                                     onChange={handleIntegerNumberFieldChange('rollingWindow')}
                                     value={values.rollingWindow}
-                                    disabled={this.isDisabled['rollingWindow']()}
-                                    error={this.isErrorDisplaying('rollingWindow')}
-                                    helperText={this.isErrorDisplaying('rollingWindow') ?
+                                    disabled={isDisabled['rollingWindow']()}
+                                    error={isErrorDisplaying('rollingWindow')}
+                                    helperText={isErrorDisplaying('rollingWindow') ?
                                         errors['rollingWindow'] : "​" /* zero whitespace to prevent height difference when error displays */}
                                 />
                             </FormControl>
@@ -178,45 +155,37 @@ class ParametersForm extends Component {
         )
     }
 
-    render() {
 
-        const {values, handlers} = this.props;
-        const {handleChange} = handlers;
+    const {setState} = handlers;
 
-        const updateTransformationState = () => {
-            const isTransformApplied = !(values.takeLog === false && values.dCode === 'nd' && values.pCode === 'np');
-            handleChange('transform')({target: {value: isTransformApplied}});
-        }
+    return (
+        <>
+            <div style={{minHeight: 600,}}>
+                {values.isLoading === null ?
+                    <Error
+                        tagName={alertErrors[values.alertErrorType]}
+                        close={() => {
+                            setState({isLoading: false});
+                        }}/>
+                    : null}
+                {preAnalysisTransformations()}
+                {bnFilterParameters()}
+            </div>
+            <Button
+                variant="outlined"
+                style={styles.button}
+                onClick={back}
+            >Back</Button>
+            <Button
+                variant="contained"
+                style={styles.button}
+                onClick={(e) => {
+                    getResults(errorsDisplayedCount, nextStep, onFetchErrorCallback)(e);
+                }}
+            >Apply BN Filter</Button>
+        </>
+    )
 
-        return (
-            <>
-                <div style={{minHeight: 600,}}>
-                    {values.loading === null ?
-                        <Error
-                            tagName={alertErrors[values.alertErrorType]}
-                            close={() => {
-                                handleChange("loading")({target: {value: false}})
-                            }}/>
-                        : null}
-                    {this.preAnalysisTransformations()}
-                    {this.bnFilterParameters()}
-                </div>
-                <Button
-                    variant="outlined"
-                    style={styles.button}
-                    onClick={this.back}
-                >Back</Button>
-                <Button
-                    variant="contained"
-                    style={styles.button}
-                    onClick={(e) => {
-                        updateTransformationState()
-                        this.continue(e)
-                    }}
-                >Apply BN Filter</Button>
-            </>
-        )
-    }
 }
 
 

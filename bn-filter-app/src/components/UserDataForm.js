@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {Divider, FormControl, Grid, InputLabel, Select, TextField} from "@mui/material";
-import CustomDatePicker from "../pickers/CustomDatePicker";
+import DatePicker from "../pickers/DatePicker";
 import {CONFIG} from "../config.js";
 import {createMenuItems} from "../utils/utils";
 
@@ -84,7 +84,7 @@ export default class UserDataForm extends Component {
                           justifyContent="space-evenly"
                           alignItems="center">
                         <Grid item xs={6}>
-                            <CustomDatePicker
+                            <DatePicker
                                 label={"Start Date"}
                                 title={"Series' start date (inclusive). The end date is determined based on frequency"}
                                 date={values.startDate}

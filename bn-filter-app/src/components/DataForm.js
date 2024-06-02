@@ -1,19 +1,28 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {Button, Divider, Grid, ToggleButton, ToggleButtonGroup,} from "@mui/material";
 import '../styles/App.css';
 import FREDDataForm from "./FREDDataForm";
 import UserDataForm from "./UserDataForm";
+import {FRED, USER} from "../utils/consts";
 
-class DataForm extends Component {
+const DataForm = ({
+                      errors,
+                      valuesUserData,
+                      valuesFREDData,
+                      handlers,
+                      deleteErrorMessage,
+                      setErrorMessage,
+                      prevStep,
+                      nextStep
+                  }) => {
+    const {handleChange, setState} = handlers;
 
-    toggleDataInputType = e => {
-        const {errors, valuesUserData, valuesFREDData, handleChange, deleteErrorMessage,} = this.props;
-
+    const toggleDataInputType = e => {
         const
             isMnemonicErrorDisplaying =
-                () => errors["mnemonic"] !== undefined && valuesFREDData.dataInputType === "FRED",
+                () => errors["mnemonic"] !== undefined && valuesFREDData.dataInputType === FRED,
             isUserSeriesErrorDisplaying =
-                () => errors["unprocessedY"] !== undefined && valuesUserData.dataInputType === "USER";
+                () => errors["unprocessedY"] !== undefined && valuesUserData.dataInputType === USER;
 
         if (isMnemonicErrorDisplaying()) deleteErrorMessage("mnemonic");
         if (isUserSeriesErrorDisplaying()) deleteErrorMessage("unprocessedY");
@@ -21,82 +30,71 @@ class DataForm extends Component {
         handleChange('dataInputType')(e);
     }
 
-    continue = e => {
+    const next = e => {
         e.preventDefault();
-        const {valuesUserData, valuesFREDData, setErrorMessage, nextStep,} = this.props;
         nextStep();
-        if (valuesFREDData.dataInputType === "FRED" && valuesFREDData.mnemonic === "") {
+        if (valuesFREDData.dataInputType === FRED && valuesFREDData.mnemonic === "") {
             setErrorMessage("mnemonic", "A mnemonic must be specified");
         }
-        if (valuesUserData.dataInputType === "USER" && valuesUserData.unprocessedY === "") {
+        if (valuesUserData.dataInputType === USER && valuesUserData.unprocessedY === "") {
             setErrorMessage("unprocessedY", "time series field cannot be empty");
         }
-        console.log(valuesUserData)
     }
 
-    render() {
-        const {
-            valuesUserData,
-            errors,
-            valuesFREDData,
-            setErrorMessage,
-            deleteErrorMessage,
-            handleChange,
-        } = this.props;
-
-        return (
-            <>
-                <div style={{minHeight: 600,}}>
-                    <div className="information">
-                        <Divider style={{fontSize: 'x-large'}}>
-                            <ToggleButtonGroup
-                                color="primary"
-                                value={valuesUserData.dataInputType}
-                                exclusive
-                                onChange={this.toggleDataInputType}
-                            >
-                                <ToggleButton value="FRED">FRED Series</ToggleButton>
-                                <ToggleButton value="USER">User Series</ToggleButton>
-                            </ToggleButtonGroup>
-                        </Divider>
-                    </div>
-                    {(() => {
-                        if (valuesUserData.dataInputType === "USER")
-                            return <UserDataForm
-                                setErrorMessage={setErrorMessage}
-                                deleteErrorMessage={deleteErrorMessage}
-                                handleChange={handleChange}
-                                values={valuesUserData}
-                                errors={errors}
-                            />
-                        else if (valuesUserData.dataInputType === "FRED")
-                            return <FREDDataForm
-                                setErrorMessage={setErrorMessage}
-                                deleteErrorMessage={deleteErrorMessage}
-                                handleChange={handleChange}
-                                values={valuesFREDData}
-                                errors={errors}
-                            />
-                    })()}
+    return (
+        <>
+            <div style={{minHeight: 600,}}>
+                <div className="information">
+                    <Divider style={{fontSize: 'x-large'}}>
+                        <ToggleButtonGroup
+                            color="primary"
+                            value={valuesUserData.dataInputType}
+                            exclusive
+                            onChange={toggleDataInputType}
+                        >
+                            <ToggleButton value={FRED}>FRED Series</ToggleButton>
+                            <ToggleButton value={USER}>User Series</ToggleButton>
+                        </ToggleButtonGroup>
+                    </Divider>
                 </div>
-                <Grid container direction="column" justifyContent="space-evenly"
-                      alignItems="center">
-                    <Grid item xs={3}>
-                        <Button
-                            variant="outlined"
-                            style={styles.button}
-                            onClick={this.props.prevStep}
-                        >Back</Button>
-                        <Button
-                            variant="contained"
-                            style={styles.button}
-                            onClick={this.continue}
-                        >Continue</Button>
-                    </Grid>
+                {(() => {
+                    if (valuesUserData.dataInputType === USER)
+                        return <UserDataForm
+                            setErrorMessage={setErrorMessage}
+                            deleteErrorMessage={deleteErrorMessage}
+                            handleChange={handleChange}
+                            values={valuesUserData}
+                            errors={errors}
+                        />
+                    else if (valuesUserData.dataInputType === FRED)
+                        return <FREDDataForm
+                            setErrorMessage={setErrorMessage}
+                            deleteErrorMessage={deleteErrorMessage}
+                            handleChange={handleChange}
+                            setState={setState}
+                            values={valuesFREDData}
+                            errors={errors}
+                        />
+                })()}
+            </div>
+            <Grid container direction="column" justifyContent="space-evenly"
+                  alignItems="center">
+                <Grid item xs={3}>
+                    <Button
+                        variant="outlined"
+                        style={styles.button}
+                        onClick={prevStep}
+                    >Back</Button>
+                    <Button
+                        variant="contained"
+                        style={styles.button}
+                        onClick={next}
+                    >Continue</Button>
                 </Grid>
-            </>
-        )
-    }
+            </Grid>
+        </>
+    )
+
 }
 
 export default DataForm

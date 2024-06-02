@@ -1,15 +1,17 @@
 {
-  "homepage": "http://bnfiltering.com",
+  "homepage": "https://bnfiltering.com",
   "name": "bn-filter-app",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.15.18",
     "@mui/material": "^5.15.11",
     "@mui/x-date-pickers": "^6.19.5",
     "@testing-library/jest-dom": "^6.4.2",
     "date-fns": "^3.3.1",
+    "material-ui-popup-state": "^5.1.2",
     "plotly.js": "^2.31.1",
     "react": "^18.2.0",
     "react-csv": "^2.2.2",
@@ -17,12 +19,13 @@
     "react-ga4": "^2.1.0",
     "react-loader-spinner": "^6.1.6",
     "react-plotly.js": "^2.6.0",
+    "react-router-dom": "^6.23.1",
     "react-scripts": "^5.0.1",
     "web-vitals": "^3.5.2"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && cp build/index.html build/404.html",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
