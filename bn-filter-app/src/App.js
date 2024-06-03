@@ -41,7 +41,11 @@ const App = () => {
                 .map(maybeConvertStringToNumber)
                 .map(DateAbstract.maybeConvertStringToDate);
 
+            console.log('queryParamValues', queryParamValues)
+
             const modelParamsFromQueryString = keyValueArraysToObject([...MODEL_PARAMS, ...TRANSFORMATION_PARAMS], queryParamValues);
+
+            console.log('modelParamsFromQueryString', modelParamsFromQueryString)
 
             const isTransformApplied = modelParamsFromQueryString['transform'] === true;
 

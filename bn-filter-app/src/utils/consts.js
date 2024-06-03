@@ -10,6 +10,8 @@ export const MODEL_QUERY_PARAMS = [
     'ib',
     'rw',
     'dci',
+    'dst',
+    'dcy',
     't'
 ];
 
@@ -25,6 +27,8 @@ export const MODEL_PARAMS = [
     'iterativeBackcasting',
     'rollingWindow',
     'displayConfInterval',
+    'displaySeriesAndTrend',
+    'displayCycle',
     'transform'
 ];
 
