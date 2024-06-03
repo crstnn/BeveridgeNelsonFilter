@@ -9,7 +9,7 @@ import ShareButton from "./ShareButton";
 
 const DataPlot = ({setState, handleCheckboxChange, plotPageValues, modelParams, prevStep}) => {
     const fileName = "BN_filter_results.csv";
-    const [displayConfInterval, setDisplayConfInterval] = useState(plotPageValues.displayConfInterval);
+    const displayConfInterval = plotPageValues.displayConfInterval;
     // Used to trigger re-render of plot. This circumvents react-plotly's plot refreshing convention.
     const [revisionNumber, setRevisionNumber] = useState(0);
     const incrementRevisionNumber = () => setRevisionNumber(revisionNumber + 1);
@@ -192,7 +192,7 @@ const DataPlot = ({setState, handleCheckboxChange, plotPageValues, modelParams, 
         , {});
 
     const handleConfIntervalDisplay = (isDisplayConfInt) => {
-        setDisplayConfInterval(isDisplayConfInt);
+        setState({'displayConfInterval': isDisplayConfInt});
 
         const lineVisibilityByGroup = getLineVisibilityByGroup(plotData);
 
@@ -292,10 +292,7 @@ const DataPlot = ({setState, handleCheckboxChange, plotPageValues, modelParams, 
                     <Button
                         variant="outlined"
                         style={styles.button}
-                        onClick={(e) => {
-                            handleCheckboxChange('displayConfInterval')({target: {checked: displayConfInterval}})
-                            back(e)
-                        }}
+                        onClick={back}
                     >Back</Button>
                     {plotPageValues.dataInputType === FRED &&
                         <ShareButton buttonText={"Share Results"} styles={styles}
