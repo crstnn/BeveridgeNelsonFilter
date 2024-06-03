@@ -7,7 +7,7 @@ import {FRED} from "../utils/consts";
 import ShareButton from "./ShareButton";
 
 
-const DataPlot = ({handleCheckboxChange, plotPageValues, modelParams, prevStep}) => {
+const DataPlot = ({setState, handleCheckboxChange, plotPageValues, modelParams, prevStep}) => {
     const fileName = "BN_filter_results.csv";
     const [displayConfInterval, setDisplayConfInterval] = useState(plotPageValues.displayConfInterval);
     // Used to trigger re-render of plot. This circumvents react-plotly's plot refreshing convention.
@@ -25,9 +25,9 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, modelParams, prevStep})
         marker: {color: 'orange'},
         name: "Trend",
         showlegend: true,
-        legendgroup: 'trend',
+        legendgroup: 'seriesAndTrend',
         yaxis: 'y1',
-        visible: true,
+        visible: plotPageValues.displaySeriesAndTrend ? true : 'legendonly',
     };
 
     const trendConfInt = [
@@ -42,9 +42,9 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, modelParams, prevStep})
             type: "scatter",
             hoverinfo: 'skip',
             name: 'trend_ci',
-            legendgroup: 'trend',
+            legendgroup: 'seriesAndTrend',
             yaxis: 'y1',
-            visible: displayConfInterval,
+            visible: displayConfInterval ? (plotPageValues.displaySeriesAndTrend ? true : 'legendonly') : false,
         },
         { // confint upper bound
             x: plotPageValues.x,
@@ -56,9 +56,9 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, modelParams, prevStep})
             type: "scatter",
             hoverinfo: 'skip',
             name: 'trend_ci',
-            legendgroup: 'trend',
+            legendgroup: 'seriesAndTrend',
             yaxis: 'y1',
-            visible: displayConfInterval,
+            visible: displayConfInterval ? (plotPageValues.displaySeriesAndTrend ? true : 'legendonly') : false,
         },
     ];
 
@@ -71,9 +71,9 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, modelParams, prevStep})
             marker: {color: 'grey'},
             name: `Series${plotPageValues.transform ? ' (Post-Transformation)' : ''}`,
             showlegend: true,
-            legendgroup: 'trend',
+            legendgroup: 'seriesAndTrend',
             yaxis: 'y1',
-            visible: true,
+            visible: plotPageValues.displaySeriesAndTrend ? true : 'legendonly',
         };
 
 
@@ -88,7 +88,7 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, modelParams, prevStep})
             showlegend: true,
             legendgroup: 'cycle',
             yaxis: 'y2',
-            visible: 'legendonly',
+            visible: plotPageValues.displayCycle ? true : 'legendonly',
         };
 
     const cycleConfInt = [
@@ -105,7 +105,7 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, modelParams, prevStep})
             name: 'cycle_ci',
             legendgroup: 'cycle',
             yaxis: 'y2',
-            visible: displayConfInterval ? 'legendonly' : false,
+            visible: displayConfInterval ? (plotPageValues.displayCycle ? true : 'legendonly') : false,
         },
         { // confint upper bound
             x: plotPageValues.x,
@@ -119,7 +119,7 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, modelParams, prevStep})
             name: 'cycle_ci',
             legendgroup: 'cycle',
             yaxis: 'y2',
-            visible: displayConfInterval ? 'legendonly' : false,
+            visible: displayConfInterval ? (plotPageValues.displayCycle ? true : 'legendonly') : false,
         },
     ];
 
@@ -215,14 +215,22 @@ const DataPlot = ({handleCheckboxChange, plotPageValues, modelParams, prevStep})
 
     const handleYAxisDisplay = ({curveNumber}) => {
         // Note that `onLegendClick` occurs before the plot state for that event is reflected (in the state).
-        const curveData = plotData[curveNumber]
-        const axisDisplayProperties = curveData.visible === true ? invisibleAxisDisplay : visibleAxisDisplay;
+        const curveData = plotData[curveNumber];
+        const isCurveVisible = curveData.visible === true;
+        const axisDisplayProperties = isCurveVisible ? invisibleAxisDisplay : visibleAxisDisplay;
         const axisOfCurve = curveData.yaxis.slice(-1) === '2' ? 2 : 1;
         const axisOfCurveKey = `yaxis${axisOfCurve === 2 ? '2' : ''}`;
         const newLayout = {
             ...plotLayout,
             [axisOfCurveKey]: {...plotLayout[axisOfCurveKey], ...axisDisplayProperties,}
         };
+
+        if(curveData.legendgroup === 'cycle') {
+            setState({'displayCycle': !isCurveVisible});
+        }
+        if(curveData.legendgroup === 'seriesAndTrend') {
+            setState({'displaySeriesAndTrend': !isCurveVisible});
+        }
 
         setPlotLayout(newLayout);
         incrementRevisionNumber();

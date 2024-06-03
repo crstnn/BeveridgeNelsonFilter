@@ -54,6 +54,8 @@ const BasePage = ({initialState}) => {
             alertErrorType: null, // overarching alert text
             fieldErrorMessages: {},
             isLoading: false,
+            displaySeriesAndTrend: true,
+            displayCycle: true,
             ...initialState,
         }
     );
@@ -351,6 +353,7 @@ const BasePage = ({initialState}) => {
                             <>
                                 {state.isLoading ? <Loading/> : <DataPlot
                                     prevStep={prevStep}
+                                    setState={setState}
                                     plotPageValues={{...state}}
                                     modelParams={extractModelParams(state)}
                                     handleCheckboxChange={handleCheckboxChange}
