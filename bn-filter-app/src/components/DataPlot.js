@@ -225,10 +225,10 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
             [axisOfCurveKey]: {...plotLayout[axisOfCurveKey], ...axisDisplayProperties,}
         };
 
-        if(curveData.legendgroup === 'cycle') {
+        if (curveData.legendgroup === 'cycle') {
             setState({'displayCycle': !isCurveVisible});
         }
-        if(curveData.legendgroup === 'seriesAndTrend') {
+        if (curveData.legendgroup === 'seriesAndTrend') {
             setState({'displaySeriesAndTrend': !isCurveVisible});
         }
 
@@ -298,7 +298,6 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
                         <ShareButton styles={styles}
                                      buttonText={"Share Results"}
                                      lazyShareUrl={_ => buildModelApplicationUrl(modelParams)}
-                                     mnemonic={plotPageValues.mnemonic}
                         />}
                 </Grid>
             </Grid>

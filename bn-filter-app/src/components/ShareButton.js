@@ -11,12 +11,11 @@ import Paper from "@mui/material/Paper"
 import FacebookIcon from "@mui/icons-material/Facebook"
 import LinkedInIcon from "@mui/icons-material/LinkedIn"
 import XIcon from '@mui/icons-material/X';
-import RedditIcon from "@mui/icons-material/Reddit"
 import LinkIcon from "@mui/icons-material/Link"
 import {usePopupState} from "material-ui-popup-state/hooks";
 import {ListItemButton} from "@mui/material";
 
-const ShareButton = ({buttonText, styles, lazyShareUrl, mnemonic}) => {
+const ShareButton = ({buttonText, styles, lazyShareUrl,}) => {
 
     const popupState =
         usePopupState({variant: 'popover', popupId: 'demoMenu'});
@@ -38,8 +37,6 @@ const ShareButton = ({buttonText, styles, lazyShareUrl, mnemonic}) => {
                 return open(`https://www.facebook.com/dialog/feed?link=${encodedAhref}`);
             case "x":
                 return open(`https://twitter.com/intent/tweet?url=${encodedAhref}`);
-            case "reddit":
-                return open(`https://new.reddit.com/submit?url=${encodedAhref}&title=Beveridge-Nelson%20Filter%20application%3A%20${mnemonic}&type=LINK`);
             case "linkedin":
                 return open(`https://www.linkedin.com/shareArticle?mini=true&url=${encodedAhref}`);
             case "copy":
@@ -77,14 +74,6 @@ const ShareButton = ({buttonText, styles, lazyShareUrl, mnemonic}) => {
                                         <XIcon/>
                                     </ListItemIcon>
                                     <ListItemText primary="X"/>
-                                </ListItemButton>
-                                <ListItemButton
-                                    id="reddit"
-                                    onClick={handleShare}>
-                                    <ListItemIcon>
-                                        <RedditIcon/>
-                                    </ListItemIcon>
-                                    <ListItemText primary="Reddit"/>
                                 </ListItemButton>
                                 <ListItemButton
                                     id="linkedin"
