@@ -35,7 +35,7 @@ const ShareButton = ({buttonText, styles, lazyShareUrl, mnemonic}) => {
 
         switch (e.currentTarget.id) {
             case "facebook":
-                return open(`https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`);
+                return open(`https://www.facebook.com/dialog/feed?link=${encodedAhref}`);
             case "x":
                 return open(`https://twitter.com/intent/tweet?url=${encodedAhref}`);
             case "reddit":
