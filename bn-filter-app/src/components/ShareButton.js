@@ -16,7 +16,7 @@ import LinkIcon from "@mui/icons-material/Link"
 import {usePopupState} from "material-ui-popup-state/hooks";
 import {ListItemButton} from "@mui/material";
 
-const ShareButton = ({buttonText, styles, lazyShareUrl}) => {
+const ShareButton = ({buttonText, styles, lazyShareUrl, mnemonic}) => {
 
     const popupState =
         usePopupState({variant: 'popover', popupId: 'demoMenu'});
@@ -39,7 +39,7 @@ const ShareButton = ({buttonText, styles, lazyShareUrl}) => {
             case "x":
                 return open(`https://twitter.com/intent/tweet?url=${encodedAhref}`);
             case "reddit":
-                return open(`https://www.reddit.com/submit?url=${encodedAhref}`);
+                return open(`https://www.reddit.com/submit?url=${encodedAhref}&title=Beveridge-Nelson%20Filter%20application%3A%20${mnemonic}`);
             case "linkedin":
                 return open(`https://www.linkedin.com/shareArticle?mini=true&url=${encodedAhref}`);
             case "copy":

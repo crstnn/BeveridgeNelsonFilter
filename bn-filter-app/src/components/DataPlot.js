@@ -7,7 +7,7 @@ import {FRED} from "../utils/consts";
 import ShareButton from "./ShareButton";
 
 
-const DataPlot = ({setState, handleCheckboxChange, plotPageValues, modelParams, prevStep}) => {
+const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
     const fileName = "BN_filter_results.csv";
     const displayConfInterval = plotPageValues.displayConfInterval;
     // Used to trigger re-render of plot. This circumvents react-plotly's plot refreshing convention.
@@ -295,8 +295,11 @@ const DataPlot = ({setState, handleCheckboxChange, plotPageValues, modelParams, 
                         onClick={back}
                     >Back</Button>
                     {plotPageValues.dataInputType === FRED &&
-                        <ShareButton buttonText={"Share Results"} styles={styles}
-                                     lazyShareUrl={_ => buildModelApplicationUrl(modelParams)}/>}
+                        <ShareButton styles={styles}
+                                     buttonText={"Share Results"}
+                                     lazyShareUrl={_ => buildModelApplicationUrl(modelParams)}
+                                     mnemonic={plotPageValues.mnemonic}
+                        />}
                 </Grid>
             </Grid>
         </>

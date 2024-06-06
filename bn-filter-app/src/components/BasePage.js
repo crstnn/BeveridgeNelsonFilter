@@ -356,7 +356,6 @@ const BasePage = ({initialState}) => {
                                     setState={setState}
                                     plotPageValues={{...state}}
                                     modelParams={extractModelParams(state)}
-                                    handleCheckboxChange={handleCheckboxChange}
                                 />
                                 }
                             </>
