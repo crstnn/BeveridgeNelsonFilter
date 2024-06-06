@@ -39,7 +39,7 @@ const ShareButton = ({buttonText, styles, lazyShareUrl, mnemonic}) => {
             case "x":
                 return open(`https://twitter.com/intent/tweet?url=${encodedAhref}`);
             case "reddit":
-                return open(`https://www.reddit.com/submit?url=${encodedAhref}&title=Beveridge-Nelson%20Filter%20application%3A%20${mnemonic}`);
+                return open(`https://www.reddit.com/submit?url=${encodedAhref}&title=Beveridge-Nelson%20Filter%20application%3A%20${mnemonic}&type=LINK`);
             case "linkedin":
                 return open(`https://www.linkedin.com/shareArticle?mini=true&url=${encodedAhref}`);
             case "copy":
