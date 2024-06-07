@@ -18,6 +18,17 @@ export default class FREDDataForm extends Component {
         timeoutError: false,
     }
 
+    componentDidMount() {
+        if (this.state.mnemonic && this.props.values.isDeeplinkApply) {
+            // This is to ensure the mnemonic's date range is enforced if a user steps back from the deeplink
+            // `isDeeplinkApply` is then set to false to avoid an unnecessary mnemonic network call upon navigating back
+            // to this form page. Once a user navigates to this form page from the deeplink there is no longer any
+            // difference from a normal user interaction starting from the base page/URL.
+            this.checkAvailability();
+            this.props.setState({isDeeplinkApply: false});
+        }
+    }
+
     createFilteredFrequencies = () => {
         const items = field.optionField.frequencyFRED.option.filter(x => this.props.values.availableFrequencies.includes(x.value));
         return createMenuItems(items);
@@ -40,7 +51,7 @@ export default class FREDDataForm extends Component {
             finalURL = URL.baseBackendURL + URL.fredDataSlug + paramStr;
 
         this.setState({loading: true}, async () => {
-            const {setState, setErrorMessage, deleteErrorMessage} = this.props;
+            const {setState, setErrorMessage, deleteErrorMessage, values} = this.props;
 
             const responseSuccess = () => {
                 this.setState(
@@ -76,6 +87,7 @@ export default class FREDDataForm extends Component {
                     console.log('Success:', result);
 
                     const
+                        availableFrequencies = result["available_frequencies"],
                         parsedStartDate = result["start_date"].split("-").map(x => Number(x)),
                         parsedEndDate = result["end_date"].split("-").map(x => Number(x)),
                         startDate = new Date(parsedStartDate[0], parsedStartDate[1] - 1, parsedStartDate[2]),
@@ -87,14 +99,15 @@ export default class FREDDataForm extends Component {
                     deleteErrorMessage("mnemonic");
 
                     setState({
-                        availableFrequencies: result["available_frequencies"],
-                        frequencyFRED: result["available_frequencies"][0],
+                        frequencyFRED: values.frequencyFRED && availableFrequencies.includes(values.frequencyFRED) ? values.frequencyFRED : availableFrequencies[0],
+                        startDateFRED: values.startDateFRED && (values.startDateFRED > startDate && values.startDateFRED < endDate) ? values.startDateFRED : startDate,
+                        endDateFRED: values.endDateFRED && (values.endDateFRED < endDate && values.endDateFRED > startDate) ? values.endDateFRED : endDate,
+                        availableFrequencies: availableFrequencies,
                         mnemonic: this.state.mnemonic,
-                        startDateFRED: startDate,
-                        endDateFRED: endDate,
                         minDate: startDate,
                         maxDate: endDate,
                     });
+
                     responseSuccess();
 
                 }).catch((error) => {
@@ -140,7 +153,6 @@ export default class FREDDataForm extends Component {
 
     render() {
         const {values, handleChange} = this.props;
-
         return (
             <div>
                 <div className="information">

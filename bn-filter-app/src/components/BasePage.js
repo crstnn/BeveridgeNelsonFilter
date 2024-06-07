@@ -332,8 +332,7 @@ const BasePage = ({initialState}) => {
                             setErrorMessage={setErrorMessage}
                             deleteErrorMessage={deleteErrorMessage}
                             handlers={handlers}
-                            valuesUserData={{...state}}
-                            valuesFREDData={{...state}}
+                            values={{...state}}
                             errors={state.fieldErrorMessages}
                         />
                     case 3:

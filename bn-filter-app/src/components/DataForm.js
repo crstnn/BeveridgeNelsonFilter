@@ -7,8 +7,7 @@ import {FRED, USER} from "../utils/consts";
 
 const DataForm = ({
                       errors,
-                      valuesUserData,
-                      valuesFREDData,
+                      values,
                       handlers,
                       deleteErrorMessage,
                       setErrorMessage,
@@ -16,13 +15,14 @@ const DataForm = ({
                       nextStep
                   }) => {
     const {handleChange, setState} = handlers;
+    const dataInputType = values.dataInputType;
 
     const toggleDataInputType = e => {
         const
             isMnemonicErrorDisplaying =
-                () => errors["mnemonic"] !== undefined && valuesFREDData.dataInputType === FRED,
+                () => errors["mnemonic"] !== undefined && dataInputType === FRED,
             isUserSeriesErrorDisplaying =
-                () => errors["unprocessedY"] !== undefined && valuesUserData.dataInputType === USER;
+                () => errors["unprocessedY"] !== undefined && dataInputType === USER;
 
         if (isMnemonicErrorDisplaying()) deleteErrorMessage("mnemonic");
         if (isUserSeriesErrorDisplaying()) deleteErrorMessage("unprocessedY");
@@ -33,10 +33,10 @@ const DataForm = ({
     const next = e => {
         e.preventDefault();
         nextStep();
-        if (valuesFREDData.dataInputType === FRED && valuesFREDData.mnemonic === "") {
+        if (dataInputType === FRED && values.mnemonic === "") {
             setErrorMessage("mnemonic", "A mnemonic must be specified");
         }
-        if (valuesUserData.dataInputType === USER && valuesUserData.unprocessedY === "") {
+        if (dataInputType === USER && values.unprocessedY === "") {
             setErrorMessage("unprocessedY", "time series field cannot be empty");
         }
     }
@@ -48,7 +48,7 @@ const DataForm = ({
                     <Divider style={{fontSize: 'x-large'}}>
                         <ToggleButtonGroup
                             color="primary"
-                            value={valuesUserData.dataInputType}
+                            value={dataInputType}
                             exclusive
                             onChange={toggleDataInputType}
                         >
@@ -58,21 +58,21 @@ const DataForm = ({
                     </Divider>
                 </div>
                 {(() => {
-                    if (valuesUserData.dataInputType === USER)
+                    if (dataInputType === USER)
                         return <UserDataForm
                             setErrorMessage={setErrorMessage}
                             deleteErrorMessage={deleteErrorMessage}
                             handleChange={handleChange}
-                            values={valuesUserData}
+                            values={values}
                             errors={errors}
                         />
-                    else if (valuesUserData.dataInputType === FRED)
+                    else if (dataInputType === FRED)
                         return <FREDDataForm
                             setErrorMessage={setErrorMessage}
                             deleteErrorMessage={deleteErrorMessage}
                             handleChange={handleChange}
                             setState={setState}
-                            values={valuesFREDData}
+                            values={values}
                             errors={errors}
                         />
                 })()}
