@@ -15,12 +15,12 @@ export default class UserDataForm extends Component {
             {setErrorMessage, deleteErrorMessage, handleChange} = this.props;
 
         const
-            notNumberReg = new RegExp(/[^\d.,\s]+/),
-            arrayFormReg = new RegExp(/^((\d*(.\d+)?),\s*)+(\d*(.\d+)?)\s*$/),
-            seriesFormReg = new RegExp(/^((\d*(.\d+)?)(\r\n|\n|\r))*((\d*(.\d+)?)(\r\n|\n|\r)?)$/);
+            notAnAcceptedCharReg = new RegExp(/[^\d-.,\s]+/),
+            arrayFormReg = new RegExp(/^(((-?\d)*(.\d+)?),\s*)+((-?\d)*(.\d+)?)\s*$/),
+            seriesFormReg = new RegExp(/^(((-?\d)*(.\d+)?)(\r\n|\n|\r))*(((-?\d)*(.\d+)?)(\r\n|\n|\r)?)$/);
 
         const
-            nonNumberTest = notNumberReg.test(timeSeries),
+            notAnAcceptedCharTest = notAnAcceptedCharReg.test(timeSeries),
             arrayFormTest = arrayFormReg.test(timeSeries),
             seriesFormTest = seriesFormReg.test(timeSeries);
 
@@ -28,8 +28,8 @@ export default class UserDataForm extends Component {
 
         if (timeSeries === "" || arrayFormTest || seriesFormTest) {
             deleteErrorMessage("unprocessedY");
-        } else if (nonNumberTest) {
-            errorMessage = "only accepts numbers, commas, and periods";
+        } else if (notAnAcceptedCharTest) {
+            errorMessage = "only accepts (decimalised) rational numbers";
         } else if (!arrayFormTest && !seriesFormTest) {
             errorMessage = "bad input format";
         }
