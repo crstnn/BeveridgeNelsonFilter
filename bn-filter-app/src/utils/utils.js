@@ -33,11 +33,18 @@ const pairToParam = (paramName, currPair) =>
 
 export const pairArrayToParamStr = arr => arr.reduce(pairToParam, '?').slice(0, -1);
 
-export async function fetchWithTimeout(url, timeout = 20000) { // 20 second timeout
+export async function fetchWithTimeout({url, method = "GET", body = undefined, timeout = 20000}) { // 20 second timeout
     const
         controller = new AbortController(),
         timeoutID = setTimeout(() => controller.abort(), timeout),
-        f = await fetch(url, {signal: controller.signal});
+        f = await fetch(url,
+            {
+                method,
+                body: JSON.stringify(body),
+                headers: body ? {"Content-Type": "application/json",} : undefined,
+                signal: controller.signal
+            }
+        );
     clearTimeout(timeoutID);
     return f;
 }

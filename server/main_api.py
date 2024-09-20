@@ -77,7 +77,7 @@ def fred_time_series():
     return jsonify(fred_series.get_information_dict())
 
 
-@app.route('/bnf/fred-time-series', methods=['GET'])
+@app.route('/bnf/fred-time-series', methods=['POST'])
 def bnf_fred_time_series():
     fred_series = FREDTimeSeries(*get_fred_params())
     handle_series_transformation_params(fred_series)
@@ -88,14 +88,14 @@ def bnf_fred_time_series():
     return jsonify(fred_series.get_series_dict() | bnf.get_result_dict())
 
 
-@app.route('/bnf/user-specified-time-series', methods=['GET'])
+@app.route('/bnf/user-specified-time-series', methods=['POST'])
 def bnf_user_specified_time_series():
     # Design Note: Time series data is a comma delimited string in the URL parameters
     # for huge time series this may be problematic due to URL length limits (as we cannot send
     # this data in the body because GET requests do not have bodies).
     # May need to change to POST if this poses a problem in the future.
-    user_y = [float(i) for i in request.args.get("processed_y").split(",")]
-    user_series = TimeSeries(user_y)
+    series = [float(i) for i in request.get_json()["processed_y"]]
+    user_series = TimeSeries(series)
     handle_series_transformation_params(user_series)
 
     bnf = BNF(user_series, R, *get_bnf_params())
@@ -104,7 +104,7 @@ def bnf_user_specified_time_series():
     return jsonify(user_series.get_series_dict() | bnf.get_result_dict())
 
 
-@app.route('/bnf/test-time-series', methods=['GET'])
+@app.route('/bnf/test-time-series', methods=['POST'])
 def bnf_test_time_series():
     us_gdp = TestTimeSeries()  # default GDPC1
     us_gdp.set_transformation_defaults()

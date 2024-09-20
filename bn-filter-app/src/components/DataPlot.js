@@ -146,24 +146,22 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
                 y: -0.08,
                 traceorder: 'normal',
             },
-            ...(plotPageValues.dataInputType === FRED && {
-                annotations: [
-                    {
-                        font: {
-                            color: 'grey',
-                            size: 9
-                        },
-                        xref: 'paper',
-                        yref: 'paper',
-                        x: 1,
-                        xanchor: 'right',
-                        y: -0.16,
-                        yanchor: 'top',
-                        text: `Series: ${plotPageValues.mnemonic}`,
-                        showarrow: false
-                    }
-                ]
-            }),
+            annotations: [
+                {
+                    font: {
+                        color: 'grey',
+                        size: 9
+                    },
+                    xref: 'paper',
+                    yref: 'paper',
+                    x: 1,
+                    xanchor: 'right',
+                    y: -0.16,
+                    yanchor: 'top',
+                    text: `Series: ${plotPageValues.dataInputType === FRED ? plotPageValues.mnemonic : 'user inputted series'}`,
+                    showarrow: false
+                }
+            ]
         };
 
     const allPlotData = [trend, ...trendConfInt, series, cycle, ...cycleConfInt,];

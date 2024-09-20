@@ -61,7 +61,7 @@ export default class FREDDataForm extends Component {
                     });
             }
 
-            fetchWithTimeout(finalURL)
+            fetchWithTimeout({url: finalURL})
                 .catch(e => {
                     setState({mnemonic: this.state.mnemonic})
                     this.setState(

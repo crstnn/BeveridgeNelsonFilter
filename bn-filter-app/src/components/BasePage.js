@@ -166,8 +166,8 @@ const BasePage = ({initialState}) => {
         )
     );
 
-    const fetchResultWithErrorHandling = async ({url, onFetchErrorCallback}) => {
-        return fetchWithTimeout(url)
+    const fetchResultWithErrorHandling = async ({url, method, body, onFetchErrorCallback}) => {
+        return fetchWithTimeout({method, body, url})
             .catch(e => {
                 setState({alertErrorType: "TIMEOUT"});
                 onFetchErrorCallback();
@@ -201,7 +201,7 @@ const BasePage = ({initialState}) => {
 
         setState({isLoading: true});
 
-        await fetchResultWithErrorHandling({url: finalURL, onFetchErrorCallback})
+        await fetchResultWithErrorHandling({url: finalURL, method: "POST", onFetchErrorCallback})
             .then(result => {
                 console.log('Success:', result);
 
@@ -238,7 +238,7 @@ const BasePage = ({initialState}) => {
 
         setState({y});
 
-        const paramStr = pairArrayToParamStr([['processed_y', y]].concat(bnfParamArr()));
+        const paramStr = pairArrayToParamStr(bnfParamArr());
 
         const finalURL = URL.baseBackendURL + URL.bnfUserSpecifiedDataSlug + paramStr;
 
@@ -246,7 +246,12 @@ const BasePage = ({initialState}) => {
 
         setState({isLoading: true});
 
-        await fetchResultWithErrorHandling({url: finalURL, onFetchErrorCallback})
+        await fetchResultWithErrorHandling({
+            url: finalURL,
+            method: "POST",
+            body: {'processed_y': y},
+            onFetchErrorCallback
+        })
             .then(result => {
                 console.log('Success:', result);
                 const
