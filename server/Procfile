@@ -1,1 +1,1 @@
-web: gunicorn --workers=2 --threads=3 --limit-request-line 16384 --timeout 21 wsgi:app
+web: gunicorn --workers=2 --threads=3 --limit-request-line 8190 --timeout 21 wsgi:app
