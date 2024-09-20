@@ -90,10 +90,6 @@ def bnf_fred_time_series():
 
 @app.route('/bnf/user-specified-time-series', methods=['POST'])
 def bnf_user_specified_time_series():
-    # Design Note: Time series data is a comma delimited string in the URL parameters
-    # for huge time series this may be problematic due to URL length limits (as we cannot send
-    # this data in the body because GET requests do not have bodies).
-    # May need to change to POST if this poses a problem in the future.
     series = [float(i) for i in request.get_json()["processed_y"]]
     user_series = TimeSeries(series)
     handle_series_transformation_params(user_series)
