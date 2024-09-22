@@ -5,6 +5,7 @@ import {CONFIG} from "../config.js";
 import {createMenuItems, fetchWithTimeout, pairArrayToParamStr} from "../utils/utils";
 import Error from "./Error";
 import {ThreeDots} from "react-loader-spinner";
+import {DateAbstract} from "../utils/date";
 
 const {field, URL} = CONFIG;
 
@@ -88,10 +89,8 @@ export default class FREDDataForm extends Component {
 
                     const
                         availableFrequencies = result["available_frequencies"],
-                        parsedStartDate = result["start_date"].split("-").map(x => Number(x)),
-                        parsedEndDate = result["end_date"].split("-").map(x => Number(x)),
-                        startDate = new Date(parsedStartDate[0], parsedStartDate[1] - 1, parsedStartDate[2]),
-                        endDate = new Date(parsedEndDate[0], parsedEndDate[1] - 1, parsedEndDate[2]);
+                        startDate = DateAbstract.maybeConvertStringToDate(result["start_date"]),
+                        endDate = DateAbstract.maybeConvertStringToDate(result["end_date"]);
 
                     console.log("Response - startDate: ", startDate);
                     console.log("Response - endDate: ", endDate);

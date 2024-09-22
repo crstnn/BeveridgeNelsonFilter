@@ -2,13 +2,13 @@ import React, {useMemo, useState} from "react";
 import Plot from 'react-plotly.js';
 import {Button, Checkbox, FormControl, FormControlLabel, Grid} from "@mui/material";
 import {CSVLink} from "react-csv";
-import {buildModelApplicationUrl, colsToRows} from "../utils/utils";
+import {buildModelApplicationUrl, colsToRows, getDifferencingPeriod} from "../utils/utils";
 import {FRED} from "../utils/consts";
 import ShareButton from "./ShareButton";
 
 
 const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
-    const fileName = "BN_filter_results.csv";
+    const fileName = `BN_filter_${plotPageValues.dataInputType === FRED ? plotPageValues.mnemonic : 'user_inputted_series'}_results.csv`;
     const displayConfInterval = plotPageValues.displayConfInterval;
     // Used to trigger re-render of plot. This circumvents react-plotly's plot refreshing convention.
     const [revisionNumber, setRevisionNumber] = useState(0);
@@ -18,7 +18,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
     const invisibleAxisDisplay = {showgrid: false, visible: false, zeroline: false};
 
     const trend = {
-        x: plotPageValues.x,
+        x: plotPageValues.transformedX,
         y: plotPageValues.trend,
         type: 'scatter',
         mode: 'lines',
@@ -33,7 +33,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
     const trendConfInt = [
         {
             // confint lower bound: enclosing line (which is hidden) hence 0 opacity (using properties of 'tonexty')
-            x: plotPageValues.x,
+            x: plotPageValues.transformedX,
             y: plotPageValues.trendCILB,
             fill: "tonexty",
             fillcolor: "rgba(0, 0, 0, 0)",
@@ -47,7 +47,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
             visible: displayConfInterval ? (plotPageValues.displaySeriesAndTrend ? true : 'legendonly') : false,
         },
         { // confint upper bound
-            x: plotPageValues.x,
+            x: plotPageValues.transformedX,
             y: plotPageValues.trendCIUB,
             fill: "tonexty",
             fillcolor: "rgba(255,145,0,0.25)",
@@ -64,7 +64,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
 
     const series =
         {
-            x: plotPageValues.x,
+            x: plotPageValues.transformedX,
             y: plotPageValues.transformedY,
             type: 'scatter',
             mode: 'lines',
@@ -79,7 +79,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
 
     const cycle =
         {
-            x: plotPageValues.x,
+            x: plotPageValues.transformedX,
             y: plotPageValues.cycle,
             type: 'scatter',
             mode: 'lines+markers',
@@ -94,7 +94,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
     const cycleConfInt = [
         {
             // confint lower bound: enclosing line (which is hidden) hence 0 opacity (using properties of 'tonexty')
-            x: plotPageValues.x,
+            x: plotPageValues.transformedX,
             y: plotPageValues.cycleCILB,
             fill: "tonexty",
             fillcolor: "rgba(0, 0, 0, 0)",
@@ -108,7 +108,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
             visible: displayConfInterval ? (plotPageValues.displayCycle ? true : 'legendonly') : false,
         },
         { // confint upper bound
-            x: plotPageValues.x,
+            x: plotPageValues.transformedX,
             y: plotPageValues.cycleCIUB,
             fill: "tonexty",
             fillcolor: "rgba(0,100,80,0.2)",
@@ -173,17 +173,21 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
         prevStep();
     }
 
-    const getCSVData = () => colsToRows(
-        ["date"].concat(plotPageValues.x),
-        [`${plotPageValues.dataInputType === FRED ? `${plotPageValues.mnemonic}_` : ''}original_series`].concat(plotPageValues.y),
-        plotPageValues.transform ? [`${plotPageValues.dataInputType === FRED ? `${plotPageValues.mnemonic}_` : ''}transformed_series`].concat(plotPageValues.transformedY) : undefined,
-        ["trend"].concat(plotPageValues.trend),
-        ["cycle"].concat(plotPageValues.cycle),
-        displayConfInterval ? ["cycle_conf_int_lower_bound"].concat(plotPageValues.cycleCILB) : undefined,
-        displayConfInterval ? ["cycle_conf_int_upper_bound"].concat(plotPageValues.cycleCIUB) : undefined,
-        displayConfInterval ? ["trend_conf_int_lower_bound"].concat(plotPageValues.trendCILB) : undefined,
-        displayConfInterval ? ["trend_conf_int_upper_bound"].concat(plotPageValues.trendCIUB) : undefined
-    );
+    const getCSVData = () => {
+        const alignDatesArrayPadding = () => Array(getDifferencingPeriod(plotPageValues.dCode)).fill(null)
+
+        return colsToRows(
+            ["date"].concat(plotPageValues.x),
+            [`${plotPageValues.dataInputType === FRED ? `${plotPageValues.mnemonic}_` : ''}original_series`].concat(plotPageValues.y),
+            plotPageValues.transform ? [`${plotPageValues.dataInputType === FRED ? `${plotPageValues.mnemonic}_` : ''}transformed_series`].concat(alignDatesArrayPadding().concat(plotPageValues.transformedY)) : undefined,
+            ["trend"].concat(alignDatesArrayPadding().concat(plotPageValues.trend)),
+            ["cycle"].concat(alignDatesArrayPadding().concat(plotPageValues.cycle)),
+            displayConfInterval ? ["cycle_conf_int_lower_bound"].concat(alignDatesArrayPadding().concat(plotPageValues.cycleCILB)) : undefined,
+            displayConfInterval ? ["cycle_conf_int_upper_bound"].concat(alignDatesArrayPadding().concat(plotPageValues.cycleCIUB)) : undefined,
+            displayConfInterval ? ["trend_conf_int_lower_bound"].concat(alignDatesArrayPadding().concat(plotPageValues.trendCILB)) : undefined,
+            displayConfInterval ? ["trend_conf_int_upper_bound"].concat(alignDatesArrayPadding().concat(plotPageValues.trendCIUB)) : undefined
+        )
+    };
 
     const getLineVisibilityByGroup = (data) => data.reduce((acc, plotAttribute) =>
             !plotAttribute.name.endsWith('ci') ? {...acc, [plotAttribute.legendgroup]: plotAttribute.visible} : acc

@@ -84,5 +84,6 @@ export const extractModelParams = valueObject => {
     );
 };
 
-
 export const buildModelApplicationUrl = paramPairs => `${window.location.origin}/#/apply${pairArrayToParamStr(paramPairs)}`;
+
+export const getDifferencingPeriod = differencingPeriod => differencingPeriod !== 'nd' ? Number(differencingPeriod.slice(1)) : 0

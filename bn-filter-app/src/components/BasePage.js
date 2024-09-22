@@ -7,7 +7,13 @@ import Loading from "./Loading";
 import Error from "./Error";
 import {CONFIG} from "../config.js";
 import {DateAbstract} from "../utils/date";
-import {confIntZip, extractModelParams, fetchWithTimeout, pairArrayToParamStr} from "../utils/utils";
+import {
+    confIntZip,
+    extractModelParams,
+    fetchWithTimeout,
+    getDifferencingPeriod,
+    pairArrayToParamStr
+} from "../utils/utils";
 import {FRED, PARAMETERS_STEP, USER} from "../utils/consts";
 
 const {field, URL} = CONFIG;
@@ -21,6 +27,7 @@ const BasePage = ({initialState}) => {
             mnemonic: '',
             unprocessedY: '',
             x: [], // dates
+            transformedX: [],
             y: [], // time series
             transformedY: [], // transformed y (only will differ from `y` if a transform is applied)
             delta: field.freeText.delta.default,
@@ -208,10 +215,17 @@ const BasePage = ({initialState}) => {
                 const
                     cycleRes = result["cycle"],
                     trendRes = result["trend"],
-                    ciRes = result["cycle_ci"];
+                    ciRes = result["cycle_ci"],
+                    x = result["dates"],
+                    transformedX = DateAbstract.createDate(state.frequency, DateAbstract.maybeConvertStringToDate(x[0]))
+                        .nextTimePeriod(getDifferencingPeriod(state.dCode))
+                        .getDateSeries(cycleRes.length).map(DateAbstract.truncatedDate);
+
+                console.log("dates", x, transformedX)
 
                 setState({
-                    x: result["dates"],
+                    x,
+                    transformedX,
                     y: result["original_y"],
                     transformedY: result["transformed_y"],
                     trend: trendRes,
@@ -259,10 +273,18 @@ const BasePage = ({initialState}) => {
                     trendRes = result["trend"],
                     ciRes = result["cycle_ci"];
 
-                setState({
-                    x: state.frequency !== "n" ? // dated axis or numbered axis
+                const
+                    x = state.frequency !== "n" ? // dated axis or numbered axis
                         DateAbstract.createDate(state.frequency, state.startDate).getDateSeries(cycleRes.length).map(DateAbstract.truncatedDate)
                         : Array.from({length: cycleRes.length}, (_, i) => i + 1),
+                    transformedX = state.frequency !== "n" ? // dated axis or numbered axis
+                        DateAbstract.createDate(state.frequency, state.startDate).nextTimePeriod(getDifferencingPeriod(state.dCode))
+                            .getDateSeries(cycleRes.length).map(DateAbstract.truncatedDate)
+                        : Array.from({length: cycleRes.length}, (_, i) => i + 1 + getDifferencingPeriod(state.dCode));
+
+                setState({
+                    x,
+                    transformedX,
                     transformedY: result["transformed_y"],
                     trend: trendRes,
                     cycle: cycleRes,
