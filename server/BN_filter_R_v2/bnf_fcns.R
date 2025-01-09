@@ -301,6 +301,66 @@ olsvar_df <- function(y, p, nc = FALSE)
 
 }
 
+# Estimate an OLS reduced form VAR and adjust estimated variance of errors for outliers
+# INPUTS:
+# y      Data(T x N)
+# p      lags
+# temp_dummies	dates of outliers
+# nc     put TRUE if you don't want a constant (default is FALSE)
+#
+# OUTPUTS:
+# A      VAR Coefficients
+# SIGMA  Reduced form variance covariance matrix
+# U      Time Series of Residuals
+# invXX  Inverse of the symmetric square matrix X'X
+# X      Design matrix
+olsvar_outliers <- function(y, p, temp_dummies, nc = FALSE)
+{
+    # Preliminary stuff
+    y <- as.matrix(y)
+    tobs <- nrow(y) - p                         # length of time series
+    Y <- y[(p + 1):nrow(y), , drop = FALSE]     # cut away first p lags
+    
+    if (!nc) {
+        X <- rep(1, tobs)
+    } else {
+        X <- c();
+    }
+
+    for (i in 1:p) {
+        Z <- y[((p + 1) - i):(nrow(y) - i), , drop = FALSE]
+        X <- cbind(X, Z)
+    }
+
+    # Do the QR decomposition
+    qr_xmat <- qr(X)
+
+    # Get the OLS coefficients
+    A <- qr.coef(qr = qr_xmat, y = Y)
+
+    # Get the OLS residuals
+    U <- qr.resid(qr = qr_xmat, y = Y)
+    
+    temp_dummies <- temp_dummies - p;
+    U_adj <- t(t(U[-temp_dummies]))
+    
+    # Get the OLS VCov matrix
+    # df is total sample-lags-number of regressors
+    SIGMA <- sum(square(U_adj)) / (nrow(U_adj) - nrow(A));
+
+    invXX <- qr.solve(crossprod(x = X, y = NULL),tol = 1e-30)
+
+    # Collect results as a list object
+    olsvar_outliers <- list()
+    olsvar_outliers$A <- A
+    olsvar_outliers$SIGMA <- SIGMA
+    olsvar_outliers$U <- U
+    olsvar_outliers$invXX <- invXX
+    olsvar_outliers$X <- X
+
+    return (olsvar_outliers)
+}
+
 
 # Backcast observations based on reversible process
 #
@@ -461,13 +521,20 @@ backcast <- function(y, p, delta){
 # BN_cycle    The estimated cycle
 # BN_cycle_se The estimated cycle standard error
 # aux_out     Auxiliary output (AR coefficients & residuals )
-BN_Filter <- function(y, p, delta, dynamic_bands, ib, window, compute_stderr = TRUE)
+BN_Filter <- function(y, p, delta, dynamic_bands, ib, window, dummies, adjust_bands, compute_stderr = TRUE)
 {
     # Do a few preliminary things
     y <- as.matrix(y)
     
+    if (adjust_bands){
+    tmp_olsvar_outliers <- olsvar_outliers(y = y, p = p, temp_dummies = dummies, nc = FALSE)
+    sig2_ols_c = tmp_olsvar_outliers$SIGMA
+    }
+    else{
     tmp_olsvar <- olsvar(y = y, p = p, nc = FALSE)
-    sig2_ols_c = tmp_olsvar$SIGMA
+    sig2_ols_c = tmp_olsvar$SIGMA	
+    }	
+    
 
     # Compute rho from delta
     rho <- -(1.0 - sqrt(delta)) / sqrt(delta)
@@ -584,9 +651,15 @@ BN_Filter <- function(y, p, delta, dynamic_bands, ib, window, compute_stderr = T
     
         y_temp <- y[1:window]
     	y_temp <- as.matrix(y_temp)
-    
-        tmp_olsvar <- olsvar(y = y_temp, p = p, nc = FALSE)
-        sig2_ols_c_t = tmp_olsvar$SIGMA
+        
+        if (adjust_bands){
+    	tmp_olsvar_outliers <- olsvar_outliers(y = y_temp, p = p, temp_dummies = dummies, nc = FALSE)
+    	sig2_ols_c_t = tmp_olsvar_outliers$SIGMA
+    	}
+    	else{
+    	tmp_olsvar <- olsvar(y = y_temp, p = p, nc = FALSE)
+    	sig2_ols_c_t = tmp_olsvar$SIGMA	
+   		}	       
     
         vecQ[1,1] = sig2_ols_c_t
         vecSigma_X = big_A %*% vecQ
@@ -601,8 +674,15 @@ BN_Filter <- function(y, p, delta, dynamic_bands, ib, window, compute_stderr = T
     		i_start <- i-window+1
     	    y_temp <- y[i_start:i]
     	    y_temp <- as.matrix(y_temp)
+    	    window_dummies <- dummies - i + window        	
+        	if (adjust_bands){
+    		tmp_olsvar_outliers <- olsvar_outliers(y = y_temp, p = p, temp_dummies = window_dummies, nc = FALSE)
+    		sig2_ols_c_t = tmp_olsvar_outliers$SIGMA
+    		}
+    		else{
     		tmp_olsvar <- olsvar(y = y_temp, p = p, nc = FALSE)
-        	sig2_ols_c_t = tmp_olsvar$SIGMA
+    		sig2_ols_c_t = tmp_olsvar$SIGMA	
+   			}	
     
         	vecQ[1,1] = sig2_ols_c_t
         	vecSigma_X = big_A %*% vecQ
@@ -652,20 +732,20 @@ BN_Filter <- function(y, p, delta, dynamic_bands, ib, window, compute_stderr = T
 #
 # OUTPUTS:
 # delta_grid
-select_delta <- function(y, p, ib, delta_select, d0 = 0.005, dt = d0)
+select_delta <- function(y, p, ib, delta_select, d0, dt)
 {
   # Initialise the difference to enter the loop
   diff_t <- 1;
 
   # Initialise the amplitude to noise ratio
   delta_grid <- d0
-  tmp <- BN_Filter(y, p, delta_grid, dynamic_bands, ib, window, F)
+  tmp <- BN_Filter(y, p, delta_grid, dynamic_bands, ib, window, dummies, F, F)
   old_amp_to_noise <- var(tmp$BN_cycle) / mean(square(tmp$aux_out$residuals))
   old_precisionDeltaBNtrend <- tmp$aux_out$varDeltaBNtrend
 
   while (diff_t > 0) {
     delta_grid <- delta_grid + dt
-    tmp <- BN_Filter(y, p, delta_grid, dynamic_bands, ib, window, F)
+    tmp <- BN_Filter(y, p, delta_grid, dynamic_bands, ib, window, dummies, F, F)
     new_amp_to_noise <- var(tmp$BN_cycle) / mean(square(tmp$aux_out$residuals))
     new_precisionDeltaBNtrend <- tmp$aux_out$varDeltaBNtrend
 
@@ -692,25 +772,31 @@ select_delta <- function(y, p, ib, delta_select, d0 = 0.005, dt = d0)
 
 # bnf using an automatically determined 'delta'
 bnf <- function(y, 
-                window = 40, 
-                iterative = 100, 
                 delta_select = 2,
-                fixed_delta = 0.1,
+                fixed_delta = 0.01,
                 p = 12, 
-                d0 = 0.01, 
-                dt = 0.0005,
+                d0 = 0.005, 
+                dt = 0.0005,              
                 demean = c("nd", "sm", "pm", "dm"),
-                dynamic_bands = T, 
-                ib = T, 
+                iterative = 100, 
+                dynamic_bands = T,
+                adjust_bands = F,
+                dummies = c(293, 294),
+                window = 40,
+                ib = T,
                 ...)
-  # @window: rolling window length for dynamic demeaning and/or dynamic error bands (e.g., 40 is 10 years for quarterly data)
-  # @iterative: set to >1 for max number of iterations for iterative dynamic demeaning
   # @delta_select: set to 0 if use fixed delta, 1 if max amp-to-noise, 2 if min var(trend shocks)
-  # @d0: min_delta: start point of grid search for delta if delta_select!=0
   # @fixed_delta: set a fixed delta to be used if delta_select=0, or for delta
-  # @dynamic_bands: set to T for dynamic error bands, F for fixed standard error bands (should be F when sm demean type)
+  # @p is lag order for estimation
+  # @d0: min_delta: start point of grid search for delta if delta_select!=0
+  # @dt: delta increment
+  # @demean = "nd", "sm", "dm", or "pm", where "nd" = no drift, "sm" = sample mean, "dm" = dynamic demeaning, "pm" = structural breaks, set as 'breaks = c(100, 237)'
+  # @iterative: set to >1 for max number of iterations for iterative dynamic demeaning
+  # @dynamic_bands: set to T for dynamic error bands, F for fixed standard error bands
+  # @adjust_bands: set to T to adjusts for outlier observations when calculating error bands, set outliers as 'dummies = c(293, 294)'
+  # @window: rolling window length for dynamic demeaning and/or dynamic error bands (e.g., 40 is 10 years for quarterly data)
   # @ib: set to F if no iterative backcasting as in KMW2018 (just unconditional mean), set to T if iterative backcasting
-  # @varargs (...): passed into piecewise demean function
+  # @varargs (...): passed into error bands and piecewise_demean function
 {
 
     if(demean != 'dm' && iterative != 0) stop("Set @iterative to 0 if @demean is not 'dm'.")
@@ -757,7 +843,7 @@ bnf <- function(y,
     else {
     	delta <- fixed_delta
     	}
-    tmp <- BN_Filter(demeaned_dy, p, delta, dynamic_bands, ib, window)
+    tmp <- BN_Filter(demeaned_dy, p, delta, dynamic_bands, ib, window, dummies, adjust_bands)
     cycle <- tmp$BN_cycle
     
     DeltaBNcycle <- diff(x = cycle, lag = 1)
@@ -777,7 +863,7 @@ bnf <- function(y,
         	delta <- fixed_delta
         }
       	
-        tmp <- BN_Filter(demeaned_dy, p, delta, dynamic_bands, ib, window)
+        tmp <- BN_Filter(demeaned_dy, p, delta, dynamic_bands, ib, window, dummies, adjust_bands)
         cycle <- tmp$BN_cycle
         DeltaBNcycle <- diff(x = cycle, lag = 1)
         
