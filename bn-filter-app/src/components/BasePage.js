@@ -217,7 +217,7 @@ const BasePage = ({initialState}) => {
                     trendRes = result["trend"],
                     ciRes = result["cycle_ci"],
                     x = result["dates"],
-                    transformedX = DateAbstract.createDate(state.frequency, DateAbstract.maybeConvertStringToDate(x[0]))
+                    transformedX = DateAbstract.createDate(state.frequencyFRED, DateAbstract.maybeConvertStringToDate(x[0]))
                         .nextTimePeriod(getDifferencingPeriod(state.dCode))
                         .getDateSeries(cycleRes.length).map(DateAbstract.truncatedDate);
 
