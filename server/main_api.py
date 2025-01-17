@@ -44,18 +44,18 @@ def get_fred_params():
 def get_bnf_params():
     delta_select = int(request.args.get("delta_select"))
 
-    # fixed_delta_arg = request.args.get("fixed_delta", None)
-    # fixed_delta = float(fixed_delta_arg) if fixed_delta_arg is not None and delta_select == 0 else 0.005
-
     delta = float(request.args.get("delta"))
 
     ib = request.args.get("ib") == "true"
     demean = request.args.get("demean")
 
     window_arg = request.args.get("window", None)
-    window = 40 if window_arg is None or demean == 'sm' else int(window_arg)
+    window = None if window_arg is None else int(window_arg)
 
-    return window, delta_select, delta, ib, demean
+    outliers_for_se_arg = request.args.get("outliers_for_se", None)
+    outliers_for_se = None if outliers_for_se_arg is None else [int(i) for i in outliers_for_se_arg.split(',')]
+
+    return window, delta_select, delta, ib, demean, outliers_for_se
 
 
 def handle_series_transformation_params(series):
