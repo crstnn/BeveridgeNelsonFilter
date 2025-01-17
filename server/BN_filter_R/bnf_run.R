@@ -35,7 +35,7 @@ bnfOutput <- bnf(as.vector(y),
                  adjust_bands = T,
                  dummies = c(293, 294),
                  window = 40,               
-			     ib = T)  
+			           ib = T)  
 # @delta_select: set to 0 if use fixed delta, 1 if max amp-to-noise, 2 (default) if min var(trend shocks)
 # @demean = "nd", "sm", "dm", or "pm", where "nd" = no drift, "sm" = sample mean, "dm" = dynamic demeaning, "pm" = structural breaks
 # @iterative: set to >1 for max number of iterations for iterative dynamic demeaning (e.g., 100 (default))
