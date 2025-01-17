@@ -52,7 +52,7 @@ export default class FREDDataForm extends Component {
             finalURL = URL.baseBackendURL + URL.fredDataSlug + paramStr;
 
         this.setState({loading: true}, async () => {
-            const {setState, setErrorMessage, deleteErrorMessage, values} = this.props;
+            const {setState, setErrorMessage, deleteErrorMessage} = this.props;
 
             const responseSuccess = () => {
                 this.setState(
@@ -98,9 +98,9 @@ export default class FREDDataForm extends Component {
                     deleteErrorMessage("mnemonic");
 
                     setState({
-                        frequencyFRED: values.frequencyFRED && availableFrequencies.includes(values.frequencyFRED) ? values.frequencyFRED : availableFrequencies[0],
-                        startDateFRED: values.startDateFRED && (values.startDateFRED > startDate && values.startDateFRED < endDate) ? values.startDateFRED : startDate,
-                        endDateFRED: values.endDateFRED && (values.endDateFRED < endDate && values.endDateFRED > startDate) ? values.endDateFRED : endDate,
+                        frequencyFRED: availableFrequencies[0],
+                        startDateFRED: startDate,
+                        endDateFRED: endDate,
                         availableFrequencies: availableFrequencies,
                         mnemonic: this.state.mnemonic,
                         minDate: startDate,
