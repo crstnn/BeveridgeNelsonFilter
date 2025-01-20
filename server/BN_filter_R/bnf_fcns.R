@@ -1013,7 +1013,6 @@ bnf <- function(y,
   }
   
   
-  
   # Automatically compute delta to pass to BN_Filter
   if (delta_select > 0) {
     delta <- select_delta(demeaned_dy, p, ib, delta_select, d0, dt)
@@ -1021,6 +1020,9 @@ bnf <- function(y,
   else {
     delta <- fixed_delta
   }
+  
+  is_idm <- iterative > 0 && demean == "dm"
+  
   tmp <-
     BN_Filter(demeaned_dy,
               p,
@@ -1029,15 +1031,16 @@ bnf <- function(y,
               ib,
               window,
               outliers,
-              adjusted_bands)
-  # TODO: check: SE may only need to calculated if `!(iterative > 0 && demean == "dm")`
+              adjusted_bands,!is_idm)  # TODO: check this optimisation
+  
   cycle <- tmp$BN_cycle
   
   DeltaBNcycle <- diff(x = cycle, lag = 1)
   
-  if (iterative > 0 && demean == "dm") {
+  if (is_idm) {
     cycle_iter <- cbind(zeros(nrow(cycle), 1), cycle)
     iter <- 1
+    
     while (iter < iterative &&
            sd(cycle_iter[, ncol(cycle_iter)] - cycle_iter[, ncol(cycle_iter) - 1]) >
            0.001 * sd(demeaned_dy)) {
@@ -1068,7 +1071,7 @@ bnf <- function(y,
       
       cycle_iter <- cbind(cycle_iter, cycle)
       
-      iter = iter + 1
+      iter <- iter + 1
     }
   }
   
