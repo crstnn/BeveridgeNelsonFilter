@@ -631,27 +631,11 @@ BN_Filter <-
            ib,
            window,
            outliers,
-           adjust_bands,
+           adjusted_bands,
            compute_stderr = TRUE)
   {
     # Do a few preliminary things
     y <- as.matrix(y)
-    
-    if (adjust_bands) {
-      tmp_olsvar_outliers <-
-        olsvar_outliers(
-          y = y,
-          p = p,
-          temp_outliers = outliers,
-          nc = FALSE
-        )
-      sig2_ols_c = tmp_olsvar_outliers$SIGMA
-    }
-    else{
-      tmp_olsvar <- olsvar(y = y, p = p, nc = FALSE)
-      sig2_ols_c = tmp_olsvar$SIGMA
-    }
-    
     
     # Compute rho from delta
     rho <- -(1.0 - sqrt(delta)) / sqrt(delta)
@@ -743,7 +727,8 @@ BN_Filter <-
     BN_cycle <- t(BN_cycle[1, , drop = FALSE])
     
     # Compute the change in trend
-    Delta_eta <- (1 / (1 - rho)) * (y - X_untransformed %*% AR_params)
+    Delta_eta <-
+      (1 / (1 - rho)) * (y - X_untransformed %*% AR_params)
     varDeltaBNtrend <- (1 / nrow(y)) * t(Delta_eta) %*% Delta_eta
     
     # Collect results into list object
@@ -767,95 +752,131 @@ BN_Filter <-
       Phi <- (A %*% qr.solve(eye(p) - A))
       
       tobs <- nrow(y)
+      # TODO: are we missing the non-dynamic bands case?
       
       
       if (dynamic_bands) {
         windp1 <- window + 1
         windm1 <- window - 1
         
+        
+        compute_bn_cycle_se <-
+          function(BN_cycle_se_t,
+                   adjusted_bands) {
+            # Case 1: If window size is less than the length of y
+            if (length(y) >= window) {
+              y_temp <- as.matrix(y[1:window])
+              
+              if (adjusted_bands) {
+                tmp_olsvar_outliers <- olsvar_outliers(
+                  y = y_temp,
+                  p = p,
+                  temp_outliers = outliers,
+                  nc = FALSE
+                )
+                sig2_ols_c_t <- tmp_olsvar_outliers$SIGMA
+              } else {
+                tmp_olsvar <- olsvar(y = y_temp,
+                                     p = p,
+                                     nc = FALSE)
+                sig2_ols_c_t <- tmp_olsvar$SIGMA
+              }
+              
+              vecQ[1, 1] <- sig2_ols_c_t
+              vecSigma_X <- big_A %*% vecQ
+              Sigma_X_alt <- matrix(vecSigma_X, p, p)
+              
+              BN_cycle_se <-
+                as.numeric(sqrt(
+                  ind_vec %*% Phi %*% Sigma_X_alt %*% t(Phi) %*% t(ind_vec)
+                ))
+              BN_cycle_se_t[1:window] <-
+                BN_cycle_se * rep(1, window)
+              
+              for (i in windp1:tobs) {
+                i_start <- i - window + 1
+                y_temp <- as.matrix(y[i_start:i])
+                window_outliers <- outliers - i + window
+                
+                if (adjusted_bands) {
+                  tmp_olsvar_outliers <- olsvar_outliers(
+                    y = y_temp,
+                    p = p,
+                    temp_outliers = window_outliers,
+                    nc = FALSE
+                  )
+                  sig2_ols_c_t <- tmp_olsvar_outliers$SIGMA
+                } else {
+                  tmp_olsvar <- olsvar(y = y_temp,
+                                       p = p,
+                                       nc = FALSE)
+                  sig2_ols_c_t <- tmp_olsvar$SIGMA
+                }
+                
+                vecQ[1, 1] <- sig2_ols_c_t
+                vecSigma_X <- big_A %*% vecQ
+                Sigma_X_alt <- matrix(vecSigma_X, p, p)
+                
+                BN_cycle_se <-
+                  as.numeric(sqrt(
+                    ind_vec %*% Phi %*% Sigma_X_alt %*% t(Phi) %*% t(ind_vec)
+                  ))
+                BN_cycle_se_t[i] <- BN_cycle_se
+              }
+            } else {
+              # Case 2: If window size exceeds the length of y
+              if (adjusted_bands) {
+                tmp_olsvar_outliers <- olsvar_outliers(
+                  y = y,
+                  p = p,
+                  temp_outliers = outliers,
+                  nc = FALSE
+                )
+                sig2_ols_c <- tmp_olsvar_outliers$SIGMA
+              } else {
+                tmp_olsvar <- olsvar(y = y,
+                                     p = p,
+                                     nc = FALSE)
+                sig2_ols_c <- tmp_olsvar$SIGMA
+              }
+              
+              vecQ[1, 1] <- sig2_ols_c
+              vecSigma_X <- big_A %*% vecQ
+              Sigma_X_alt <- matrix(vecSigma_X, p, p)
+              
+              BN_cycle_se <-
+                as.numeric(sqrt(
+                  ind_vec %*% Phi %*% Sigma_X_alt %*% t(Phi) %*% t(ind_vec)
+                ))
+              BN_cycle_se_t <- BN_cycle_se * rep(1, tobs)
+            }
+            
+            # Add a row if `ib` is TRUE
+            if (ib) {
+              BN_cycle_se_t <- rbind(BN_cycle_se_t[1], BN_cycle_se_t)
+            }
+            
+            return(BN_cycle_se_t)
+          }
+        
+        
         # Allocate storage for the demeaned series
-        BN_cycle_se_t <- matrix(data = NA_real_,
-                                nrow = tobs,
-                                ncol = 1)
+        BN_cycle_se <- matrix(data = NA_real_,
+                              nrow = tobs,
+                              ncol = 1)
         
-        y_temp <- y[1:window]
-        y_temp <- as.matrix(y_temp)
-        
-        if (adjust_bands) {
-          tmp_olsvar_outliers <-
-            olsvar_outliers(
-              y = y_temp,
-              p = p,
-              temp_outliers = outliers,
-              nc = FALSE
-            )
-          sig2_ols_c_t = tmp_olsvar_outliers$SIGMA
-        }
-        else{
-          tmp_olsvar <- olsvar(y = y_temp, p = p, nc = FALSE)
-          sig2_ols_c_t = tmp_olsvar$SIGMA
+        if (adjusted_bands) {
+          BN_cycle_se_adjusted <- BN_cycle_se
+          result$BN_cycle_adjusted_se <-
+            compute_bn_cycle_se(BN_cycle_se_adjusted, TRUE)
         }
         
-        vecQ[1, 1] = sig2_ols_c_t
-        vecSigma_X = big_A %*% vecQ
-        Sigma_X_alt = matrix(vecSigma_X, p, p)
-        
-        BN_cycle_se <-
-          as.numeric(sqrt(ind_vec %*% Phi %*% Sigma_X_alt %*% t(Phi) %*% t(ind_vec)))
-        
-        BN_cycle_se_t[1:window] <- BN_cycle_se * ones(window, 1)
-        
-        for (i in windp1:tobs) {
-          i_start <- i - window + 1
-          y_temp <- y[i_start:i]
-          y_temp <- as.matrix(y_temp)
-          window_outliers <- outliers - i + window
-          if (adjust_bands) {
-            tmp_olsvar_outliers <-
-              olsvar_outliers(
-                y = y_temp,
-                p = p,
-                temp_outliers = window_outliers,
-                nc = FALSE
-              )
-            sig2_ols_c_t = tmp_olsvar_outliers$SIGMA
-          }
-          else{
-            tmp_olsvar <- olsvar(y = y_temp,
-                                 p = p,
-                                 nc = FALSE)
-            sig2_ols_c_t = tmp_olsvar$SIGMA
-          }
-          
-          vecQ[1, 1] = sig2_ols_c_t
-          vecSigma_X = big_A %*% vecQ
-          Sigma_X_alt = matrix(vecSigma_X, p, p)
-          
-          BN_cycle_se <-
-            as.numeric(sqrt(ind_vec %*% Phi %*% Sigma_X_alt %*% t(Phi) %*% t(ind_vec)))
-          
-          BN_cycle_se_t[i] <- BN_cycle_se
-        }
+        result$BN_cycle_se <-
+          compute_bn_cycle_se(BN_cycle_se, FALSE)
         
       }
-      else{
-        vecQ[1, 1] = sig2_ols_c
-        vecSigma_X = big_A %*% vecQ
-        Sigma_X_alt = matrix(vecSigma_X, p, p)
-        
-        BN_cycle_se <-
-          as.numeric(sqrt(ind_vec %*% Phi %*% Sigma_X_alt %*% t(Phi) %*% t(ind_vec)))
-        BN_cycle_se_t <- BN_cycle_se * ones(tobs, 1)
-      }
-      
-      if (ib) {
-        BN_cycle_se_t <- rbind(BN_cycle_se_t[1], BN_cycle_se_t)
-      }
-      
-      result$BN_cycle_se <- BN_cycle_se_t
     }
     
-    # Return results
     return (result)
   }
 
@@ -930,7 +951,7 @@ bnf <- function(y,
                 demean = c("nd", "sm", "pm", "dm"),
                 iterative = 100,
                 dynamic_bands = T,
-                adjust_bands = F,
+                adjusted_bands = F,
                 outliers = c(293, 294),
                 window = 40,
                 ib = T,
@@ -943,7 +964,7 @@ bnf <- function(y,
 # @demean = "nd", "sm", "dm", or "pm", where "nd" = no drift, "sm" = sample mean, "dm" = dynamic demeaning, "pm" = structural breaks, set as 'breaks = c(100, 237)'
 # @iterative: set to >1 for max number of iterations for iterative dynamic demeaning
 # @dynamic_bands: set to T for dynamic error bands, F for fixed standard error bands
-# @adjust_bands: set to T to adjusts for outlier observations when calculating error bands, set outliers as 'outliers = c(293, 294)'
+# @adjusted_bands: set to T to adjusts for outlier observations when calculating error bands, set outliers as 'outliers = c(293, 294)'
 # @window: rolling window length for dynamic demeaning and/or dynamic error bands (e.g., 40 is 10 years for quarterly data)
 # @ib: set to F if no iterative backcasting as in KMW2018 (just unconditional mean), set to T if iterative backcasting
 # @varargs (...): passed into error bands and piecewise_demean function
@@ -992,7 +1013,6 @@ bnf <- function(y,
   }
   
   
-  
   # Automatically compute delta to pass to BN_Filter
   if (delta_select > 0) {
     delta <- select_delta(demeaned_dy, p, ib, delta_select, d0, dt)
@@ -1000,6 +1020,9 @@ bnf <- function(y,
   else {
     delta <- fixed_delta
   }
+  
+  is_idm <- iterative > 0 && demean == "dm"
+  
   tmp <-
     BN_Filter(demeaned_dy,
               p,
@@ -1008,14 +1031,16 @@ bnf <- function(y,
               ib,
               window,
               outliers,
-              adjust_bands)
+              adjusted_bands,!is_idm)  # TODO: check this optimisation
+  
   cycle <- tmp$BN_cycle
   
   DeltaBNcycle <- diff(x = cycle, lag = 1)
   
-  if (iterative > 0 && demean == "dm") {
+  if (is_idm) {
     cycle_iter <- cbind(zeros(nrow(cycle), 1), cycle)
     iter <- 1
+    
     while (iter < iterative &&
            sd(cycle_iter[, ncol(cycle_iter)] - cycle_iter[, ncol(cycle_iter) - 1]) >
            0.001 * sd(demeaned_dy)) {
@@ -1039,18 +1064,18 @@ bnf <- function(y,
                   ib,
                   window,
                   outliers,
-                  adjust_bands)
+                  adjusted_bands)
+      # TODO: check whether SE needs to be calculated on every iteration (may only need to be on final)
       cycle <- tmp$BN_cycle
       DeltaBNcycle <- diff(x = cycle, lag = 1)
       
       cycle_iter <- cbind(cycle_iter, cycle)
       
-      iter = iter + 1
+      iter <- iter + 1
     }
   }
   
   colnames(cycle) <- "Cycle"
-  cycle_se <- tmp$BN_cycle_se
   
   # Add 'ts' attribute to 'y' and 'cycle' if 'ts' object was originally passed in
   if (y_ts) {
@@ -1068,15 +1093,16 @@ bnf <- function(y,
   result$y <- y
   result$cycle <- cycle
   result$trend <- y - cycle
-  result$cycle_se <- cycle_se
+  result$cycle_se <- tmp$BN_cycle_se
   result$delta <- delta
   result$demean_method <- demean_method
   result$iterative <- iterative
   result$cycle_ci <-
-    round(qnorm(p = 0.05 / 2.0, lower.tail = FALSE), 2) * cycle_se
-  if (adjust_bands) {
+    round(qnorm(p = 0.05 / 2.0, lower.tail = FALSE), 2) * tmp$BN_cycle_se
+  if (adjusted_bands) {
+    result$cycle_adjusted_se <- tmp$BN_cycle_adjusted_se
     result$cycle_ci_adjusted <-
-      round(qnorm(p = 0.05 / 2.0, lower.tail = FALSE), 2) * cycle_se
+      round(qnorm(p = 0.05 / 2.0, lower.tail = FALSE), 2) * tmp$BN_cycle_adjusted_se
   }
   if (iterative > 0) {
     result$iterations <- ncol(cycle_iter) - 1
