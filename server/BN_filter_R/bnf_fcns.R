@@ -1153,7 +1153,8 @@ print.bnfClass <-
 plot.bnfClass <- function(x,
                           main = "BN Filter Cycle",
                           plot_ci = TRUE,
-                          col = "blue",
+                          col = "red",
+                          secondary_col = "blue",
                           lwd = 2,
                           ...)
 {
@@ -1241,6 +1242,18 @@ plot.bnfClass <- function(x,
       col = adjustcolor(col, alpha.f = 0.2),
       border = NA
     )
+    
+    if("cycle_ci_adjusted" %in% names(x)) {
+      polygon(
+        x = c(x_axis, rev(x_axis)),
+        y = c((x$cycle - x$cycle_ci_adjusted),
+              rev(x$cycle + x$cycle_ci_adjusted)
+        ),
+        col = adjustcolor(secondary_col, alpha.f = 0.1),
+        border = NA
+      )
+    }
+
   }
   
   # Mark the LHS y-axis
