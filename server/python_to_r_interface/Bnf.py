@@ -42,7 +42,7 @@ class BNF:
                                             fixed_delta=self.delta,
                                             d0=self.d0,
                                             demean=self.demean,
-                                            adjust_bands=self.adjust_bands,
+                                            adjusted_bands=self.adjust_bands,
                                             outliers=self.outliers_for_se,
                                             dynamic_bands=self.dynamic_bands,
                                             ib=self.ib,
