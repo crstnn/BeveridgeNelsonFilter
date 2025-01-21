@@ -27,8 +27,8 @@ class BNF:
         else:
             self.iterative = 0
 
-        self.adjust_bands = bool(outliers_for_se)
-        self.outliers_for_se = create_int_array(outliers_for_se if self.adjust_bands else [])
+        self.return_adjusted_bands = bool(outliers_for_se)
+        self.outliers_for_se = create_int_array(outliers_for_se if self.return_adjusted_bands else [])
         self.dynamic_bands = self.iterative != 0
 
         # outputs (of interest)
@@ -42,7 +42,7 @@ class BNF:
                                             fixed_delta=self.delta,
                                             d0=self.d0,
                                             demean=self.demean,
-                                            adjusted_bands=self.adjust_bands,
+                                            adjusted_bands=self.return_adjusted_bands,
                                             outliers=self.outliers_for_se,
                                             dynamic_bands=self.dynamic_bands,
                                             ib=self.ib,
@@ -51,7 +51,7 @@ class BNF:
         self.trend = [convert_to_float(v) for v in bnf_output.rx2('trend')]
         self.cycle = [convert_to_float(v) for v in bnf_output.rx2('cycle')]
         self.cycle_ci = [convert_to_float(v) for v in bnf_output.rx2('cycle_ci')]
-        if self.adjust_bands:
+        if self.return_adjusted_bands:
             self.cycle_ci_adjusted = [convert_to_float(v) for v in bnf_output.rx2('cycle_ci_adjusted')]
         self.delta = convert_to_float(bnf_output.rx2('delta')[0])
 
@@ -64,6 +64,6 @@ class BNF:
             "trend": self.trend,
             "cycle": self.cycle,
             "cycle_ci": self.cycle_ci,
-            **({"cycle_ci_adjusted": self.cycle_ci_adjusted} if self.adjust_bands else {}),
+            **({"cycle_ci_adjusted": self.cycle_ci_adjusted} if self.return_adjusted_bands else {}),
             "delta": self.delta
         }
