@@ -42,7 +42,6 @@ bnfOutput <- bnf(
   iterative = 100,
   dynamic_bands = T,
   adjusted_bands = T,
-  unadjusted_bands = T,
   outliers = c(293, 294),
   window = 40,
   ib = T
