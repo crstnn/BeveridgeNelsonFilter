@@ -621,7 +621,6 @@ backcast <- function(y, p, delta) {
 #
 # OUTPUTS:
 # BN_cycle    The estimated cycle
-# BN_cycle_se The estimated cycle standard error
 # aux_out     Auxiliary output (AR coefficients & residuals )
 BN_Filter <-
   function(y,
@@ -744,6 +743,7 @@ BN_Filter <-
     return (result)
   }
 
+# Calculates the standard error of the BNF. Must use result from `BN_filter`
 BN_Filter_stderr <-
   function(y,
            p,
@@ -1040,8 +1040,6 @@ bnf <- function(y,
   else {
     delta <- fixed_delta
   }
-  
-  
   
   bnf_result <-
     BN_Filter(demeaned_dy,
