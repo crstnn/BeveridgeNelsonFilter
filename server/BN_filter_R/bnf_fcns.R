@@ -1043,7 +1043,7 @@ bnf <- function(y,
   
   is_idm <- iterative > 0 && demean == "dm"
   
-  tmp <-
+  bnf_result <-
     BN_Filter(demeaned_dy,
               p,
               delta,
@@ -1053,7 +1053,7 @@ bnf <- function(y,
               outliers,
               adjusted_bands)
   
-  cycle <- tmp$BN_cycle
+  cycle <- bnf_result$BN_cycle
   
   DeltaBNcycle <- diff(x = cycle, lag = 1)
   
@@ -1076,7 +1076,7 @@ bnf <- function(y,
         delta <- fixed_delta
       }
       
-      tmp <-
+      bnf_result <-
         BN_Filter(demeaned_dy,
                   p,
                   delta,
@@ -1086,7 +1086,7 @@ bnf <- function(y,
                   outliers,
                   adjusted_bands)
       
-      cycle <- tmp$BN_cycle
+      cycle <- bnf_result$BN_cycle
       DeltaBNcycle <- diff(x = cycle, lag = 1)
       
       cycle_iter <- cbind(cycle_iter, cycle)
@@ -1096,14 +1096,14 @@ bnf <- function(y,
     
   }
   
-  tmp <- BN_Filter_stderr(demeaned_dy,
-                          p,
-                          dynamic_bands,
-                          ib,
-                          window,
-                          outliers,
-                          adjusted_bands,
-                          bnf_result = tmp)
+  bnf_result <- BN_Filter_stderr(demeaned_dy,
+                                 p,
+                                 dynamic_bands,
+                                 ib,
+                                 window,
+                                 outliers,
+                                 adjusted_bands,
+                                 bnf_result)
   
   colnames(cycle) <- "Cycle"
   
@@ -1123,16 +1123,16 @@ bnf <- function(y,
   result$y <- y
   result$cycle <- cycle
   result$trend <- y - cycle
-  result$cycle_se <- tmp$BN_cycle_se
+  result$cycle_se <- bnf_result$BN_cycle_se
   result$delta <- delta
   result$demean_method <- demean_method
   result$iterative <- iterative
   result$cycle_ci <-
-    round(qnorm(p = 0.05 / 2.0, lower.tail = FALSE), 2) * tmp$BN_cycle_se
+    round(qnorm(p = 0.05 / 2.0, lower.tail = FALSE), 2) * bnf_result$BN_cycle_se
   if (adjusted_bands) {
-    result$cycle_adjusted_se <- tmp$BN_cycle_adjusted_se
+    result$cycle_adjusted_se <- bnf_result$BN_cycle_adjusted_se
     result$cycle_ci_adjusted <-
-      round(qnorm(p = 0.05 / 2.0, lower.tail = FALSE), 2) * tmp$BN_cycle_adjusted_se
+      round(qnorm(p = 0.05 / 2.0, lower.tail = FALSE), 2) * bnf_result$BN_cycle_adjusted_se
   }
   if (iterative > 0) {
     result$iterations <- ncol(cycle_iter) - 1
