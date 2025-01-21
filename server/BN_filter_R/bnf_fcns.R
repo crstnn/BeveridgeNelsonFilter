@@ -626,12 +626,7 @@ BN_Filter <-
   function(y,
            p,
            delta,
-           dynamic_bands,
-           ib,
-           window,
-           outliers,
-           adjusted_bands,
-           compute_stderr = TRUE)
+           ib)
   {
     # Do a few preliminary things
     y <- as.matrix(y)
@@ -929,7 +924,7 @@ select_delta <- function(y, p, ib, delta_select, d0, dt)
   # Initialise the amplitude to noise ratio
   delta_grid <- d0
   tmp <-
-    BN_Filter(y, p, delta_grid, dynamic_bands, ib, window, outliers, F)
+    BN_Filter(y, p, delta_grid, ib)
   old_amp_to_noise <-
     var(tmp$BN_cycle) / mean(square(tmp$aux_out$residuals))
   old_precisionDeltaBNtrend <- tmp$aux_out$varDeltaBNtrend
@@ -937,7 +932,7 @@ select_delta <- function(y, p, ib, delta_select, d0, dt)
   while (diff_t > 0) {
     delta_grid <- delta_grid + dt
     tmp <-
-      BN_Filter(y, p, delta_grid, dynamic_bands, ib, window, outliers, F)
+      BN_Filter(y, p, delta_grid, ib)
     new_amp_to_noise <-
       var(tmp$BN_cycle) / mean(square(tmp$aux_out$residuals))
     new_precisionDeltaBNtrend <- tmp$aux_out$varDeltaBNtrend
@@ -1047,11 +1042,7 @@ bnf <- function(y,
     BN_Filter(demeaned_dy,
               p,
               delta,
-              dynamic_bands,
-              ib,
-              window,
-              outliers,
-              adjusted_bands)
+              ib)
   
   cycle <- bnf_result$BN_cycle
   
@@ -1081,11 +1072,7 @@ bnf <- function(y,
         BN_Filter(demeaned_dy,
                   p,
                   delta,
-                  dynamic_bands,
-                  ib,
-                  window,
-                  outliers,
-                  adjusted_bands)
+                  ib)
       
       cycle <- bnf_result$BN_cycle
       DeltaBNcycle <- diff(x = cycle, lag = 1)
