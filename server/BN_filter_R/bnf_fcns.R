@@ -1041,7 +1041,7 @@ bnf <- function(y,
     delta <- fixed_delta
   }
   
-  is_idm <- iterative > 0 && demean == "dm"
+  
   
   bnf_result <-
     BN_Filter(demeaned_dy,
@@ -1057,6 +1057,7 @@ bnf <- function(y,
   
   DeltaBNcycle <- diff(x = cycle, lag = 1)
   
+  is_idm <- iterative > 0 && demean == "dm"
   if (is_idm) {
     cycle_iter <- cbind(zeros(nrow(cycle), 1), cycle)
     iter <- 1
