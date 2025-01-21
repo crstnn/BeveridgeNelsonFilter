@@ -885,15 +885,17 @@ BN_Filter_stderr <-
     BN_cycle_se <- matrix(data = NA_real_,
                           nrow = tobs,
                           ncol = 1)
-    
+  
+    # Calculate both sets of std err.
     if (adjusted_bands) {
       BN_cycle_se_adjusted <- BN_cycle_se
+      
       bnf_result$BN_cycle_adjusted_se <-
-        compute_bn_cycle_se(BN_cycle_se_adjusted, TRUE)
+        compute_bn_cycle_se(BN_cycle_se_adjusted, adjusted_bands = TRUE)
     }
     
     bnf_result$BN_cycle_se <-
-      compute_bn_cycle_se(BN_cycle_se, FALSE)
+      compute_bn_cycle_se(BN_cycle_se, adjusted_bands = FALSE)
     
     
     return (bnf_result)
