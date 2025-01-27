@@ -41,7 +41,7 @@ bnfOutput <- bnf(
   demean = "dm",
   iterative = 100,
   dynamic_bands = T,
-  adjust_bands = T,
+  adjusted_bands = T,
   outliers = c(293, 294),
   window = 40,
   ib = T
@@ -58,7 +58,12 @@ bnfOutput <- bnf(
 
 
 write.csv(bnfOutput$cycle, "us_cycle_R_bnf.csv")
-plot(bnfOutput, main = "US Output Gap", col = "red")
+plot(
+  bnfOutput,
+  main = "US Output Gap",
+  col = "red",
+  secondary_col = "blue"
+)
 cat("\nPrinting out cycle data...\n")
 print(bnfOutput) # comment this command to stop the cycle data being printed to the console
 cat('\n')
