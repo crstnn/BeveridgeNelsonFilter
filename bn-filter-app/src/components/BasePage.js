@@ -58,6 +58,7 @@ const BasePage = ({initialState}) => {
             cycleCIUB: [],
             trendCILB: [],
             trendCIUB: [],
+            outliersForSE: [],
             alertErrorType: null, // overarching alert text
             fieldErrorMessages: {},
             isLoading: false,
@@ -168,10 +169,22 @@ const BasePage = ({initialState}) => {
             state.transform ? [
                     ['p_code', state.pCode],
                     ['d_code', state.dCode],
-                    ['take_log', state.takeLog]]
+                    ['take_log', state.takeLog]
+                ]
                 : []
-        )
+        ),
+    ).concat(
+        state.outliersForSE === 0 ? [['outliers_for_se', state.outliersForSE]] : [],
     );
+
+    const maybeAddOutliersForCovid = ({dates}) => {
+        const covidStartDate = new Date(2020, 2, 1); // 1st Mar 2020
+        const covidEndDate = new Date(2020, 8, 30); // 30 Sept 2020
+        return dates
+            .map((date, index) => ({ date: new Date(date), index }))
+            .filter(({ date }) => date >= covidStartDate && date <= covidEndDate)
+            .map(({ index }) => index);
+    }
 
     const fetchResultWithErrorHandling = async ({url, method, body, onFetchErrorCallback}) => {
         return fetchWithTimeout({method, body, url})
