@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {Divider, FormControl, FormGroup, FormHelperText, Grid, InputLabel, Select, TextField,} from "@mui/material";
 import DatePicker from "../pickers/DatePicker";
 import {CONFIG} from "../config.js";
-import {createMenuItems, fetchWithTimeout, pairArrayToParamStr} from "../utils/utils";
+import {createMenuItems, fetchWithTimeout, getDifferencingPeriod, pairArrayToParamStr} from "../utils/utils";
 import Error from "./Error";
 import {ThreeDots} from "react-loader-spinner";
 import {DateAbstract} from "../utils/date";
@@ -115,6 +115,19 @@ export default class FREDDataForm extends Component {
         });
     }
 
+    calculateDisabledSelections = () => {
+        const {frequencyFRED, minDate, maxDate, dCode} = this.props.values;
+
+        if (!frequencyFRED)
+            return (_isSameTime) => (_t) => false;
+
+        const generatedDates = DateAbstract.createDate(frequencyFRED, DateAbstract.maybeConvertStringToDate(minDate))
+            .nextTimePeriod(getDifferencingPeriod(dCode))
+            .getDateSeriesUpToMaxDate(maxDate);
+
+        return (isSameTime) => (t) => !generatedDates.some(date => isSameTime(date, t));
+    }
+
     mnemonicInput = () => {
 
         const
@@ -182,6 +195,8 @@ export default class FREDDataForm extends Component {
                                 date={values.startDateFRED}
                                 minDate={values.minDate}
                                 maxDate={values.maxDate}
+                                frequency={values.frequencyFRED}
+                                shouldDisableSelections={this.calculateDisabledSelections()}
                                 updateDate={handleChange('startDateFRED')}/>
                         </Grid>
                         <Grid item xs={4}>
@@ -191,6 +206,8 @@ export default class FREDDataForm extends Component {
                                 date={values.endDateFRED}
                                 minDate={values.minDate}
                                 maxDate={values.maxDate}
+                                frequency={values.frequencyFRED}
+                                shouldDisableSelections={this.calculateDisabledSelections()}
                                 updateDate={handleChange('endDateFRED')}/>
                         </Grid>
                         <Grid item xs={4}>

@@ -12,7 +12,8 @@ export const MODEL_QUERY_PARAMS = [
     'dci',
     'dst',
     'dcy',
-    't'
+    't',
+    'ofs'
 ];
 
 // ordering must align with `MODEL_QUERY_PARAMS`
@@ -29,7 +30,8 @@ export const MODEL_PARAMS = [
     'displayConfInterval',
     'displaySeriesAndTrend',
     'displayCycle',
-    'transform'
+    'transform',
+    'outliersForSE'
 ];
 
 // ordering must align with `TRANSFORMATION_PARAMS`

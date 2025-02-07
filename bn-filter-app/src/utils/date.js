@@ -43,6 +43,20 @@ class DateAbstract extends Date {
             return retDate;
         })
     };
+
+    getDateSeriesUpToMaxDate = (maxDate) => {
+        let currDate = this, retDate = this;
+        const maximumDate = DateAbstract.maybeConvertStringToDate(maxDate);
+
+        const series = [currDate];
+        while (currDate <= maximumDate) {
+            retDate = currDate;
+            currDate = currDate.nextTimePeriod();
+            series.push(retDate);
+        }
+
+        return series;
+    };
 }
 
 class WeeklyDate extends DateAbstract {
@@ -75,8 +89,8 @@ class QuarterlyDate extends DateAbstract {
 
 class SemiAnnualDate extends DateAbstract {
     nextTimePeriod = (times = 1) => {
-        const oldDate = new QuarterlyDate(this);
-        return new QuarterlyDate(oldDate.setMonth(this.getMonth() + (6 * times)));
+        const oldDate = new SemiAnnualDate(this);
+        return new SemiAnnualDate(oldDate.setMonth(this.getMonth() + (6 * times)));
     };
 }
 

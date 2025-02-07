@@ -11,7 +11,7 @@ import {
     confIntZip,
     extractModelParams,
     fetchWithTimeout,
-    getDifferencingPeriod,
+    getDifferencingPeriod, getLengthOfSeries,
     pairArrayToParamStr
 } from "../utils/utils";
 import {FRED, PARAMETERS_STEP, USER} from "../utils/consts";
@@ -36,12 +36,12 @@ const BasePage = ({initialState}) => {
             iterativeBackcasting: true,
             rollingWindow: field.freeText.rollingWindow.default,
             frequency: field.optionField.frequencyManual.default, // periodicity
-            startDate: null,
-            endDate: null,
+            startDate: null, // User-inputted series start date
+            endDate: null, // User-inputted series end date
             startDateFRED: null,
+            endDateFRED: null,
             minDate: null,
             maxDate: null,
-            endDateFRED: null,
             availableFrequencies: [],
             frequencyFRED: field.optionField.frequencyFRED.default,
             transform: true, // transforms to data before bnf
@@ -52,12 +52,18 @@ const BasePage = ({initialState}) => {
             cycle: [],
             trend: [],
             displayConfInterval: true,
+            displayCovidAdjustedConfInterval: true,
             cycleCI: [],
+            cycleAdjustedCI: [],
             deltaCalc: undefined,
             cycleCILB: [],
             cycleCIUB: [],
             trendCILB: [],
             trendCIUB: [],
+            cycleAdjustedCILB: [],
+            cycleAdjustedCIUB: [],
+            trendAdjustedCILB: [],
+            trendAdjustedCIUB: [],
             outliersForSE: [],
             alertErrorType: null, // overarching alert text
             fieldErrorMessages: {},
@@ -159,7 +165,7 @@ const BasePage = ({initialState}) => {
         validateField([isEmptyString, isNotAnInt, isNotANum, isExceedsMinMax,], input, e);
     }
 
-    const bnfParamArr = () => [
+    const bnfParamArr = (outliersForSE) => [
         ['window', state.rollingWindow],
         ['delta_select', state.deltaSelect],
         ['delta', state.delta],
@@ -174,10 +180,10 @@ const BasePage = ({initialState}) => {
                 : []
         ),
     ).concat(
-        state.outliersForSE === 0 ? [['outliers_for_se', state.outliersForSE]] : [],
+        outliersForSE?.length > 0 ? [['outliers_for_se', outliersForSE.join(',')]] : [],
     );
 
-    const maybeAddOutliersForCovid = ({dates}) => {
+    const maybeAddOutliersForCovid = (dates) => {
         const covidStartDate = new Date(2020, 2, 1); // 1st Mar 2020
         const covidEndDate = new Date(2020, 8, 30); // 30 Sept 2020
         return dates
@@ -207,12 +213,18 @@ const BasePage = ({initialState}) => {
 
     const getResultsForFREDData = async ({onFetchErrorCallback}) => {
 
+        const outliersForSE = handleCovidOutliersForFredData({
+            frequency: state.frequencyFRED,
+            startDate: state.startDateFRED,
+            endDate: state.endDateFRED
+        })
+
         const paramStr = pairArrayToParamStr(
             [['fred_abbr', state.mnemonic],
                 ['freq', state.frequencyFRED],
                 ['obs_start', DateAbstract.truncatedDate(state.startDateFRED)],
                 ['obs_end', DateAbstract.truncatedDate(state.endDateFRED)],
-            ].concat(bnfParamArr())
+            ].concat(bnfParamArr(outliersForSE))
         );
 
         const finalURL = URL.baseBackendURL + URL.bnfFredDataSlug + paramStr;
@@ -229,6 +241,7 @@ const BasePage = ({initialState}) => {
                     cycleRes = result["cycle"],
                     trendRes = result["trend"],
                     ciRes = result["cycle_ci"],
+                    ciAdjustRes = state.outliersForSE.length > 0 ? result["cycle_ci_adjusted"] : [],
                     x = result["dates"],
                     transformedX = DateAbstract.createDate(state.frequencyFRED, DateAbstract.maybeConvertStringToDate(x[0]))
                         .nextTimePeriod(getDifferencingPeriod(state.dCode))
@@ -244,11 +257,16 @@ const BasePage = ({initialState}) => {
                     trend: trendRes,
                     cycle: cycleRes,
                     cycleCI: ciRes,
+                    cycleAdjustedCI: ciAdjustRes,
                     deltaCalc: result["delta"],
                     cycleCILB: confIntZip(cycleRes, ciRes, "lower"),
                     cycleCIUB: confIntZip(cycleRes, ciRes, "upper"),
                     trendCILB: confIntZip(trendRes, ciRes, "lower"),
                     trendCIUB: confIntZip(trendRes, ciRes, "upper"),
+                    cycleAdjustedCILB: confIntZip(cycleRes, ciAdjustRes, "lower"),
+                    cycleAdjustedCIUB: confIntZip(cycleRes, ciAdjustRes, "upper"),
+                    trendAdjustedCILB: confIntZip(trendRes, ciAdjustRes, "lower"),
+                    trendAdjustedCIUB: confIntZip(trendRes, ciAdjustRes, "upper"),
                     isLoading: false,
                 });
             }).catch((error) => {
@@ -263,9 +281,23 @@ const BasePage = ({initialState}) => {
             .split(",")
             .filter(x => x !== "");
 
+        const
+            x = state.frequency !== "n" ? // dated axis or numbered axis
+                DateAbstract.createDate(state.frequency, state.startDate).getDateSeries(y.length).map(DateAbstract.truncatedDate)
+                : Array.from({length: y.length}, (_, i) => i + 1),
+            transformedX = state.frequency !== "n" ? // dated axis or numbered axis
+                DateAbstract.createDate(state.frequency, state.startDate).nextTimePeriod(getDifferencingPeriod(state.dCode))
+                    .getDateSeries(y.length).map(DateAbstract.truncatedDate)
+                : Array.from({length: y.length}, (_, i) => i + 1 + getDifferencingPeriod(state.dCode));
+
+        const outliersForSE = handleCovidOutliersForUserData({
+            frequency: state.frequency,
+            transformedX
+        })
+
         setState({y});
 
-        const paramStr = pairArrayToParamStr(bnfParamArr());
+        const paramStr = pairArrayToParamStr(bnfParamArr(outliersForSE));
 
         const finalURL = URL.baseBackendURL + URL.bnfUserSpecifiedDataSlug + paramStr;
 
@@ -284,16 +316,9 @@ const BasePage = ({initialState}) => {
                 const
                     cycleRes = result["cycle"],
                     trendRes = result["trend"],
-                    ciRes = result["cycle_ci"];
+                    ciRes = result["cycle_ci"],
+                    ciAdjustRes = state.outliersForSE.length > 0 ? result["cycle_ci_adjusted"] : [];
 
-                const
-                    x = state.frequency !== "n" ? // dated axis or numbered axis
-                        DateAbstract.createDate(state.frequency, state.startDate).getDateSeries(cycleRes.length).map(DateAbstract.truncatedDate)
-                        : Array.from({length: cycleRes.length}, (_, i) => i + 1),
-                    transformedX = state.frequency !== "n" ? // dated axis or numbered axis
-                        DateAbstract.createDate(state.frequency, state.startDate).nextTimePeriod(getDifferencingPeriod(state.dCode))
-                            .getDateSeries(cycleRes.length).map(DateAbstract.truncatedDate)
-                        : Array.from({length: cycleRes.length}, (_, i) => i + 1 + getDifferencingPeriod(state.dCode));
 
                 setState({
                     x,
@@ -302,11 +327,16 @@ const BasePage = ({initialState}) => {
                     trend: trendRes,
                     cycle: cycleRes,
                     cycleCI: ciRes,
+                    cycleAdjustedCI: ciAdjustRes,
                     deltaCalc: result["delta"],
                     cycleCILB: confIntZip(cycleRes, ciRes, "lower"),
                     cycleCIUB: confIntZip(cycleRes, ciRes, "upper"),
                     trendCILB: confIntZip(trendRes, ciRes, "lower"),
                     trendCIUB: confIntZip(trendRes, ciRes, "upper"),
+                    cycleAdjustedCILB: confIntZip(cycleRes, ciAdjustRes, "lower"),
+                    cycleAdjustedCIUB: confIntZip(cycleRes, ciAdjustRes, "upper"),
+                    trendAdjustedCILB: confIntZip(trendRes, ciAdjustRes, "lower"),
+                    trendAdjustedCIUB: confIntZip(trendRes, ciAdjustRes, "upper"),
                     isLoading: false,
                 });
             }).catch((error) => {
@@ -318,6 +348,37 @@ const BasePage = ({initialState}) => {
     const updateTransformationState = () => {
         const isTransformApplied = !(state.takeLog === false && state.dCode === 'nd' && state.pCode === 'np');
         setState({"transform": isTransformApplied});
+    }
+
+
+    const handleCovidOutliersForUserData = ({frequency, transformedX}) => {
+
+        const outliersForSE = (frequency !== 'n') ? maybeAddOutliersForCovid(transformedX) : [];
+
+        setState({
+            displayCovidAdjustedConfInterval: false,
+            outliersForSE
+        });
+
+        return outliersForSE
+    }
+
+    const handleCovidOutliersForFredData = ({frequency, startDate, endDate}) => {
+
+        const generatedDates = DateAbstract.createDate(frequency, DateAbstract.maybeConvertStringToDate(startDate))
+            .nextTimePeriod(getDifferencingPeriod(state.dCode))
+            .getDateSeriesUpToMaxDate(endDate);
+
+        const outliersForSE = maybeAddOutliersForCovid(generatedDates);
+
+        console.log("OUTLIERS FOR SE", outliersForSE)
+
+        setState({
+            displayCovidAdjustedConfInterval: false,
+            outliersForSE
+        });
+
+        return outliersForSE
     }
 
     const getResults = (errorsDisplayedCount, onSuccessCallback, onFetchErrorCallback) => e => {
