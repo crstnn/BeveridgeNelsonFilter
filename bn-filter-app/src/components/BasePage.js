@@ -11,7 +11,7 @@ import {
     confIntZip,
     extractModelParams,
     fetchWithTimeout,
-    getDifferencingPeriod, getLengthOfSeries,
+    getDifferencingPeriod,
     pairArrayToParamStr
 } from "../utils/utils";
 import {FRED, PARAMETERS_STEP, USER} from "../utils/consts";
@@ -187,9 +187,9 @@ const BasePage = ({initialState}) => {
         const covidStartDate = new Date(2020, 2, 1); // 1st Mar 2020
         const covidEndDate = new Date(2020, 8, 30); // 30 Sept 2020
         return dates
-            .map((date, index) => ({ date: new Date(date), index }))
-            .filter(({ date }) => date >= covidStartDate && date <= covidEndDate)
-            .map(({ index }) => index);
+            .map((date, index) => ({date: new Date(date), index}))
+            .filter(({date}) => date >= covidStartDate && date <= covidEndDate)
+            .map(({index}) => index);
     }
 
     const fetchResultWithErrorHandling = async ({url, method, body, onFetchErrorCallback}) => {

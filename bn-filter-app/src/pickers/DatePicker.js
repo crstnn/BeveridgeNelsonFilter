@@ -2,9 +2,19 @@ import React from "react";
 import {DesktopDatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import {TextField} from "@mui/material";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFnsV3";
-import {isSameDay, isSameYear, isSameMonth} from "date-fns";
+import {isSameDay, isSameMonth, isSameYear} from "date-fns";
 
-const DatePicker = ({date, label, minDate, maxDate, title, updateDate, isDisabled, frequency, shouldDisableSelections = (_isSameTime) => (_t) => false}) => {
+const DatePicker = ({
+                        date,
+                        label,
+                        minDate,
+                        maxDate,
+                        title,
+                        updateDate,
+                        isDisabled,
+                        frequency,
+                        shouldDisableSelections = (_isSameTime) => (_t) => false
+                    }) => {
 
     const handleDateChange = newValue => {
         updateDate({target: {value: newValue}});
@@ -14,7 +24,7 @@ const DatePicker = ({date, label, minDate, maxDate, title, updateDate, isDisable
     let dateSelectionFunc = isSameDay
     let minimumView = 'day'
 
-    if(['a'].includes(frequency)) {
+    if (['a'].includes(frequency)) {
         availableViews.splice(0, 2)
         minimumView = availableViews[0]
         dateSelectionFunc = isSameYear
