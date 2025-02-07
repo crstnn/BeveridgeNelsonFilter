@@ -48,7 +48,7 @@ class DateAbstract extends Date {
         let currDate = this, retDate = this;
         const maximumDate = DateAbstract.maybeConvertStringToDate(maxDate);
 
-        const series = [currDate];
+        const series = [];
         while (currDate <= maximumDate) {
             retDate = currDate;
             currDate = currDate.nextTimePeriod();
