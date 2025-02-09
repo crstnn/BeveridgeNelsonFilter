@@ -8,7 +8,8 @@ import {
     IconButton,
     InputLabel,
     Select,
-    TextField, Tooltip,
+    TextField,
+    Tooltip,
 } from "@mui/material";
 import DatePicker from "../pickers/DatePicker";
 import {CONFIG} from "../config.js";
@@ -224,8 +225,9 @@ export default class FREDDataForm extends Component {
                         <Grid item xs={4}>
                             <FormControl variant="standard" sx={{minWidth: 220}}>
                                 <InputLabel>Frequency
-                                    <Tooltip title="Time-series frequency. If the data is aggregated, the default aggregation method is averaging.">
-                                        <IconButton size="small"><InfoIcon fontSize="small" /></IconButton>
+                                    <Tooltip
+                                        title="Time-series frequency. If the data is aggregated, the default aggregation method is averaging.">
+                                        <IconButton size="small"><InfoIcon fontSize="small"/></IconButton>
                                     </Tooltip>
                                 </InputLabel>
                                 <Select
