@@ -52,7 +52,7 @@ const BasePage = ({initialState}) => {
             cycle: [],
             trend: [],
             displayConfInterval: true,
-            displayCovidAdjustedConfInterval: true,
+            displayAdjustedConfInterval: true,
             cycleCI: [],
             cycleAdjustedCI: [],
             deltaCalc: undefined,
@@ -241,13 +241,11 @@ const BasePage = ({initialState}) => {
                     cycleRes = result["cycle"],
                     trendRes = result["trend"],
                     ciRes = result["cycle_ci"],
-                    ciAdjustRes = state.outliersForSE.length > 0 ? result["cycle_ci_adjusted"] : [],
+                    ciAdjustRes = outliersForSE.length > 0 ? result["cycle_ci_adjusted"] : [],
                     x = result["dates"],
                     transformedX = DateAbstract.createDate(state.frequencyFRED, DateAbstract.maybeConvertStringToDate(x[0]))
                         .nextTimePeriod(getDifferencingPeriod(state.dCode))
                         .getDateSeries(cycleRes.length).map(DateAbstract.truncatedDate);
-
-                console.log("dates", x, transformedX)
 
                 setState({
                     x,
@@ -317,7 +315,7 @@ const BasePage = ({initialState}) => {
                     cycleRes = result["cycle"],
                     trendRes = result["trend"],
                     ciRes = result["cycle_ci"],
-                    ciAdjustRes = state.outliersForSE.length > 0 ? result["cycle_ci_adjusted"] : [];
+                    ciAdjustRes = outliersForSE.length > 0 ? result["cycle_ci_adjusted"] : [];
 
 
                 setState({
@@ -356,7 +354,7 @@ const BasePage = ({initialState}) => {
         const outliersForSE = (frequency !== 'n') ? maybeAddOutliersForCovid(transformedX) : [];
 
         setState({
-            displayCovidAdjustedConfInterval: false,
+            displayAdjustedConfInterval: outliersForSE.length > 0,
             outliersForSE
         });
 
@@ -374,7 +372,7 @@ const BasePage = ({initialState}) => {
         console.log("OUTLIERS FOR SE", outliersForSE)
 
         setState({
-            displayCovidAdjustedConfInterval: false,
+            displayAdjustedConfInterval: outliersForSE.length > 0,
             outliersForSE
         });
 

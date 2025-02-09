@@ -1,6 +1,6 @@
 import React, {useMemo, useState} from "react";
 import Plot from 'react-plotly.js';
-import {Button, Checkbox, FormControl, FormControlLabel, Grid} from "@mui/material";
+import {Button, FormControl, FormLabel, Grid, ToggleButton, ToggleButtonGroup,} from "@mui/material";
 import {CSVLink} from "react-csv";
 import {buildModelApplicationUrl, colsToRows, getDifferencingPeriod} from "../utils/utils";
 import {FRED} from "../utils/consts";
@@ -9,10 +9,14 @@ import ShareButton from "./ShareButton";
 
 const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
     const fileName = `BN_filter_${plotPageValues.dataInputType === FRED ? plotPageValues.mnemonic : 'user_inputted_series'}_results.csv`;
-    const displayConfInterval = plotPageValues.displayConfInterval;
+    const {displayConfInterval, displayAdjustedConfInterval} = plotPageValues;
+    const defaultCI = displayAdjustedConfInterval ? "adjusted" : (displayConfInterval ? "normal" : "off");
+
     // Used to trigger re-render of plot. This circumvents react-plotly's plot refreshing convention.
     const [revisionNumber, setRevisionNumber] = useState(0);
     const incrementRevisionNumber = () => setRevisionNumber(revisionNumber + 1);
+
+    const [confIntSelection, setConfIntSelection] = useState(defaultCI);
 
     const visibleAxisDisplay = {showgrid: true, visible: true, zeroline: true};
     const invisibleAxisDisplay = {showgrid: false, visible: false, zeroline: false};
@@ -41,7 +45,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
             showlegend: false,
             type: "scatter",
             hoverinfo: 'skip',
-            name: 'trend_ci',
+            name: 'trend_lower_ci',
             legendgroup: 'seriesAndTrend',
             yaxis: 'y1',
             visible: displayConfInterval ? (plotPageValues.displaySeriesAndTrend ? true : 'legendonly') : false,
@@ -55,7 +59,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
             showlegend: false,
             type: "scatter",
             hoverinfo: 'skip',
-            name: 'trend_ci',
+            name: 'trend_upper_ci',
             legendgroup: 'seriesAndTrend',
             yaxis: 'y1',
             visible: displayConfInterval ? (plotPageValues.displaySeriesAndTrend ? true : 'legendonly') : false,
@@ -102,7 +106,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
             showlegend: false,
             type: "scatter",
             hoverinfo: 'skip',
-            name: 'cycle_ci',
+            name: 'cycle_lower_ci',
             legendgroup: 'cycle',
             yaxis: 'y2',
             visible: displayConfInterval ? (plotPageValues.displayCycle ? true : 'legendonly') : false,
@@ -116,7 +120,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
             showlegend: false,
             type: "scatter",
             hoverinfo: 'skip',
-            name: 'cycle_ci',
+            name: 'cycle_upper_ci',
             legendgroup: 'cycle',
             yaxis: 'y2',
             visible: displayConfInterval ? (plotPageValues.displayCycle ? true : 'legendonly') : false,
@@ -193,20 +197,37 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
             !plotAttribute.name.endsWith('ci') ? {...acc, [plotAttribute.legendgroup]: plotAttribute.visible} : acc
         , {});
 
-    const handleConfIntervalDisplay = (isDisplayConfInt) => {
-        setState({'displayConfInterval': isDisplayConfInt});
+    const handleConfIntervalDisplay = (_event, newSelection) => {
+        const currentSelection = newSelection ?? confIntSelection;
+
+        const isDisplayConfInt = currentSelection !== "off"
+        const isDisplayNormalConfInt = currentSelection === "normal"
+        const isDisplayAdjustedConfInt = currentSelection === "adjusted"
+
+        setConfIntSelection(currentSelection);
+        setState({
+            displayConfInterval: isDisplayNormalConfInt,
+            displayAdjustedConfInterval: isDisplayAdjustedConfInt,
+        });
 
         const lineVisibilityByGroup = getLineVisibilityByGroup(plotData);
 
+        const handleConfIntType = (plotAttrName) => {
+            const ciLine = plotAttrName.split('_')[0]
+            return plotPageValues[`${ciLine}${isDisplayAdjustedConfInt ? 'Adjusted' : ''}CI${plotAttrName.endsWith('lower_ci') ? 'LB' : 'UB'}`];
+        }
+
         setPlotData(plotData.map(
                 plotAttribute => {
-                    if (plotAttribute.name.endsWith('ci')) {
+                    const plotAttrName = plotAttribute.name
+                    if (plotAttrName.endsWith('ci')) {
                         if (lineVisibilityByGroup[plotAttribute.legendgroup] === true)
-                            return {...plotAttribute, visible: isDisplayConfInt};
+                            return {...plotAttribute, y: handleConfIntType(plotAttrName), visible: isDisplayConfInt};
                         else if (lineVisibilityByGroup[plotAttribute.legendgroup] === 'legendonly' && !isDisplayConfInt)
                             return {...plotAttribute, visible: false};
-                        else if (lineVisibilityByGroup[plotAttribute.legendgroup] === 'legendonly' && isDisplayConfInt)
-                            return {...plotAttribute, visible: 'legendonly'};
+                        else if (lineVisibilityByGroup[plotAttribute.legendgroup] === 'legendonly' && isDisplayConfInt) {
+                            return {...plotAttribute, y: handleConfIntType(plotAttrName), visible: 'legendonly'};
+                        }
                     }
                     return plotAttribute;
                 }
@@ -253,9 +274,11 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [revisionNumber]);
 
-    const {cycleCI} = plotPageValues;
+    const {cycleCI, cycleAdjustedCI} = plotPageValues;
     const isConfIntNotEstimated = useMemo(() => cycleCI.includes(null) || cycleCI.includes(undefined),
         [cycleCI]);
+    const isAdjustedConfIntNotEstimated = useMemo(() => cycleAdjustedCI.includes(null) || cycleAdjustedCI.includes(undefined),
+        [cycleAdjustedCI]);
 
     return (<>
             <div style={{minHeight: 600,}}>
@@ -268,18 +291,22 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
                 <div>
                     {plot}
                 </div>
-                <FormControl variant="standard">
-                    <FormControlLabel label="95% Confidence Intervals"
-                                      title={isConfIntNotEstimated ?
-                                          "There was a computational issue when calculating the confidence intervals. Try with a higher value of delta or consider working with the Matlab or R code" :
-                                          "Choose to report 95% confidence intervals (in both plot and CSV)"}
-                                      control={<Checkbox
-                                          size="small"
-                                          onChange={e => handleConfIntervalDisplay(e.target.checked)}
-                                          checked={displayConfInterval && !isConfIntNotEstimated}
-                                          disabled={isConfIntNotEstimated}
-                                      />}
-                    />
+                <FormControl component="fieldset">
+                    <FormLabel component="legend">95% CI Options</FormLabel>
+                    <ToggleButtonGroup
+                        value={confIntSelection}
+                        exclusive
+                        onChange={handleConfIntervalDisplay}
+                    >
+                        <ToggleButton value="off">Off</ToggleButton>
+                        <ToggleButton value="normal" disabled={isConfIntNotEstimated}>
+                            Normal
+                        </ToggleButton>
+                        <ToggleButton value="adjusted"
+                                      disabled={isAdjustedConfIntNotEstimated || (plotPageValues.outliersForSE.length === 0)}>
+                            COVID Adj.
+                        </ToggleButton>
+                    </ToggleButtonGroup>
                 </FormControl>
                 <div style={{marginBottom: 10}}>
                     <strong>Delta:</strong> {plotPageValues.deltaCalc.toFixed(4) /* delta reported to 4 d.p. */}

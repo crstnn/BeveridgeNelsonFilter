@@ -26,7 +26,7 @@ export const colsToRows = (...columns) => {
 
 const zip = (array1, array2) => array1.map((k, i) => [k, array2[i]]);
 
-export const confIntZip = (cycle, ci, bound) => cycle.map((x, i) => ci[i] ? bound === "lower" ? x - ci[i] : /* upper */ x + ci[i] : undefined);
+export const confIntZip = (cycle, ci, bound) => cycle.map((x, i) => ci[i] ? (bound === "lower" ? x - ci[i] : /* upper */ x + ci[i]) : undefined);
 
 const pairToParam = (paramName, currPair) =>
     paramName + currPair[0].toString() + '=' + currPair[1].toString() + '&';

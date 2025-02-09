@@ -10,6 +10,7 @@ export const MODEL_QUERY_PARAMS = [
     'ib',
     'rw',
     'dci',
+    'daci',
     'dst',
     'dcy',
     't',
@@ -28,10 +29,11 @@ export const MODEL_PARAMS = [
     'iterativeBackcasting',
     'rollingWindow',
     'displayConfInterval',
+    'displayAdjustedConfInterval',
     'displaySeriesAndTrend',
     'displayCycle',
     'transform',
-    'outliersForSE'
+    'outliersForSE',
 ];
 
 // ordering must align with `TRANSFORMATION_PARAMS`
