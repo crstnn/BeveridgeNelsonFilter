@@ -356,6 +356,7 @@ const BasePage = ({initialState}) => {
         console.log("OUTLIERS FOR SE", outliersForSE)
 
         setState({
+            displayAdjustedConfInterval: state.displayAdjustedConfInterval && outliersForSE.length > 0,
             outliersForSE
         });
 
@@ -373,6 +374,7 @@ const BasePage = ({initialState}) => {
         console.log("OUTLIERS FOR SE", outliersForSE)
 
         setState({
+            displayAdjustedConfInterval: state.displayAdjustedConfInterval && outliersForSE.length > 0,
             outliersForSE
         });
 

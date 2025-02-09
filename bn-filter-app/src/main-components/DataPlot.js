@@ -11,15 +11,13 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
     const fileName = `BN_filter_${plotPageValues.dataInputType === FRED ? plotPageValues.mnemonic : 'user_inputted_series'}_results.csv`;
     const {displayConfInterval, displayAdjustedConfInterval, cycleCI, cycleAdjustedCI} = plotPageValues;
 
-    console.log("BLASH", displayConfInterval, displayAdjustedConfInterval)
-
     const isConfIntNotEstimated = useMemo(() => cycleCI.includes(null) || cycleCI.includes(undefined),
         [cycleCI]);
     const isAdjustedConfIntNotEstimated = useMemo(() => cycleAdjustedCI.includes(null) || cycleAdjustedCI.includes(undefined),
         [cycleAdjustedCI]);
     const hasNoChosenOutliers = plotPageValues.outliersForSE.length === 0
 
-    const defaultCI = displayAdjustedConfInterval && !isAdjustedConfIntNotEstimated ? "adjusted" : (displayConfInterval && !isConfIntNotEstimated ? "normal" : "off");
+    const defaultCI = displayAdjustedConfInterval && !isAdjustedConfIntNotEstimated && !hasNoChosenOutliers ? "adjusted" : (displayConfInterval && !isConfIntNotEstimated ? "normal" : "off");
 
     // Used to trigger re-render of plot. This circumvents react-plotly's plot refreshing convention.
     const [revisionNumber, setRevisionNumber] = useState(0);
