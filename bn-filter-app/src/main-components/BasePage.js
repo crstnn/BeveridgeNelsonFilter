@@ -51,8 +51,8 @@ const BasePage = ({initialState}) => {
             // bnf output (from API)
             cycle: [],
             trend: [],
-            displayConfInterval: true,
-            displayAdjustedConfInterval: true,
+            displayConfInterval: true, // normal bands
+            displayAdjustedConfInterval: true, // adjusted bands
             cycleCI: [],
             cycleAdjustedCI: [],
             deltaCalc: undefined,
@@ -355,8 +355,11 @@ const BasePage = ({initialState}) => {
 
         console.log("OUTLIERS FOR SE", outliersForSE)
 
+        const displayAdjConfInt = state.displayAdjustedConfInterval && outliersForSE.length > 0
+
         setState({
-            displayAdjustedConfInterval: state.displayAdjustedConfInterval && outliersForSE.length > 0,
+            displayConfInterval: !(displayAdjConfInt && state.displayConfInterval),
+            displayAdjustedConfInterval: displayAdjConfInt,
             outliersForSE
         });
 
@@ -373,8 +376,11 @@ const BasePage = ({initialState}) => {
 
         console.log("OUTLIERS FOR SE", outliersForSE)
 
+        const displayAdjConfInt = state.displayAdjustedConfInterval && outliersForSE.length > 0
+
         setState({
-            displayAdjustedConfInterval: state.displayAdjustedConfInterval && outliersForSE.length > 0,
+            displayConfInterval: !(displayAdjConfInt && state.displayConfInterval),
+            displayAdjustedConfInterval: displayAdjConfInt,
             outliersForSE
         });
 

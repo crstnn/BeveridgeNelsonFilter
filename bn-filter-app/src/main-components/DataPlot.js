@@ -16,8 +16,9 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
     const isAdjustedConfIntNotEstimated = useMemo(() => cycleAdjustedCI.includes(null) || cycleAdjustedCI.includes(undefined),
         [cycleAdjustedCI]);
     const hasNoChosenOutliers = plotPageValues.outliersForSE.length === 0
+    const isValidAdjustedConfInt = displayAdjustedConfInterval && !isAdjustedConfIntNotEstimated && !hasNoChosenOutliers
 
-    const defaultCI = displayAdjustedConfInterval && !isAdjustedConfIntNotEstimated && !hasNoChosenOutliers ? "adjusted" : (displayConfInterval && !isConfIntNotEstimated ? "normal" : "off");
+    const defaultCI = isValidAdjustedConfInt ? "adjusted" : (displayConfInterval && !isConfIntNotEstimated ? "normal" : "off");
 
     // Used to trigger re-render of plot. This circumvents react-plotly's plot refreshing convention.
     const [revisionNumber, setRevisionNumber] = useState(0);
@@ -196,7 +197,11 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
             displayConfInterval ? ["cycle_conf_int_lower_bound"].concat(alignDatesArrayPadding().concat(plotPageValues.cycleCILB)) : undefined,
             displayConfInterval ? ["cycle_conf_int_upper_bound"].concat(alignDatesArrayPadding().concat(plotPageValues.cycleCIUB)) : undefined,
             displayConfInterval ? ["trend_conf_int_lower_bound"].concat(alignDatesArrayPadding().concat(plotPageValues.trendCILB)) : undefined,
-            displayConfInterval ? ["trend_conf_int_upper_bound"].concat(alignDatesArrayPadding().concat(plotPageValues.trendCIUB)) : undefined
+            displayConfInterval ? ["trend_conf_int_upper_bound"].concat(alignDatesArrayPadding().concat(plotPageValues.trendCIUB)) : undefined,
+            isValidAdjustedConfInt ? ["cycle_adjusted_conf_int_lower_bound"].concat(alignDatesArrayPadding().concat(plotPageValues.cycleAdjustedCILB)) : undefined,
+            isValidAdjustedConfInt ? ["cycle_adjusted_conf_int_upper_bound"].concat(alignDatesArrayPadding().concat(plotPageValues.cycleAdjustedCIUB)) : undefined,
+            isValidAdjustedConfInt ? ["trend_adjusted_conf_int_lower_bound"].concat(alignDatesArrayPadding().concat(plotPageValues.trendAdjustedCILB)) : undefined,
+            isValidAdjustedConfInt ? ["trend_adjusted_conf_int_upper_bound"].concat(alignDatesArrayPadding().concat(plotPageValues.trendAdjustedCIUB)) : undefined
         )
     };
 
