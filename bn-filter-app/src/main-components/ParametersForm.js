@@ -6,13 +6,16 @@ import {
     FormControl,
     FormControlLabel,
     Grid,
+    IconButton,
     InputLabel,
     Select,
     TextField,
+    Tooltip,
 } from "@mui/material";
+import InfoIcon from '@mui/icons-material/Info';
 import '../styles/App.css';
 import {CONFIG} from "../config.js";
-import Error from "./Error";
+import Error from "./components/Error";
 import {createHoverText, createMenuItems} from "../utils/utils";
 import {PARAMETERS_STEP} from "../utils/consts";
 
@@ -52,37 +55,49 @@ const ParametersForm = ({handlers, values, errors, prevStep, nextStep, cancelLoa
                 <Grid container direction="column" justifyContent="space-evenly" alignItems="center" spacing={4}>
                     <Grid item xs={4}>
                         <FormControl variant="standard">
-                            <FormControlLabel label="Natural Logarithm"
-                                              title="Logarithm to the base of Euler's number"
-                                              control={<Checkbox
-                                                  size="small"
-                                                  onChange={handleCheckboxChange('takeLog')}
-                                                  checked={values.takeLog}/>}
+                            <FormControlLabel
+                                label={
+                                    <span>
+                                    Natural Logarithm
+                                    <Tooltip title="Natural log applied to the initial dataset">
+                                        <IconButton size="small"><InfoIcon fontSize="small"/></IconButton>
+                                    </Tooltip>
+                                </span>
+                                }
+                                control={<Checkbox size="small" onChange={handleCheckboxChange('takeLog')}
+                                                   checked={values.takeLog}/>}
                             />
                         </FormControl>
                     </Grid>
                     <Grid item xs={4}>
                         <FormControl variant="standard" sx={{minWidth: 350}}>
-                            <InputLabel>Differencing Method</InputLabel>
-                            <Select
-                                title="Differencing method applied"
-                                onChange={handleChange('dCode')}
-                                value={values.dCode}
-                            >{createMenuItems(field.optionField.dCode.option)}</Select>
+                            <InputLabel>
+                                Differencing Method
+                                <Tooltip title="Differencing method applied to the initial dataset">
+                                    <IconButton size="small"><InfoIcon fontSize="small"/></IconButton>
+                                </Tooltip>
+                            </InputLabel>
+                            <Select onChange={handleChange('dCode')} value={values.dCode}>
+                                {createMenuItems(field.optionField.dCode.option)}
+                            </Select>
                         </FormControl>
                     </Grid>
                     <Grid item xs={4}>
                         <FormControl variant="standard" sx={{minWidth: 350}}>
-                            <InputLabel>Computed Percentages</InputLabel>
-                            <Select
-                                title="Multiple applied"
-                                onChange={handleChange('pCode')}
-                                value={values.pCode}
-                            >{createMenuItems(field.optionField.pCode.option)}</Select>
+                            <InputLabel>
+                                Computed Percentages
+                                <Tooltip title="Multiple applied to the initial dataset">
+                                    <IconButton size="small"><InfoIcon fontSize="small"/></IconButton>
+                                </Tooltip>
+                            </InputLabel>
+                            <Select onChange={handleChange('pCode')} value={values.pCode}>
+                                {createMenuItems(field.optionField.pCode.option)}
+                            </Select>
                         </FormControl>
                     </Grid>
                 </Grid>
-            </>)
+            </>
+        );
     }
 
     const bnFilterParameters = () => {
@@ -101,60 +116,77 @@ const ParametersForm = ({handlers, values, errors, prevStep, nextStep, cancelLoa
                     <Grid container alignItems="flex-start" justifyContent="space-evenly" spacing={4}>
                         <Grid item xs={8}>
                             <FormControl variant="standard" sx={{width: 295}}>
-                                <InputLabel>Signal-to-Noise Ratio (Delta)</InputLabel>
-                                <Select
-                                    label="Signal-to-Noise Ratio (Delta)"
-                                    title={createHoverText(field.optionField.deltaSelect.option)(values.deltaSelect)}
-                                    onChange={handleChange('deltaSelect')}
-                                    value={values.deltaSelect}
-                                >{createMenuItems(field.optionField.deltaSelect.option)}</Select>
+                                <InputLabel>
+                                    Signal-to-Noise Ratio (Delta)
+                                    <Tooltip
+                                        title={createHoverText(field.optionField.deltaSelect.option)(values.deltaSelect)}>
+                                        <IconButton size="small"><InfoIcon fontSize="small"/></IconButton>
+                                    </Tooltip>
+                                </InputLabel>
+                                <Select onChange={handleChange('deltaSelect')} value={values.deltaSelect}>
+                                    {createMenuItems(field.optionField.deltaSelect.option)}
+                                </Select>
                             </FormControl>
                         </Grid>
                         <Grid item xs={4}>
                             <FormControl variant="standard" sx={{width: 137}}>
                                 <TextField
                                     label={values.deltaSelect === 0 ? "Fixed Delta" : "Minimum Delta"}
-                                    title={values.deltaSelect === 0 ? "Fixed delta for estimation" : "Minimum threshold start point for grid search (with grid increments of 0.0005). Lowest possible minimum will depend on time series, including length of sample period, with higher minimum needed for shorter time series."}
                                     onChange={handleNumberFieldChange('delta')}
                                     value={values.delta}
                                     disabled={isDisabled['delta']()}
                                     error={isErrorDisplaying('delta')}
-                                    helperText={isErrorDisplaying('delta') ?
-                                        errors['delta'] : "​" /* zero whitespace to prevent height difference when error displays */}
+                                    helperText={isErrorDisplaying('delta') ? errors['delta'] : "​"}
+                                    InputProps={{
+                                        endAdornment: (
+                                            <Tooltip
+                                                title={values.deltaSelect === 0 ? "Fixed delta for estimation" : "Minimum threshold start point for grid search (with grid increments of 0.0005). Lowest possible minimum will depend on time series, including length of sample period, with higher minimum needed for shorter time series."}>
+                                                <IconButton size="small"><InfoIcon fontSize="small"/></IconButton>
+                                            </Tooltip>
+                                        )
+                                    }}
                                 />
                             </FormControl>
                         </Grid>
                         <Grid item xs={8}>
                             <FormControl variant="standard" sx={{minWidth: 295}}>
-                                <InputLabel>Demeaning</InputLabel>
-                                <Select
-                                    label="Demeaning"
-                                    title={createHoverText(field.optionField.iterativeDynamicDemeaning.option)(values.demean)}
-                                    onChange={handleChange('demean')}
-                                    value={values.demean}
-                                >{createMenuItems(field.optionField.iterativeDynamicDemeaning.option)}</Select>
+                                <InputLabel>
+                                    Demeaning
+                                    <Tooltip
+                                        title={createHoverText(field.optionField.iterativeDynamicDemeaning.option)(values.demean)}>
+                                        <IconButton size="small"><InfoIcon fontSize="small"/></IconButton>
+                                    </Tooltip>
+                                </InputLabel>
+                                <Select onChange={handleChange('demean')} value={values.demean}>
+                                    {createMenuItems(field.optionField.iterativeDynamicDemeaning.option)}
+                                </Select>
                             </FormControl>
                         </Grid>
                         <Grid item xs={4}>
                             <FormControl variant="standard" sx={{minWidth: 137}}>
                                 <TextField
                                     label="Rolling Window"
-                                    title="Only active when using dynamic demeaning. Upper bound is two less than the number of observations. A rolling window of 40 is suggested for quarterly macroeconomic data to average over effects of business cycles on mean growth, but appropriate value will depend on frequency of data, timeframe over which cyclical movements should average out, and sufficient observations to estimate drift precisely."
                                     onChange={handleIntegerNumberFieldChange('rollingWindow')}
                                     value={values.rollingWindow}
                                     disabled={isDisabled['rollingWindow']()}
                                     error={isErrorDisplaying('rollingWindow')}
-                                    helperText={isErrorDisplaying('rollingWindow') ?
-                                        errors['rollingWindow'] : "​" /* zero whitespace to prevent height difference when error displays */}
+                                    helperText={isErrorDisplaying('rollingWindow') ? errors['rollingWindow'] : "​"}
+                                    InputProps={{
+                                        endAdornment: (
+                                            <Tooltip
+                                                title="Only active when using dynamic demeaning. Upper bound is two less than the number of observations. A rolling window of 40 is suggested for quarterly macroeconomic data to average over effects of business cycles on mean growth, but appropriate value will depend on frequency of data, timeframe over which cyclical movements should average out, and sufficient observations to estimate drift precisely.">
+                                                <IconButton size="small"><InfoIcon fontSize="small"/></IconButton>
+                                            </Tooltip>
+                                        )
+                                    }}
                                 />
                             </FormControl>
                         </Grid>
                     </Grid>
                 </div>
             </>
-        )
+        );
     }
-
 
     const {setState} = handlers;
 

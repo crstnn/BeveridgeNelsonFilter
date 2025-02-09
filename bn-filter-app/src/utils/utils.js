@@ -26,7 +26,7 @@ export const colsToRows = (...columns) => {
 
 const zip = (array1, array2) => array1.map((k, i) => [k, array2[i]]);
 
-export const confIntZip = (cycle, ci, bound) => cycle.map((x, i) => ci[i] !== null ? bound === "lower" ? x - ci[i] : /* upper */ x + ci[i] : undefined);
+export const confIntZip = (cycle, ci, bound) => cycle.map((x, i) => ci[i] ? (bound === "lower" ? x - ci[i] : /* upper */ x + ci[i]) : undefined);
 
 const pairToParam = (paramName, currPair) =>
     paramName + currPair[0].toString() + '=' + currPair[1].toString() + '&';
@@ -86,4 +86,4 @@ export const extractModelParams = valueObject => {
 
 export const buildModelApplicationUrl = paramPairs => `${window.location.origin}/#/apply${pairArrayToParamStr(paramPairs)}`;
 
-export const getDifferencingPeriod = differencingPeriod => differencingPeriod !== 'nd' ? Number(differencingPeriod.slice(1)) : 0
+export const getDifferencingPeriod = differencingPeriod => differencingPeriod !== 'nd' ? Number(differencingPeriod.slice(1)) : 0;

@@ -1,5 +1,5 @@
 import './styles/App.css';
-import BasePage from './components/BasePage';
+import BasePage from './main-components/BasePage';
 import React, {useEffect, useState} from "react";
 import {CONFIG} from "./config.js";
 import ReactGA from 'react-ga4';
