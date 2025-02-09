@@ -1,11 +1,22 @@
 import React, {Component} from "react";
-import {Divider, FormControl, FormGroup, FormHelperText, Grid, InputLabel, Select, TextField,} from "@mui/material";
+import {
+    Divider,
+    FormControl,
+    FormGroup,
+    FormHelperText,
+    Grid,
+    IconButton,
+    InputLabel,
+    Select,
+    TextField, Tooltip,
+} from "@mui/material";
 import DatePicker from "../pickers/DatePicker";
 import {CONFIG} from "../config.js";
 import {createMenuItems, fetchWithTimeout, getDifferencingPeriod, pairArrayToParamStr} from "../utils/utils";
-import Error from "./Error";
+import Error from "./components/Error";
 import {ThreeDots} from "react-loader-spinner";
 import {DateAbstract} from "../utils/date";
+import InfoIcon from "@mui/icons-material/Info";
 
 const {field, URL} = CONFIG;
 
@@ -212,9 +223,13 @@ export default class FREDDataForm extends Component {
                         </Grid>
                         <Grid item xs={4}>
                             <FormControl variant="standard" sx={{minWidth: 220}}>
-                                <InputLabel>Frequency</InputLabel>
+                                <InputLabel>Frequency
+                                    <Tooltip title="Time-series frequency. If the data is aggregated, the default aggregation method is averaging.">
+                                        <IconButton size="small"><InfoIcon fontSize="small" /></IconButton>
+                                    </Tooltip>
+                                </InputLabel>
                                 <Select
-                                    title="Time-series frequency (default aggregation method: averaging)"
+                                    title="Time-series frequency"
                                     onChange={handleChange('frequencyFRED')}
                                     value={values.frequencyFRED}
                                 >{this.createFilteredFrequencies()}</Select>

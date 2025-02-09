@@ -4,7 +4,7 @@ import ParametersForm from "./ParametersForm";
 import DataForm from "./DataForm";
 import DataPlot from "./DataPlot";
 import Loading from "./Loading";
-import Error from "./Error";
+import Error from "./components/Error";
 import {CONFIG} from "../config.js";
 import {DateAbstract} from "../utils/date";
 import {
@@ -353,8 +353,9 @@ const BasePage = ({initialState}) => {
 
         const outliersForSE = (frequency !== 'n') ? maybeAddOutliersForCovid(transformedX) : [];
 
+        console.log("OUTLIERS FOR SE", outliersForSE)
+
         setState({
-            displayAdjustedConfInterval: outliersForSE.length > 0,
             outliersForSE
         });
 
@@ -372,7 +373,6 @@ const BasePage = ({initialState}) => {
         console.log("OUTLIERS FOR SE", outliersForSE)
 
         setState({
-            displayAdjustedConfInterval: outliersForSE.length > 0,
             outliersForSE
         });
 

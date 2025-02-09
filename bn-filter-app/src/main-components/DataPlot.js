@@ -1,16 +1,25 @@
 import React, {useMemo, useState} from "react";
 import Plot from 'react-plotly.js';
-import {Button, FormControl, FormLabel, Grid, ToggleButton, ToggleButtonGroup,} from "@mui/material";
+import {Button, FormControl, FormLabel, Grid, ToggleButton, ToggleButtonGroup, Tooltip,} from "@mui/material";
 import {CSVLink} from "react-csv";
 import {buildModelApplicationUrl, colsToRows, getDifferencingPeriod} from "../utils/utils";
 import {FRED} from "../utils/consts";
-import ShareButton from "./ShareButton";
+import ShareButton from "./components/ShareButton";
 
 
 const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
     const fileName = `BN_filter_${plotPageValues.dataInputType === FRED ? plotPageValues.mnemonic : 'user_inputted_series'}_results.csv`;
-    const {displayConfInterval, displayAdjustedConfInterval} = plotPageValues;
-    const defaultCI = displayAdjustedConfInterval ? "adjusted" : (displayConfInterval ? "normal" : "off");
+    const {displayConfInterval, displayAdjustedConfInterval, cycleCI, cycleAdjustedCI} = plotPageValues;
+
+    console.log("BLASH", displayConfInterval, displayAdjustedConfInterval)
+
+    const isConfIntNotEstimated = useMemo(() => cycleCI.includes(null) || cycleCI.includes(undefined),
+        [cycleCI]);
+    const isAdjustedConfIntNotEstimated = useMemo(() => cycleAdjustedCI.includes(null) || cycleAdjustedCI.includes(undefined),
+        [cycleAdjustedCI]);
+    const hasNoChosenOutliers = plotPageValues.outliersForSE.length === 0
+
+    const defaultCI = displayAdjustedConfInterval && !isAdjustedConfIntNotEstimated ? "adjusted" : (displayConfInterval && !isConfIntNotEstimated ? "normal" : "off");
 
     // Used to trigger re-render of plot. This circumvents react-plotly's plot refreshing convention.
     const [revisionNumber, setRevisionNumber] = useState(0);
@@ -38,7 +47,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
         {
             // confint lower bound: enclosing line (which is hidden) hence 0 opacity (using properties of 'tonexty')
             x: plotPageValues.transformedX,
-            y: plotPageValues.trendCILB,
+            y: plotPageValues[`trend${confIntSelection === 'adjusted' ? 'Adjusted' : ''}CILB`],
             fill: "tonexty",
             fillcolor: "rgba(0, 0, 0, 0)",
             line: {color: "transparent"},
@@ -48,11 +57,11 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
             name: 'trend_lower_ci',
             legendgroup: 'seriesAndTrend',
             yaxis: 'y1',
-            visible: displayConfInterval ? (plotPageValues.displaySeriesAndTrend ? true : 'legendonly') : false,
+            visible: defaultCI !== 'off' ? (plotPageValues.displaySeriesAndTrend ? true : 'legendonly') : false,
         },
         { // confint upper bound
             x: plotPageValues.transformedX,
-            y: plotPageValues.trendCIUB,
+            y: plotPageValues[`trend${confIntSelection === 'adjusted' ? 'Adjusted' : ''}CIUB`],
             fill: "tonexty",
             fillcolor: "rgba(255,145,0,0.25)",
             line: {color: "transparent"},
@@ -62,7 +71,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
             name: 'trend_upper_ci',
             legendgroup: 'seriesAndTrend',
             yaxis: 'y1',
-            visible: displayConfInterval ? (plotPageValues.displaySeriesAndTrend ? true : 'legendonly') : false,
+            visible: defaultCI !== 'off' ? (plotPageValues.displaySeriesAndTrend ? true : 'legendonly') : false,
         },
     ];
 
@@ -99,7 +108,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
         {
             // confint lower bound: enclosing line (which is hidden) hence 0 opacity (using properties of 'tonexty')
             x: plotPageValues.transformedX,
-            y: plotPageValues.cycleCILB,
+            y: plotPageValues[`cycle${confIntSelection === 'adjusted' ? 'Adjusted' : ''}CILB`],
             fill: "tonexty",
             fillcolor: "rgba(0, 0, 0, 0)",
             line: {color: "transparent"},
@@ -109,11 +118,11 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
             name: 'cycle_lower_ci',
             legendgroup: 'cycle',
             yaxis: 'y2',
-            visible: displayConfInterval ? (plotPageValues.displayCycle ? true : 'legendonly') : false,
+            visible: defaultCI !== 'off' ? (plotPageValues.displayCycle ? true : 'legendonly') : false,
         },
         { // confint upper bound
             x: plotPageValues.transformedX,
-            y: plotPageValues.cycleCIUB,
+            y: plotPageValues[`cycle${confIntSelection === 'adjusted' ? 'Adjusted' : ''}CIUB`],
             fill: "tonexty",
             fillcolor: "rgba(0,100,80,0.2)",
             line: {color: "transparent"},
@@ -123,7 +132,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
             name: 'cycle_upper_ci',
             legendgroup: 'cycle',
             yaxis: 'y2',
-            visible: displayConfInterval ? (plotPageValues.displayCycle ? true : 'legendonly') : false,
+            visible: defaultCI !== 'off' ? (plotPageValues.displayCycle ? true : 'legendonly') : false,
         },
     ];
 
@@ -274,11 +283,16 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [revisionNumber]);
 
-    const {cycleCI, cycleAdjustedCI} = plotPageValues;
-    const isConfIntNotEstimated = useMemo(() => cycleCI.includes(null) || cycleCI.includes(undefined),
-        [cycleCI]);
-    const isAdjustedConfIntNotEstimated = useMemo(() => cycleAdjustedCI.includes(null) || cycleAdjustedCI.includes(undefined),
-        [cycleAdjustedCI]);
+    const disableAdjustedConfIntButton = isAdjustedConfIntNotEstimated || hasNoChosenOutliers
+
+    const normalCIButton = (<ToggleButton value="normal" disabled={isConfIntNotEstimated}>
+        Normal
+    </ToggleButton>)
+
+    const adjustedCIButton = (<ToggleButton value="adjusted" disabled={disableAdjustedConfIntButton}
+    >
+        COVID Adj.
+    </ToggleButton>)
 
     return (<>
             <div style={{minHeight: 600,}}>
@@ -291,23 +305,41 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
                 <div>
                     {plot}
                 </div>
-                <FormControl component="fieldset">
-                    <FormLabel component="legend">95% CI Options</FormLabel>
-                    <ToggleButtonGroup
-                        value={confIntSelection}
-                        exclusive
-                        onChange={handleConfIntervalDisplay}
-                    >
-                        <ToggleButton value="off">Off</ToggleButton>
-                        <ToggleButton value="normal" disabled={isConfIntNotEstimated}>
-                            Normal
-                        </ToggleButton>
-                        <ToggleButton value="adjusted"
-                                      disabled={isAdjustedConfIntNotEstimated || (plotPageValues.outliersForSE.length === 0)}>
-                            COVID Adj.
-                        </ToggleButton>
-                    </ToggleButtonGroup>
-                </FormControl>
+                <div style={{paddingBottom: '0.75rem'}}>
+                    <FormControl component="fieldset">
+                        <FormLabel component="legend">
+                            95% CI Options
+                        </FormLabel>
+                        <ToggleButtonGroup
+                            value={confIntSelection}
+                            color="primary"
+                            exclusive
+                            sx={{flex: 1, width: '300px', height: '60px'}}
+                            onChange={handleConfIntervalDisplay}
+                        >
+                            <ToggleButton value="off" sx={{flex: 1}}>Off</ToggleButton>
+
+                            {isConfIntNotEstimated ? (
+                                <Tooltip
+                                    title="There was a computational issue when calculating the standard confidence intervals. Try with a higher value of delta or consider working with the Matlab or R code"
+                                    arrow
+                                >
+                                    <span>{normalCIButton}</span>
+                                </Tooltip>
+                            ) : normalCIButton}
+
+                            {disableAdjustedConfIntButton ? (
+                                <Tooltip
+                                    title={hasNoChosenOutliers ? "This dataset does not have any chosen outliers" : "There was a computational issue when calculating the adjusted confidence intervals. Try with a higher value of delta or consider working with the Matlab or R code"}
+                                    arrow
+                                >
+                                    <span>{adjustedCIButton}</span>
+                                </Tooltip>
+                            ) : adjustedCIButton}
+
+                        </ToggleButtonGroup>
+                    </FormControl>
+                </div>
                 <div style={{marginBottom: 10}}>
                     <strong>Delta:</strong> {plotPageValues.deltaCalc.toFixed(4) /* delta reported to 4 d.p. */}
                 </div>

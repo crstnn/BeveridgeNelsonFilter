@@ -14,7 +14,6 @@ export const MODEL_QUERY_PARAMS = [
     'dst',
     'dcy',
     't',
-    'ofs'
 ];
 
 // ordering must align with `MODEL_QUERY_PARAMS`
@@ -33,7 +32,6 @@ export const MODEL_PARAMS = [
     'displaySeriesAndTrend',
     'displayCycle',
     'transform',
-    'outliersForSE',
 ];
 
 // ordering must align with `TRANSFORMATION_PARAMS`
