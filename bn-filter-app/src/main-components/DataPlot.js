@@ -288,11 +288,11 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
 
     const disableAdjustedConfIntButton = isAdjustedConfIntNotEstimated || hasNoChosenOutliers
 
-    const normalCIButton = (<ToggleButton value="normal" disabled={isConfIntNotEstimated}>
+    const normalCIButton = (<ToggleButton value="normal" sx={{flex: 1, whiteSpace: "nowrap"}} disabled={isConfIntNotEstimated}>
         Normal
     </ToggleButton>)
 
-    const adjustedCIButton = (<ToggleButton value="adjusted" disabled={disableAdjustedConfIntButton}
+    const adjustedCIButton = (<ToggleButton value="adjusted" sx={{flex: 1, whiteSpace: "nowrap"}} disabled={disableAdjustedConfIntButton}
     >
         COVID Adj.
     </ToggleButton>)
@@ -317,10 +317,10 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
                             value={confIntSelection}
                             color="primary"
                             exclusive
-                            sx={{flex: 1, width: '300px', height: '60px'}}
+                            sx={{flex: 1, width: '300px', height: '50px'}}
                             onChange={handleConfIntervalDisplay}
                         >
-                            <ToggleButton value="off" sx={{flex: 1}}>Off</ToggleButton>
+                            <ToggleButton value="off" sx={{flex: 1, whiteSpace: "nowrap"}}>Off</ToggleButton>
 
                             {isConfIntNotEstimated ? (
                                 <Tooltip
