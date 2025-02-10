@@ -49,21 +49,21 @@ const ParametersForm = ({handlers, values, errors, prevStep, nextStep, cancelLoa
 
         return (
             <>
-                <div className="information">
-                    <Divider style={{fontSize: 'x-large', marginTop: "25px"}}>Transformations</Divider>
+                <div className="information"
+                     style={{display: "flex", alignItems: "center", justifyContent: "center", marginTop: "25px"}}>
+                    <Tooltip
+                        title="These transformations are applied to the base dataset. They are applied in the order of the fields."
+                        arrow>
+                        <Divider sx={{fontSize: "x-large", flex: 1}}>
+                            Transformations<IconButton size="small"><InfoIcon fontSize="small"/></IconButton>
+                        </Divider>
+                    </Tooltip>
                 </div>
                 <Grid container direction="column" justifyContent="space-evenly" alignItems="center" spacing={4}>
                     <Grid item xs={4}>
                         <FormControl variant="standard">
                             <FormControlLabel
-                                label={
-                                    <span>
-                                    Natural Logarithm
-                                    <Tooltip title="Natural log applied to the initial dataset">
-                                        <IconButton size="small"><InfoIcon fontSize="small"/></IconButton>
-                                    </Tooltip>
-                                </span>
-                                }
+                                label="Natural Logarithm"
                                 control={<Checkbox size="small" onChange={handleCheckboxChange('takeLog')}
                                                    checked={values.takeLog}/>}
                             />
@@ -73,9 +73,6 @@ const ParametersForm = ({handlers, values, errors, prevStep, nextStep, cancelLoa
                         <FormControl variant="standard" sx={{minWidth: 350}}>
                             <InputLabel>
                                 Differencing Method
-                                <Tooltip title="Differencing method applied to the initial dataset">
-                                    <IconButton size="small"><InfoIcon fontSize="small"/></IconButton>
-                                </Tooltip>
                             </InputLabel>
                             <Select onChange={handleChange('dCode')} value={values.dCode}>
                                 {createMenuItems(field.optionField.dCode.option)}
@@ -86,9 +83,6 @@ const ParametersForm = ({handlers, values, errors, prevStep, nextStep, cancelLoa
                         <FormControl variant="standard" sx={{minWidth: 350}}>
                             <InputLabel>
                                 Computed Percentages
-                                <Tooltip title="Multiple applied to the initial dataset">
-                                    <IconButton size="small"><InfoIcon fontSize="small"/></IconButton>
-                                </Tooltip>
                             </InputLabel>
                             <Select onChange={handleChange('pCode')} value={values.pCode}>
                                 {createMenuItems(field.optionField.pCode.option)}
