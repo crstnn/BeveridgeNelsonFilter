@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {Divider, FormControl, Grid, InputLabel, Select, TextField} from "@mui/material";
-import DatePicker from "../pickers/DatePicker";
+import DatePicker from "./components/DatePicker";
 import {CONFIG} from "../config.js";
 import {createMenuItems} from "../utils/utils";
 

@@ -11,7 +11,7 @@ import {
     TextField,
     Tooltip,
 } from "@mui/material";
-import DatePicker from "../pickers/DatePicker";
+import DatePicker from "./components/DatePicker";
 import {CONFIG} from "../config.js";
 import {createMenuItems, fetchWithTimeout, getDifferencingPeriod, pairArrayToParamStr} from "../utils/utils";
 import Error from "./components/Error";
