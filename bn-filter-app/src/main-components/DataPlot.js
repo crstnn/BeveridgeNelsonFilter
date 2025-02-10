@@ -311,7 +311,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
                 <div style={{paddingBottom: '0.75rem'}}>
                     <FormControl component="fieldset">
                         <FormLabel component="legend">
-                            95% CI Options
+                            95% Confidence Interval Options
                         </FormLabel>
                         <ToggleButtonGroup
                             value={confIntSelection}
