@@ -89,6 +89,7 @@ export default class UserDataForm extends Component {
                                 title={"Series' start date (inclusive). The end date is determined based on frequency"}
                                 date={values.startDate}
                                 updateDate={handleChange('startDate')}
+                                frequency={values.frequency}
                                 isDisabled={values.frequency === "n"}/>
                         </Grid>
                         <Grid item xs={6}>
