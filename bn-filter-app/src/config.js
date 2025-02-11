@@ -20,6 +20,10 @@ export const CONFIG = Object.freeze({
             "frequencyManual": {
                 "option": [
                     {
+                        "value": "d",
+                        "text": "Daily"
+                    },
+                    {
                         "value": "w",
                         "text": "Weekly"
                     },
