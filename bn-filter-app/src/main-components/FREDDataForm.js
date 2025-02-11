@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import DatePicker from "./components/DatePicker";
 import {CONFIG} from "../config.js";
-import {createMenuItems, fetchWithTimeout, getDifferencingPeriod, pairArrayToParamStr} from "../utils/utils";
+import {createMenuItems, fetchWithTimeout, pairArrayToParamStr} from "../utils/utils";
 import Error from "./components/Error";
 import {ThreeDots} from "react-loader-spinner";
 import {DateAbstract} from "../utils/date";
@@ -128,13 +128,12 @@ export default class FREDDataForm extends Component {
     }
 
     calculateDisabledSelections = () => {
-        const {frequencyFRED, minDate, maxDate, dCode} = this.props.values;
+        const {frequencyFRED, minDate, maxDate} = this.props.values;
 
         if (!frequencyFRED)
             return (_isSameTime) => (_t) => false;
 
         const generatedDates = DateAbstract.createDate(frequencyFRED, DateAbstract.maybeConvertStringToDate(minDate))
-            .nextTimePeriod(getDifferencingPeriod(dCode))
             .getDateSeriesUpToMaxDate(maxDate);
 
         return (isSameTime) => (t) => !generatedDates.some(date => isSameTime(date, t));
