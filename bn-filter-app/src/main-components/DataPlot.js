@@ -289,7 +289,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
     const disableAdjustedConfIntButton = isAdjustedConfIntNotEstimated || hasNoChosenOutliers
 
     const normalCIButton = (<ToggleButton value="normal" sx={{flex: 1, whiteSpace: "nowrap"}} disabled={isConfIntNotEstimated}>
-        Normal
+        On
     </ToggleButton>)
 
     const adjustedCIButton = (<ToggleButton value="adjusted" sx={{flex: 1, whiteSpace: "nowrap"}} disabled={disableAdjustedConfIntButton}
@@ -311,7 +311,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
                 <div style={{paddingBottom: '0.75rem'}}>
                     <FormControl component="fieldset">
                         <FormLabel component="legend">
-                            95% Confidence Interval Options
+                            95% Confidence Intervals
                         </FormLabel>
                         <ToggleButtonGroup
                             value={confIntSelection}
