@@ -1,10 +1,20 @@
 import React, {useMemo, useState} from "react";
 import Plot from 'react-plotly.js';
-import {Button, FormControl, FormLabel, Grid, ToggleButton, ToggleButtonGroup, Tooltip,} from "@mui/material";
+import {
+    Button,
+    FormControl,
+    FormLabel,
+    Grid,
+    IconButton,
+    ToggleButton,
+    ToggleButtonGroup,
+    Tooltip,
+} from "@mui/material";
 import {CSVLink} from "react-csv";
 import {buildModelApplicationUrl, colsToRows, getDifferencingPeriod} from "../utils/utils";
 import {FRED} from "../utils/consts";
 import ShareButton from "./components/ShareButton";
+import InfoIcon from "@mui/icons-material/Info";
 
 
 const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
@@ -288,14 +298,23 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
 
     const disableAdjustedConfIntButton = isAdjustedConfIntNotEstimated || hasNoChosenOutliers
 
-    const normalCIButton = (<ToggleButton value="normal" sx={{flex: 1, whiteSpace: "nowrap"}} disabled={isConfIntNotEstimated}>
-        On
-    </ToggleButton>)
+    const ciMaxButtonHeight = '40px'
 
-    const adjustedCIButton = (<ToggleButton value="adjusted" sx={{flex: 1, whiteSpace: "nowrap"}} disabled={disableAdjustedConfIntButton}
-    >
-        COVID Adj.
-    </ToggleButton>)
+    const normalCIButton = (
+        <ToggleButton value="normal" sx={{flex: 1, whiteSpace: "nowrap", maxHeight: ciMaxButtonHeight}}
+                      disabled={isConfIntNotEstimated}>
+            On
+        </ToggleButton>)
+
+    const adjustedCIButton = (
+        <ToggleButton value="adjusted" sx={{flex: 1, whiteSpace: "nowrap", maxHeight: ciMaxButtonHeight}}
+                      disabled={disableAdjustedConfIntButton}
+        >
+            COVID Adj.<Tooltip
+            title="Covid adjusted error bands drop residuals in 2020 corresponding to observations falling between 1 March 2020 - 30 September 2020">
+            <IconButton size="small"><InfoIcon fontSize="small"/></IconButton>
+        </Tooltip>
+        </ToggleButton>)
 
     return (<>
             <div style={{minHeight: 600,}}>
@@ -313,14 +332,19 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
                         <FormLabel component="legend">
                             95% Confidence Intervals
                         </FormLabel>
+
                         <ToggleButtonGroup
                             value={confIntSelection}
                             color="primary"
                             exclusive
-                            sx={{flex: 1, width: '300px', height: '50px'}}
+                            sx={{flex: 1, width: '370px'}}
                             onChange={handleConfIntervalDisplay}
                         >
-                            <ToggleButton value="off" sx={{flex: 1, whiteSpace: "nowrap"}}>Off</ToggleButton>
+                            <ToggleButton value="off" sx={{
+                                flex: 1,
+                                whiteSpace: "nowrap",
+                                maxHeight: ciMaxButtonHeight
+                            }}>Off</ToggleButton>
 
                             {isConfIntNotEstimated ? (
                                 <Tooltip
@@ -333,7 +357,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
 
                             {disableAdjustedConfIntButton ? (
                                 <Tooltip
-                                    title={hasNoChosenOutliers ? "This dataset does not have any chosen outliers" : "There was a computational issue when calculating the adjusted confidence intervals. Try with a higher value of delta or consider working with the Matlab or R code"}
+                                    title={hasNoChosenOutliers ? "This dataset does not have any COVID outliers (dates falling between 1 March 2020 - 30 September 2020)." : "There was a computational issue when calculating the adjusted confidence intervals. Try with a higher value of delta or consider working with the Matlab or R code"}
                                     arrow
                                 >
                                     <span>{adjustedCIButton}</span>
