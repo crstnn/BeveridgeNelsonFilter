@@ -186,10 +186,14 @@ const BasePage = ({initialState}) => {
     const maybeAddOutliersForCovid = (dates) => {
         const covidStartDate = new Date(2020, 2, 1); // 1st Mar 2020
         const covidEndDate = new Date(2020, 8, 30); // 30 Sept 2020
-        return dates
+        const outliers = dates
             .map((date, index) => ({date: new Date(date), index}))
-            .filter(({date}) => date >= covidStartDate && date <= covidEndDate)
-            .map(({index}) => index);
+            .filter(({date}) => date >= covidStartDate && date <= covidEndDate);
+        const outlierIndices = outliers
+            .map(({index}) => index)
+
+        console.log("COVID OUTLIERS FOR SE", outliers, outlierIndices)
+        return outlierIndices;
     }
 
     const fetchResultWithErrorHandling = async ({url, method, body, onFetchErrorCallback}) => {
@@ -373,8 +377,6 @@ const BasePage = ({initialState}) => {
             .getDateSeriesUpToMaxDate(endDate);
 
         const outliersForSE = maybeAddOutliersForCovid(generatedDates);
-
-        console.log("OUTLIERS FOR SE", outliersForSE)
 
         const displayAdjConfInt = state.displayAdjustedConfInterval && outliersForSE.length > 0
 
