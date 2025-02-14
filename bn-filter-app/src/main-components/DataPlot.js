@@ -72,7 +72,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
             x: plotPageValues.transformedX,
             y: plotPageValues[`trend${confIntSelection === 'adjusted' ? 'Adjusted' : ''}CIUB`],
             fill: "tonexty",
-            fillcolor: "rgba(255,145,0,0.25)",
+            fillcolor: "rgba(255, 145, 0, 0.25)",
             line: {color: "transparent"},
             showlegend: false,
             type: "scatter",
@@ -133,7 +133,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
             x: plotPageValues.transformedX,
             y: plotPageValues[`cycle${confIntSelection === 'adjusted' ? 'Adjusted' : ''}CIUB`],
             fill: "tonexty",
-            fillcolor: "rgba(0,100,80,0.2)",
+            fillcolor: "rgba(0, 100, 80, 0.2)",
             line: {color: "transparent"},
             showlegend: false,
             type: "scatter",
@@ -145,11 +145,13 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
         },
     ];
 
+    const annotationBelowPlotPositioning = -0.17
+
     const layout =
         {
             autosize: true,
             uirevision: 'true',  // essential to prevent user interactions being reset on a redrawing of the plot
-            margin: {l: 30, r: 30, b: 70, t: 30},
+            margin: {l: 30, r: 30, b: 75, t: 30},
             xaxis: {automargin: true},
             yaxis: {
                 tickangle: 'auto',
@@ -178,9 +180,23 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
                     yref: 'paper',
                     x: 1,
                     xanchor: 'right',
-                    y: -0.16,
+                    y: annotationBelowPlotPositioning,
                     yanchor: 'top',
                     text: `Series: ${plotPageValues.dataInputType === FRED ? plotPageValues.mnemonic : 'user inputted series'}`,
+                    showarrow: false
+                },
+                {
+                    font: {
+                        color: 'grey',
+                        size: 9
+                    },
+                    xref: 'paper',
+                    yref: 'paper',
+                    x: 0.5,
+                    xanchor: 'center',
+                    y: annotationBelowPlotPositioning,
+                    yanchor: 'top',
+                    text: `Delta: ${plotPageValues.deltaCalc.toFixed(4)}`,
                     showarrow: false
                 }
             ]
@@ -327,7 +343,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
                 <div>
                     {plot}
                 </div>
-                <div style={{paddingBottom: '0.75rem'}}>
+                <div style={{paddingBottom: '1rem', paddingTop: '0.25rem'}}>
                     <FormControl component="fieldset">
                         <FormLabel component="legend">
                             95% Confidence Intervals
@@ -366,9 +382,6 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
 
                         </ToggleButtonGroup>
                     </FormControl>
-                </div>
-                <div style={{marginBottom: 10}}>
-                    <strong>Delta:</strong> {plotPageValues.deltaCalc.toFixed(4) /* delta reported to 4 d.p. */}
                 </div>
                 <CSVLink style={{textDecoration: "underline", marginBottom: 7}}
                          filename={fileName} data={getCSVData()}>Download as CSV</CSVLink>
