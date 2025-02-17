@@ -13,24 +13,23 @@ source("bnf_fcns.R")
 # Read in US centric data to use for the demonstration
 #usdata <- read.csv(file = 'us_data.csv', header = T, stringsAsFactors = F)
 usdata <-
-  read.csv(file = 'USGDP_updated.csv',
-           header = F,
-           stringsAsFactors = F)
+  read.csv(file = 'UNRATE.csv',
+           header = T,
+           stringsAsFactors = F)$UNRATE
+
 
 # Make the series GDP a 'ts' object
 # type 'help(ts)' in the R console for more information
 #gdp <- ts(data = usdata$GDPC1, end = c(2016, 2), frequency = 4)
 gdp <- ts(data = usdata,
-          end = c(2023, 2),
-          frequency = 4)
+          end = c(2025, 1),
+          frequency = 12)
 
 #Take logs and multiply by 100
 y <-
   transform_series(y = gdp,
                    take_log = T,
                    pcode = "p1") # same as: log(raw_y) * 100.0
-
-print(y)
 
 # Example: Automatically determined delta and full sample mean demeaning method
 cat("Example: log US real GDP\n\n")
@@ -42,7 +41,7 @@ bnfOutput <- bnf(
   iterative = 100,
   dynamic_bands = T,
   adjusted_bands = T,
-  outliers = c(293, 294),
+  outliers = 866:872,
   window = 40,
   ib = T
 )
