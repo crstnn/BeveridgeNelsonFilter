@@ -408,9 +408,15 @@ olsvar_outliers <- function(y, p, temp_outliers, nc = FALSE)
   # Get the OLS residuals
   U <- qr.resid(qr = qr_xmat, y = Y)
   
-  temp_outliers <- temp_outliers - p
-  
-  U_adj <- t(t(U[-temp_outliers]))
+  if (sum(temp_outliers) > 0) {
+    # Removes non-positive indexed observations
+    temp_outliers <- temp_outliers - p
+    temp_outliers <- temp_outliers[temp_outliers <= length(U)]
+    temp_outliers <- temp_outliers[temp_outliers > 0]
+    U <- U[-temp_outliers]
+  }
+
+  U_adj <- t(t(U))
   
   # Get the OLS VCov matrix
   # df is total sample-lags-number of regressors
@@ -880,7 +886,7 @@ BN_Filter_stderr <-
     BN_cycle_se <- matrix(data = NA_real_,
                           nrow = tobs,
                           ncol = 1)
-  
+    
     # Calculate both sets of std err.
     if (adjusted_bands) {
       BN_cycle_se_adjusted <- BN_cycle_se
