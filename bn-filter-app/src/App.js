@@ -78,7 +78,7 @@ const App = () => {
                         Kamber, Morley, and Wong (2018)</a> and the refined version in <a target="_blank"
                                                                                           rel="noopener noreferrer"
                                                                                           href="https://doi.org/10.1016/j.jedc.2025.105066">
-                        Kamber, Morley, and Wong (2024)</a>.
+                        Kamber, Morley, and Wong (2025)</a>.
                     </p>
                 </div>
 
