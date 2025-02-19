@@ -77,7 +77,7 @@ const App = () => {
                         href="https://doi.org/10.1162/rest_a_00691">
                         Kamber, Morley, and Wong (2018)</a> and the refined version in <a target="_blank"
                                                                                           rel="noopener noreferrer"
-                                                                                          href="https://ideas.repec.org/p/een/camaaa/2024-24.html">
+                                                                                          href="https://doi.org/10.1016/j.jedc.2025.105066">
                         Kamber, Morley, and Wong (2024)</a>.
                     </p>
                 </div>
