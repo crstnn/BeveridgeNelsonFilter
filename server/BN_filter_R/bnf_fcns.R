@@ -224,7 +224,7 @@ rolling_demean <- function(y, y_cycle, wind)
                        ncol = 1)
   
   demeaned_y[1:wind] <-
-    t(t(y[1:wind])) - mean(y[1:wind]) + mean(y_cycle[1:wind])
+    as.matrix(y[1:wind]) - mean(y[1:wind]) + mean(y_cycle[1:wind])
   
   for (i in windp1:tobs) {
     demeaned_y[i] <-
@@ -408,9 +408,18 @@ olsvar_outliers <- function(y, p, temp_outliers, nc = FALSE)
   # Get the OLS residuals
   U <- qr.resid(qr = qr_xmat, y = Y)
   
-  temp_outliers <- temp_outliers - p
+  U_adj <- U
+  if (sum(temp_outliers) > 0) {
+    # Removes non-positive indexed observations
+    temp_outliers <- temp_outliers - p
+    temp_outliers <- temp_outliers[temp_outliers <= length(U_adj)]
+    temp_outliers <- temp_outliers[temp_outliers > 0]
+    if (length(temp_outliers) > 0) {
+      U_adj <- U_adj[-temp_outliers]
+    }
+  }
   
-  U_adj <- t(t(U[-temp_outliers]))
+  U_adj <- as.matrix(U_adj)
   
   # Get the OLS VCov matrix
   # df is total sample-lags-number of regressors
@@ -423,7 +432,7 @@ olsvar_outliers <- function(y, p, temp_outliers, nc = FALSE)
   olsvar_outliers <- list()
   olsvar_outliers$A <- A
   olsvar_outliers$SIGMA <- SIGMA
-  olsvar_outliers$U <- U
+  olsvar_outliers$U <- U_adj
   olsvar_outliers$invXX <- invXX
   olsvar_outliers$X <- X
   
@@ -474,9 +483,13 @@ backcast <- function(y, p, delta) {
     # Get data matrix from untransformed model. Estimate without a constant
     end_row = p + 2 + nr_y
     tmp_olsvar_df <-
-      olsvar_df(y = t(t(augmented_y[2:end_row])), p = p, nc = TRUE)
+      olsvar_df(y = as.matrix(augmented_y[2:end_row]),
+                p = p,
+                nc = TRUE)
     tmp_olsvar_df_flip <-
-      olsvar_df(y = t(t(augmented_y_flip[2:end_row])), p = p, nc = TRUE)
+      olsvar_df(y = as.matrix(augmented_y_flip[2:end_row]),
+                p = p,
+                nc = TRUE)
     
     X <- tmp_olsvar_df$X[, , drop = FALSE]
     nr_X = nrow(X)
@@ -488,16 +501,14 @@ backcast <- function(y, p, delta) {
     # Estimate AR by OLS with (for sig_e) and without a constant
     end_row = p + 2
     tmp_olsvar <-
-      olsvar(y = rbind(t(t(augmented_y[3:end_row])), y),
+      olsvar(y = rbind(as.matrix(augmented_y[3:end_row]), y),
              p = p,
              nc = TRUE)
     sig2_ols <- tmp_olsvar$SIGMA
     tmp_olsvar_flip <-
-      olsvar(y = rbind(t(t(
-        augmented_y_flip[3:end_row]
-      )), y_flip),
-      p = p,
-      nc = TRUE)
+      olsvar(y = rbind(as.matrix(augmented_y_flip[3:end_row]), y_flip),
+             p = p,
+             nc = TRUE)
     
     X_untransformed <- tmp_olsvar$X[, , drop = FALSE]
     nr_X_untransformed = nrow(X_untransformed)
@@ -507,10 +518,10 @@ backcast <- function(y, p, delta) {
     start_row = p + 3
     end_row = p + 2 + nr_y
     reparameterised_y <-
-      t(t(augmented_y[start_row:end_row, , drop = FALSE])) -
+      as.matrix(augmented_y[start_row:end_row, , drop = FALSE]) -
       rho * X[, 1]
     reparameterised_y_flip <-
-      t(t(augmented_y_flip[start_row:end_row, , drop = FALSE])) -
+      as.matrix(augmented_y_flip[start_row:end_row, , drop = FALSE]) -
       rho * X_flip[, 1]
     
     #Calculate other preliminaries before estimation
@@ -580,10 +591,10 @@ backcast <- function(y, p, delta) {
       for (i in 1:j - 1) {
         Companion_j <- Companion %*% Companion_j
       }
-      X_j = Companion_j %*% t(t(X[nrow(X), 1:ncol(X)]))
+      X_j = Companion_j %*% as.matrix(X[nrow(X), 1:ncol(X)])
       overwrite_row = p + 2 + nrow(y) + j
       augmented_y[overwrite_row] = t(X_j[1, 1:ncol(X_j)])
-      X_j = Companion_j %*% t(t(X_flip[nrow(X_flip), 1:ncol(X_flip)]))
+      X_j = Companion_j %*% as.matrix(X_flip[nrow(X_flip), 1:ncol(X_flip)])
       augmented_y_flip[overwrite_row] = t(X_j[1, 1:ncol(X_j)])
       j = j + 1
     }
@@ -593,8 +604,8 @@ backcast <- function(y, p, delta) {
     start_row = p + 2 + nr_y + 1
     end_row = p + 2 + nr_y + p + 2
     
-    augmented_y[1:end_row0] = t(t(rev(t(
-      t(augmented_y_flip[start_row:end_row])
+    augmented_y[1:end_row0] = as.matrix(rev(t(t(
+      augmented_y_flip[start_row:end_row]
     ))))
     
     augmented_y_iter = cbind(augmented_y_iter, augmented_y)
@@ -602,7 +613,7 @@ backcast <- function(y, p, delta) {
     iter = iter + 1
   }
   end_row = p + 2 + nr_y
-  augmented_y = t(t(augmented_y[1:end_row]))
+  augmented_y = as.matrix(augmented_y[1:end_row])
   
   # Return backcast data
   return (augmented_y)
@@ -880,7 +891,7 @@ BN_Filter_stderr <-
     BN_cycle_se <- matrix(data = NA_real_,
                           nrow = tobs,
                           ncol = 1)
-  
+    
     # Calculate both sets of std err.
     if (adjusted_bands) {
       BN_cycle_se_adjusted <- BN_cycle_se
