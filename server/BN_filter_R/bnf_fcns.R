@@ -483,9 +483,13 @@ backcast <- function(y, p, delta) {
     # Get data matrix from untransformed model. Estimate without a constant
     end_row = p + 2 + nr_y
     tmp_olsvar_df <-
-      olsvar_df(y = as.matrix(augmented_y[2:end_row]), p = p, nc = TRUE)
+      olsvar_df(y = as.matrix(augmented_y[2:end_row]),
+                p = p,
+                nc = TRUE)
     tmp_olsvar_df_flip <-
-      olsvar_df(y = as.matrix(augmented_y_flip[2:end_row]), p = p, nc = TRUE)
+      olsvar_df(y = as.matrix(augmented_y_flip[2:end_row]),
+                p = p,
+                nc = TRUE)
     
     X <- tmp_olsvar_df$X[, , drop = FALSE]
     nr_X = nrow(X)
@@ -502,11 +506,9 @@ backcast <- function(y, p, delta) {
              nc = TRUE)
     sig2_ols <- tmp_olsvar$SIGMA
     tmp_olsvar_flip <-
-      olsvar(y = rbind(as.matrix(
-        augmented_y_flip[3:end_row]
-      ), y_flip),
-      p = p,
-      nc = TRUE)
+      olsvar(y = rbind(as.matrix(augmented_y_flip[3:end_row]), y_flip),
+             p = p,
+             nc = TRUE)
     
     X_untransformed <- tmp_olsvar$X[, , drop = FALSE]
     nr_X_untransformed = nrow(X_untransformed)
@@ -602,9 +604,9 @@ backcast <- function(y, p, delta) {
     start_row = p + 2 + nr_y + 1
     end_row = p + 2 + nr_y + p + 2
     
-    augmented_y[1:end_row0] = as.matrix(rev(t(
-      t(augmented_y_flip[start_row:end_row])
-    )))
+    augmented_y[1:end_row0] = as.matrix(rev(t(t(
+      augmented_y_flip[start_row:end_row]
+    ))))
     
     augmented_y_iter = cbind(augmented_y_iter, augmented_y)
     
