@@ -413,7 +413,9 @@ olsvar_outliers <- function(y, p, temp_outliers, nc = FALSE)
     temp_outliers <- temp_outliers - p
     temp_outliers <- temp_outliers[temp_outliers <= length(U)]
     temp_outliers <- temp_outliers[temp_outliers > 0]
-    U <- U[-temp_outliers]
+    if(length(temp_outliers) > 0) {
+      U <- U[-temp_outliers]
+    }
   }
 
   U_adj <- t(t(U))
