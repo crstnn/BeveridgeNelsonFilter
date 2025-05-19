@@ -6,6 +6,7 @@ import rpy2.robjects as robj
 from rpy2.robjects.vectors import FloatVector
 
 R = robj.r
+R.source("bnf_util.R")
 R.source("bnf_fcns.R")
 
 

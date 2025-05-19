@@ -8,6 +8,7 @@ rm(list = ls(all = T))
 gc()
 
 # Source required functions
+source("bnf_util.R")
 source("bnf_fcns.R")
 
 # Read in US centric data to use for the demonstration

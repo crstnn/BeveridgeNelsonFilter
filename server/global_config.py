@@ -26,6 +26,7 @@ from rpy2.robjects.vectors import FloatVector
 
 FILTER_FILEPATH = config['PATH']['FILTER_FILEPATH']
 BNF_FUNCTIONS = config['PATH']['BNF_FUNCTIONS']
+BNF_UTILITIES = config['PATH']['BNF_UTILITIES']
 
 FRED_OBS_URL = config['URL']['FRED_OBS_URL']
 FRED_INFO_URL = config['URL']['FRED_INFO_URL']
