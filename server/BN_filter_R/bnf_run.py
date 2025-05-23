@@ -1,12 +1,17 @@
+import configparser
 import gc
 import os
 
-os.environ['R_HOME'] = 'C:/Program Files/R/R-4.0.2'  # must be set before rpy2 import
+localConfig = configparser.ConfigParser()
+localConfig.read('../local_config.ini')
+
+os.environ['R_HOME'] = localConfig['PATH']['R_FOLDER']  # adjust to local R directory
 import rpy2.robjects as robj
 from rpy2.robjects.vectors import FloatVector
 
 R = robj.r
-R.source("bnf_fcns.R")
+R.source("bnf_internal_fcns.R")
+R.source("bnf.R")
 
 
 def US_GDP_test_data():

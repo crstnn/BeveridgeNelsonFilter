@@ -25,7 +25,8 @@ import rpy2.robjects as robj
 from rpy2.robjects.vectors import FloatVector
 
 FILTER_FILEPATH = config['PATH']['FILTER_FILEPATH']
-BNF_FUNCTIONS = config['PATH']['BNF_FUNCTIONS']
+BNF_PUBLIC_API = config['PATH']['BNF_PUBLIC_API']
+BNF_INTERNAL_FUNCTIONS = config['PATH']['BNF_INTERNAL_FUNCTIONS']
 
 FRED_OBS_URL = config['URL']['FRED_OBS_URL']
 FRED_INFO_URL = config['URL']['FRED_INFO_URL']

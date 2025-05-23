@@ -8,7 +8,8 @@ rm(list = ls(all = T))
 gc()
 
 # Source required functions
-source("bnf_fcns.R")
+source("bnf_internal_fcns.R")
+source("bnf.R")
 
 # Read in US centric data to use for the demonstration
 #usdata <- read.csv(file = 'us_data.csv', header = T, stringsAsFactors = F)
