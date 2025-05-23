@@ -21,8 +21,8 @@ cors = CORS(app, resources={
 
 def get_r_inst():
     r = robj.r
-    r.source(FILTER_FILEPATH + BNF_UTILITIES)
-    r.source(FILTER_FILEPATH + BNF_FUNCTIONS)
+    r.source(FILTER_FILEPATH + BNF_INTERNAL_FUNCTIONS)
+    r.source(FILTER_FILEPATH + BNF_PUBLIC_API)
     return r
 
 
