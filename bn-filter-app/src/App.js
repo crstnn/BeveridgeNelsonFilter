@@ -24,7 +24,6 @@ ReactGA.initialize(GA.BASE_PAGE_TRACKING_ID);
 const App = () => {
 
     useEffect(() => {
-        console.log('registered App for GA');
         ReactGA.send({hitType: "pageview", page: window.location.pathname});
     }, []);
 
@@ -64,12 +63,12 @@ const App = () => {
     }, [window.location.hash]);
 
     return (
-        <>
-            <div className="App">
-                <header className="appHeader">
-                    BN Filter Trend-Cycle Decomposition
-                </header>
+        <div className="page">
+            <header className="appHeader">
+                BN Filter Trend-Cycle Decomposition
+            </header>
 
+            <main className="App">
                 <div className="information welcomeInformation">
                     <p>This tool performs trend-cycle decomposition using the Beveridge-Nelson filter in <a
                         target="_blank"
@@ -86,9 +85,9 @@ const App = () => {
                     <Route path="/" element={<BasePage {...{initialState: initialState}}/>}/>
                     <Route path="/apply" element={<></>}/>
                 </Routes>
+            </main>
 
-            </div>
-            <div style={styles.footer}>
+            <footer className="footer">
                 <a href="https://sites.google.com/site/guneskamber" rel="noopener noreferrer" target="_blank">
                     Gunes Kamber</a>&nbsp;&nbsp;&nbsp;&nbsp;
                 <a href="https://sites.google.com/site/jamescmorley" rel="noopener noreferrer" target="_blank">
@@ -97,34 +96,12 @@ const App = () => {
                    target="_blank">
                     Benjamin Wong</a>
                 <br/>
-                <div style={styles.feature}>
+                <div className="handle">
                     <a href="https://crstnn.github.io/" rel="noopener noreferrer" target="_blank">@cristian</a>
                 </div>
-            </div>
-        </>
+            </footer>
+        </div>
     );
 }
-
-const styles = {
-    footer: {
-        fontSize: "small",
-        backgroundColor: "#F7F7F7",
-        borderTop: "1px solid #E7E7E7",
-        textAlign: "center",
-        padding: "10px",
-        marginTop: "10px",
-        position: "fixed",
-        overflowX: "hidden",
-        left: "0",
-        bottom: "0",
-        width: "100%",
-        zIndex: 1,
-    },
-    feature: {
-        marginTop: "5px",
-        fontSize: "x-small",
-    }
-};
-
 
 export default App;

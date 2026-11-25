@@ -1,10 +1,10 @@
 import React, {useMemo, useState} from "react";
-import Plot from 'react-plotly.js';
+import Plotly from 'plotly.js-basic-dist-min';
+import createPlotlyComponent from 'react-plotly.js/factory';
 import {
     Button,
     FormControl,
     FormLabel,
-    Grid,
     IconButton,
     ToggleButton,
     ToggleButtonGroup,
@@ -15,6 +15,8 @@ import {buildModelApplicationUrl, colsToRows, getDifferencingPeriod} from "../ut
 import {FRED} from "../utils/consts";
 import ShareButton from "./components/ShareButton";
 import InfoIcon from "@mui/icons-material/Info";
+
+const Plot = createPlotlyComponent(Plotly);
 
 
 const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
@@ -37,6 +39,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
     const [confIntSelection, setConfIntSelection] = useState(defaultCI);
 
     const visibleAxisDisplay = {showgrid: true, visible: true, zeroline: true};
+    const hoverValue = '%{fullData.name}: %{y:.3f}<extra></extra>';
     const invisibleAxisDisplay = {showgrid: false, visible: false, zeroline: false};
 
     const trend = {
@@ -45,6 +48,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
         type: 'scatter',
         mode: 'lines',
         marker: {color: 'orange'},
+        hovertemplate: hoverValue,
         name: "Trend",
         showlegend: true,
         legendgroup: 'seriesAndTrend',
@@ -91,6 +95,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
             type: 'scatter',
             mode: 'lines',
             marker: {color: 'grey'},
+            hovertemplate: hoverValue,
             name: `Series${plotPageValues.transform ? ' (Post-Transformation)' : ''}`,
             showlegend: true,
             legendgroup: 'seriesAndTrend',
@@ -105,7 +110,9 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
             y: plotPageValues.cycle,
             type: 'scatter',
             mode: 'lines+markers',
-            marker: {color: 'blue'},
+            marker: {color: 'blue', size: 4},
+            line: {width: 1.5},
+            hovertemplate: hoverValue,
             name: "Cycle",
             showlegend: true,
             legendgroup: 'cycle',
@@ -145,22 +152,30 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
         },
     ];
 
-    const annotationBelowPlotPositioning = -0.17
+    // On phones the legend wraps onto several rows, so the notes below it need to sit lower
+    const isNarrow = window.matchMedia('(max-width: 600px)').matches;
+    const annotationBelowPlotPositioning = isNarrow ? -0.42 : -0.17
 
     const layout =
         {
             autosize: true,
             uirevision: 'true',  // essential to prevent user interactions being reset on a redrawing of the plot
-            margin: {l: 30, r: 30, b: 75, t: 30},
-            xaxis: {automargin: true},
+            margin: {l: 10, r: 10, b: isNarrow ? 130 : 75, t: 20},
+            hovermode: 'x unified',
+            xaxis: {automargin: true, gridcolor: '#ececec'},
             yaxis: {
                 tickangle: 'auto',
+                automargin: true,
+                title: {text: 'Trend / series', font: {size: 12, color: 'grey'}},
+                gridcolor: '#ececec',
                 ...(trend.visible === true ? visibleAxisDisplay : invisibleAxisDisplay),
             },
             yaxis2: {
                 overlaying: 'y',
                 side: 'right',
                 automargin: true,
+                title: {text: 'Cycle', font: {size: 12, color: 'grey'}},
+                gridcolor: '#ececec',
                 ...(cycle.visible === true ? visibleAxisDisplay : invisibleAxisDisplay),
             },
             legend: {
@@ -302,9 +317,9 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
             <Plot
                 layout={plotLayout}
                 data={plotData}
-                config={{displaylogo: false, modeBarButtonsToRemove: ['resetScale2d']}}
+                config={{displaylogo: false, modeBarButtonsToRemove: ['resetScale2d', 'select2d', 'lasso2d']}}
                 useResizeHandler={true}
-                style={{maxWidth: 700, marginLeft: 'auto', marginRight: 'auto',}}
+                style={{width: '100%', height: 'clamp(400px, 62vw, 460px)'}}
                 onLegendClick={handleYAxisDisplay}
                 onLegendDoubleClick={() => false} // disabled
             />
@@ -333,18 +348,18 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
         </ToggleButton>)
 
     return (<>
-            <div style={{minHeight: 600,}}>
+            <div>
                 <div className="information">
-                    <p>
+                    <p className="plotNote">
                         Select from the legend of the interactive plot below to toggle between plotting trend and/or
                         cycle. The scale for the trend/cycle is given on the left/right axis.
                     </p>
                 </div>
-                <div>
+                <div className="plotWrap">
                     {plot}
                 </div>
                 <div style={{paddingBottom: '1rem', paddingTop: '0.25rem'}}>
-                    <FormControl component="fieldset">
+                    <FormControl component="fieldset" sx={{width: '100%', maxWidth: 370}}>
                         <FormLabel component="legend">
                             95% Confidence Intervals
                         </FormLabel>
@@ -353,7 +368,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
                             value={confIntSelection}
                             color="primary"
                             exclusive
-                            sx={{flex: 1, width: '370px'}}
+                            fullWidth
                             onChange={handleConfIntervalDisplay}
                         >
                             <ToggleButton value="off" sx={{
@@ -387,32 +402,24 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
                          filename={fileName} data={getCSVData()}>Download as CSV</CSVLink>
 
             </div>
-            <Grid container direction="column" justifyContent="space-evenly"
-                  alignItems="center">
-                <Grid item xs={3}>
-                    <Button
-                        variant="outlined"
-                        style={styles.button}
-                        onClick={back}
-                    >Back</Button>
-                    {plotPageValues.dataInputType === FRED &&
-                        <ShareButton styles={styles}
-                                     buttonText={"Share Results"}
-                                     lazyShareUrl={_ => buildModelApplicationUrl(modelParams)}
-                        />}
-                </Grid>
-            </Grid>
+            <div className="buttonRow">
+                <Button
+                    variant="outlined"
+                    onClick={back}
+                >Back</Button>
+                {plotPageValues.dataInputType === FRED &&
+                    <ShareButton styles={styles}
+                                 buttonText={"Share Results"}
+                                 lazyShareUrl={_ => buildModelApplicationUrl(modelParams)}
+                    />}
+            </div>
         </>
     );
 
 }
 
 const styles = {
-    button: {
-        minHeight: "45px",
-        minWidth: "100px",
-        margin: "15px 20px 100px",
-    },
+    button: {},
     shareList: {
         border: "1px solid #d3d3d3",
         borderBottom: "none",

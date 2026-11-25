@@ -4,7 +4,6 @@ import ParametersForm from "./ParametersForm";
 import DataForm from "./DataForm";
 import DataPlot from "./DataPlot";
 import Loading from "./Loading";
-import Error from "./components/Error";
 import {CONFIG} from "../config.js";
 import {DateAbstract} from "../utils/date";
 import {
@@ -43,6 +42,7 @@ const BasePage = ({initialState}) => {
             minDate: null,
             maxDate: null,
             availableFrequencies: [],
+            isCheckingMnemonic: false, // true until a newly typed mnemonic has been checked
             frequencyFRED: field.optionField.frequencyFRED.default,
             transform: true, // transforms to data before bnf
             dCode: field.optionField.dCode.default,

@@ -4,17 +4,16 @@ import {
     FormControl,
     FormGroup,
     FormHelperText,
-    Grid,
     IconButton,
     InputLabel,
     Select,
+    Stack,
     TextField,
     Tooltip,
 } from "@mui/material";
 import DatePicker from "./components/DatePicker";
 import {CONFIG} from "../config.js";
 import {createMenuItems, fetchWithTimeout, pairArrayToParamStr} from "../utils/utils";
-import Error from "./components/Error";
 import {ThreeDots} from "react-loader-spinner";
 import {DateAbstract} from "../utils/date";
 import InfoIcon from "@mui/icons-material/Info";
@@ -49,6 +48,7 @@ export default class FREDDataForm extends Component {
 
     handleMnemonic = (e) => {
         this.setState({mnemonic: e.target.value.toUpperCase()});
+        this.props.setState({isCheckingMnemonic: true});
 
         if (this.mnemonicTimeoutID) clearTimeout(this.mnemonicTimeoutID);
 
@@ -123,7 +123,7 @@ export default class FREDDataForm extends Component {
 
                 }).catch((error) => {
                 console.log(error);
-            });
+            }).finally(() => setState({isCheckingMnemonic: false}));
         });
     }
 
@@ -150,15 +150,13 @@ export default class FREDDataForm extends Component {
             };
 
         return (
-            <Grid container direction="column" sx={{minHeight: 80, marginBottom: 1}}
-                  justifyContent="space-evenly"
-                  alignItems="center">
-                <Grid item>
+            <div>
+                <div>
                     <FormGroup row>
                         <TextField variant="outlined" label="FRED Mnemonic"
                                    title="Press enter to check the availability of the mnemonic/series"
                                    color={errors["mnemonic"] === undefined && values.mnemonic !== "" ? "success" : null}
-                                   placeholder="e.g. GDPC1" sx={{width: 250}}
+                                   placeholder="e.g. GDPC1" fullWidth
                                    error={errors["mnemonic"] !== undefined}
                                    onChange={e => this.handleMnemonic(e)}
                                    onKeyDown={e => e.key === "Enter" ? this.checkAvailability(e) : null}
@@ -169,8 +167,8 @@ export default class FREDDataForm extends Component {
                                    }}/>
                     </FormGroup>
                     <FormHelperText>{mnemonicHelperText()}</FormHelperText>
-                </Grid>
-            </Grid>
+                </div>
+            </div>
         )
     }
 
@@ -184,59 +182,44 @@ export default class FREDDataForm extends Component {
                                    href="https://fred.stlouisfed.org/tags/series">
                         FRED mnemonic</a> and check its availability before continuing.</p>
                 </div>
-                <div style={{
-                    width: "420px",
-                    marginTop: "10px",
-                    alignItems: "center",
-                    display: "inline-block",
-                }}>
+                <div className="formColumn" style={{marginTop: "16px"}}>
                     {this.mnemonicInput()}
-                    <div className="dataInformation">
-                        <Divider
-                            title="The options specifiy the data's range and frequency"
-                            style={{fontSize: 'large', marginTop: "20px"}}>Options</Divider>
-                    </div>
-                    <Grid container direction="column" sx={{minHeight: 340,}}
-                          justifyContent="space-evenly"
-                          alignItems="center">
-                        <Grid item xs={4}>
-                            <DatePicker
-                                label={"Start Date"}
-                                title={"Series' start date (inclusive). Determined by FRED"}
-                                date={values.startDateFRED}
-                                minDate={values.minDate}
-                                maxDate={values.maxDate}
-                                frequency={values.frequencyFRED}
-                                shouldDisableSelections={this.calculateDisabledSelections()}
-                                updateDate={handleChange('startDateFRED')}/>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <DatePicker
-                                label={"End Date"}
-                                title={"Series' end date (inclusive). Determined by FRED"}
-                                date={values.endDateFRED}
-                                minDate={values.minDate}
-                                maxDate={values.maxDate}
-                                frequency={values.frequencyFRED}
-                                shouldDisableSelections={this.calculateDisabledSelections()}
-                                updateDate={handleChange('endDateFRED')}/>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <FormControl variant="standard" sx={{minWidth: 220}}>
-                                <InputLabel>Frequency
-                                    <Tooltip
-                                        title="Time-series frequency. If the data is aggregated, the default aggregation method is averaging.">
-                                        <IconButton size="small"><InfoIcon fontSize="small"/></IconButton>
-                                    </Tooltip>
-                                </InputLabel>
-                                <Select
-                                    title="Time-series frequency"
-                                    onChange={handleChange('frequencyFRED')}
-                                    value={values.frequencyFRED}
-                                >{this.createFilteredFrequencies()}</Select>
-                            </FormControl>
-                        </Grid>
-                    </Grid>
+                    <Divider
+                        title="The options specifiy the data's range and frequency"
+                        style={{fontSize: 'large', marginTop: "20px", marginBottom: "24px"}}>Options</Divider>
+                    <Stack spacing={3}>
+                        <DatePicker
+                            label={"Start Date"}
+                            title={"Series' start date (inclusive). Determined by FRED"}
+                            date={values.startDateFRED}
+                            minDate={values.minDate}
+                            maxDate={values.maxDate}
+                            frequency={values.frequencyFRED}
+                            shouldDisableSelections={this.calculateDisabledSelections()}
+                            updateDate={handleChange('startDateFRED')}/>
+                        <DatePicker
+                            label={"End Date"}
+                            title={"Series' end date (inclusive). Determined by FRED"}
+                            date={values.endDateFRED}
+                            minDate={values.minDate}
+                            maxDate={values.maxDate}
+                            frequency={values.frequencyFRED}
+                            shouldDisableSelections={this.calculateDisabledSelections()}
+                            updateDate={handleChange('endDateFRED')}/>
+                        <FormControl variant="standard" fullWidth>
+                            <InputLabel>Frequency
+                                <Tooltip
+                                    title="Time-series frequency. If the data is aggregated, the default aggregation method is averaging.">
+                                    <IconButton size="small"><InfoIcon fontSize="small"/></IconButton>
+                                </Tooltip>
+                            </InputLabel>
+                            <Select
+                                title="Time-series frequency"
+                                onChange={handleChange('frequencyFRED')}
+                                value={values.frequencyFRED}
+                            >{this.createFilteredFrequencies()}</Select>
+                        </FormControl>
+                    </Stack>
                 </div>
             </div>
         )

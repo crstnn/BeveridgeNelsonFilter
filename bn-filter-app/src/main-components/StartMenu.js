@@ -43,23 +43,15 @@ class StartMenu extends Component {
                     </p>
                 </div>
 
-                <Button
-                    variant="contained"
-                    style={styles.button}
-                    onClick={this.continue}
-                >Continue</Button>
-                <br/>
+                <div className="buttonRow">
+                    <Button
+                        variant="contained"
+                        onClick={this.continue}
+                    >Continue</Button>
+                </div>
 
             </div>
         )
-    }
-}
-
-const styles = {
-    button: {
-        minHeight: "45px",
-        minWidth: "100px",
-        margin: "30px 0 100px",
     }
 }
 

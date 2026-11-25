@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Divider, Grid, ToggleButton, ToggleButtonGroup,} from "@mui/material";
+import {Button, Divider, ToggleButton, ToggleButtonGroup,} from "@mui/material";
 import '../styles/App.css';
 import FREDDataForm from "./FREDDataForm";
 import UserDataForm from "./UserDataForm";
@@ -32,18 +32,26 @@ const DataForm = ({
 
     const next = e => {
         e.preventDefault();
-        nextStep();
         if (dataInputType === FRED && values.mnemonic === "") {
             setErrorMessage("mnemonic", "A mnemonic must be specified");
         }
         if (dataInputType === USER && values.unprocessedY === "") {
             setErrorMessage("unprocessedY", "time series field cannot be empty");
         }
+
+        // Only move on once the input has been checked and has no errors
+        const isFREDReady = values.mnemonic !== "" && errors["mnemonic"] === undefined
+            && !values.isCheckingMnemonic && values.startDateFRED !== null;
+        const isUserSeriesReady = values.unprocessedY !== "" && errors["unprocessedY"] === undefined;
+
+        if ((dataInputType === FRED && isFREDReady) || (dataInputType === USER && isUserSeriesReady)) {
+            nextStep();
+        }
     }
 
     return (
         <>
-            <div style={{minHeight: 600,}}>
+            <div>
                 <div className="information">
                     <Divider style={{fontSize: 'x-large'}}>
                         <ToggleButtonGroup
@@ -77,33 +85,19 @@ const DataForm = ({
                         />
                 })()}
             </div>
-            <Grid container direction="column" justifyContent="space-evenly"
-                  alignItems="center">
-                <Grid item xs={3}>
-                    <Button
-                        variant="outlined"
-                        style={styles.button}
-                        onClick={prevStep}
-                    >Back</Button>
-                    <Button
-                        variant="contained"
-                        style={styles.button}
-                        onClick={next}
-                    >Continue</Button>
-                </Grid>
-            </Grid>
+            <div className="buttonRow">
+                <Button
+                    variant="outlined"
+                    onClick={prevStep}
+                >Back</Button>
+                <Button
+                    variant="contained"
+                    onClick={next}
+                >Continue</Button>
+            </div>
         </>
     )
 
 }
 
 export default DataForm
-
-const styles = {
-    button: {
-        minHeight: "45px",
-        minWidth: "100px",
-        margin: "0 20px 100px",
-    },
-    headingFormControlLabel: {fontSize: 'large'}
-}

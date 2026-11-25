@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Divider, FormControl, Grid, InputLabel, Select, TextField} from "@mui/material";
+import {Divider, FormControl, InputLabel, Select, Stack, TextField} from "@mui/material";
 import DatePicker from "./components/DatePicker";
 import {CONFIG} from "../config.js";
 import {createMenuItems} from "../utils/utils";
@@ -48,61 +48,49 @@ export default class UserDataForm extends Component {
                         Pasting a time series from a CSV or array will achieve the appropriate formatting.
                     </p>
                 </div>
-                <FormControl variant="standard" sx={{m: 1, minWidth: 300, paddingRight: 2}}>
-                    <TextField
-                        multiline
-                        rows={16}
-                        label="Time Series (y)"
-                        title="Paste your chosen time series here"
-                        onChange={this.handleTimeSeriesChange}
-                        InputLabelProps={{shrink: true}}
-                        // Hacky newline fix that works for all browsers (newline/line break not functioning in Safari)
-                        placeholder={"e.g. " + (new Array(100).join(" ")) +
-                            "101.2, 104.8, 102.4, ..." + (new Array(100).join(" ")) +
-                            "e.g." + (new Array(100).join(" ")) +
-                            "101.2" + (new Array(100).join(" ")) +
-                            "104.8" + (new Array(100).join(" ")) +
-                            "102.4" + (new Array(100).join(" ")) +
-                            "..."}
-                        value={values.unprocessedY}
-                        error={errors["unprocessedY"] !== undefined}
-                        helperText={errors["unprocessedY"] !== undefined ?
-                            errors['unprocessedY'] : "​" /* zero whitespace to prevent height difference when error displays */}
-                    />
-                </FormControl>
-                <div style={{
-                    width: "420px",
-                    alignItems: "center",
-                    display: "inline-block",
-                }}>
-                    <div className="dataInformation">
-                        <Divider
-                            title="This option does not make alterations to the data but changes the display of the plot output"
-                            style={{fontSize: 'large'}}>Display Options</Divider>
-                    </div>
-                    <Grid container direction="column" sx={{minHeight: 400, paddingTop: 2}}
-                          justifyContent="space-evenly"
-                          alignItems="center">
-                        <Grid item xs={6}>
-                            <DatePicker
-                                label={"Start Date"}
-                                title={"Series' start date (inclusive). The end date is determined based on frequency"}
-                                date={values.startDate}
-                                updateDate={handleChange('startDate')}
-                                frequency={values.frequency}
-                                isDisabled={values.frequency === "n"}/>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <FormControl variant="standard" sx={{minWidth: 220}}>
-                                <InputLabel>Frequency</InputLabel>
-                                <Select
-                                    title="Time-series frequency"
-                                    onChange={handleChange('frequency')}
-                                    value={values.frequency}
-                                >{createMenuItems(field.optionField.frequencyManual.option)}</Select>
-                            </FormControl>
-                        </Grid>
-                    </Grid>
+                <div className="formColumn" style={{marginTop: "16px"}}>
+                    <FormControl fullWidth>
+                        <TextField
+                            multiline
+                            rows={16}
+                            label="Time Series (y)"
+                            title="Paste your chosen time series here"
+                            onChange={this.handleTimeSeriesChange}
+                            InputLabelProps={{shrink: true}}
+                            // Hacky newline fix that works for all browsers (newline/line break not functioning in Safari)
+                            placeholder={"e.g. " + (new Array(100).join(" ")) +
+                                "101.2, 104.8, 102.4, ..." + (new Array(100).join(" ")) +
+                                "e.g." + (new Array(100).join(" ")) +
+                                "101.2" + (new Array(100).join(" ")) +
+                                "104.8" + (new Array(100).join(" ")) +
+                                "102.4" + (new Array(100).join(" ")) +
+                                "..."}
+                            value={values.unprocessedY}
+                            error={errors["unprocessedY"] !== undefined}
+                            helperText={errors["unprocessedY"] !== undefined ?
+                                errors['unprocessedY'] : "​" /* zero whitespace to prevent height difference when error displays */}
+                        />
+                    </FormControl>
+                    <Divider
+                        title="This option does not make alterations to the data but changes the display of the plot output"
+                        style={{fontSize: 'large', marginTop: "20px", marginBottom: "24px"}}>Display Options</Divider>
+                    <Stack spacing={3}>
+                        <DatePicker
+                            label={"Start Date"}
+                            title={"Series' start date (inclusive). The end date is determined based on frequency"}
+                            date={values.startDate}
+                            updateDate={handleChange('startDate')}
+                            frequency={values.frequency}
+                            isDisabled={values.frequency === "n"}/>
+                        <FormControl variant="standard" fullWidth>
+                            <InputLabel>Frequency</InputLabel>
+                            <Select
+                                title="Time-series frequency"
+                                onChange={handleChange('frequency')}
+                                value={values.frequency}
+                            >{createMenuItems(field.optionField.frequencyManual.option)}</Select>
+                        </FormControl>
+                    </Stack>
                 </div>
             </div>
         )
