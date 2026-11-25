@@ -14,7 +14,6 @@ import {
 import DatePicker from "./components/DatePicker";
 import {CONFIG} from "../config.js";
 import {createMenuItems, fetchWithTimeout, pairArrayToParamStr} from "../utils/utils";
-import Error from "./components/Error";
 import {ThreeDots} from "react-loader-spinner";
 import {DateAbstract} from "../utils/date";
 import InfoIcon from "@mui/icons-material/Info";
@@ -49,6 +48,7 @@ export default class FREDDataForm extends Component {
 
     handleMnemonic = (e) => {
         this.setState({mnemonic: e.target.value.toUpperCase()});
+        this.props.setState({isCheckingMnemonic: true});
 
         if (this.mnemonicTimeoutID) clearTimeout(this.mnemonicTimeoutID);
 
@@ -123,7 +123,7 @@ export default class FREDDataForm extends Component {
 
                 }).catch((error) => {
                 console.log(error);
-            });
+            }).finally(() => setState({isCheckingMnemonic: false}));
         });
     }
 

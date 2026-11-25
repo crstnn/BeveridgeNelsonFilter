@@ -32,12 +32,20 @@ const DataForm = ({
 
     const next = e => {
         e.preventDefault();
-        nextStep();
         if (dataInputType === FRED && values.mnemonic === "") {
             setErrorMessage("mnemonic", "A mnemonic must be specified");
         }
         if (dataInputType === USER && values.unprocessedY === "") {
             setErrorMessage("unprocessedY", "time series field cannot be empty");
+        }
+
+        // Only move on once the input has been checked and has no errors
+        const isFREDReady = values.mnemonic !== "" && errors["mnemonic"] === undefined
+            && !values.isCheckingMnemonic && values.startDateFRED !== null;
+        const isUserSeriesReady = values.unprocessedY !== "" && errors["unprocessedY"] === undefined;
+
+        if ((dataInputType === FRED && isFREDReady) || (dataInputType === USER && isUserSeriesReady)) {
+            nextStep();
         }
     }
 

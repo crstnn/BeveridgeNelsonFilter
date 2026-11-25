@@ -16,7 +16,7 @@ import {
 import InfoIcon from '@mui/icons-material/Info';
 import '../styles/App.css';
 import {CONFIG} from "../config.js";
-import Error from "./components/Error";
+import ErrorAlert from "./components/Error";
 import {createHoverText, createMenuItems} from "../utils/utils";
 import {PARAMETERS_STEP} from "../utils/consts";
 
@@ -167,7 +167,7 @@ const ParametersForm = ({handlers, values, errors, prevStep, nextStep, cancelLoa
         <>
             <div>
                 {values.isLoading === null ?
-                    <Error
+                    <ErrorAlert
                         tagName={alertErrors[values.alertErrorType]}
                         close={() => {
                             setState({isLoading: false});
