@@ -14,6 +14,8 @@ class DateAbstract extends Date {
                 return new BiWeeklyDate(date);
             case "w":
                 return new WeeklyDate(date);
+            case "d":
+                return new DailyDate(date);
             default:
                 throw new Error("Non-existent key");
         }
@@ -59,6 +61,13 @@ class DateAbstract extends Date {
     };
 }
 
+class DailyDate extends DateAbstract {
+    nextTimePeriod = (times = 1) => {
+        const oldDate = new DailyDate(this);
+        return new DailyDate(oldDate.setDate(this.getDate() + times));
+    };
+}
+
 class WeeklyDate extends DateAbstract {
     nextTimePeriod = (times = 1) => {
         const oldDate = new WeeklyDate(this);
@@ -101,4 +110,4 @@ class AnnualDate extends DateAbstract {
     };
 }
 
-export {DateAbstract, WeeklyDate, MonthlyDate, QuarterlyDate, AnnualDate}
+export {DateAbstract, DailyDate, WeeklyDate, MonthlyDate, QuarterlyDate, AnnualDate}
