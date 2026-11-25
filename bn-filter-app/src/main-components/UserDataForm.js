@@ -16,8 +16,10 @@ export default class UserDataForm extends Component {
 
         const
             notAnAcceptedCharReg = new RegExp(/[^\d-.,\s]+/),
-            arrayFormReg = new RegExp(/^(((-?\d)*(.\d+)?),\s*)+((-?\d)*(.\d+)?)\s*$/),
-            seriesFormReg = new RegExp(/^(((-?\d)*(.\d+)?)(\r\n|\n|\r))*(((-?\d)*(.\d+)?)(\r\n|\n|\r)?)$/);
+            // one value: optional minus, then digits with an optional decimal part (or a bare .5)
+            number = String.raw`(-?(?:\d+(?:\.\d*)?|\.\d+))?`,
+            arrayFormReg = new RegExp(String.raw`^(${number},\s*)+${number}\s*$`),
+            seriesFormReg = new RegExp(String.raw`^(${number}(\r\n|\n|\r))*(${number}(\r\n|\n|\r)?)$`);
 
         const
             notAnAcceptedCharTest = notAnAcceptedCharReg.test(timeSeries),
