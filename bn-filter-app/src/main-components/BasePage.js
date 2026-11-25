@@ -165,14 +165,14 @@ const BasePage = ({initialState}) => {
         validateField([isEmptyString, isNotAnInt, isNotANum, isExceedsMinMax,], input, e);
     }
 
-    const bnfParamArr = (outliersForSE) => [
+    const bnfParamArr = (outliersForSE, transform) => [
         ['window', state.rollingWindow],
         ['delta_select', state.deltaSelect],
         ['delta', state.delta],
         ['ib', state.iterativeBackcasting],
         ['demean', state.demean],].concat(
-        [['transform', state.transform]].concat(
-            state.transform ? [
+        [['transform', transform]].concat(
+            transform ? [
                     ['p_code', state.pCode],
                     ['d_code', state.dCode],
                     ['take_log', state.takeLog]
@@ -215,7 +215,7 @@ const BasePage = ({initialState}) => {
 
     }
 
-    const getResultsForFREDData = async ({onFetchErrorCallback}) => {
+    const getResultsForFREDData = async ({onFetchErrorCallback, transform}) => {
 
         const outliersForSE = handleCovidOutliersForFredData({
             frequency: state.frequencyFRED,
@@ -228,7 +228,7 @@ const BasePage = ({initialState}) => {
                 ['freq', state.frequencyFRED],
                 ['obs_start', DateAbstract.truncatedDate(state.startDateFRED)],
                 ['obs_end', DateAbstract.truncatedDate(state.endDateFRED)],
-            ].concat(bnfParamArr(outliersForSE))
+            ].concat(bnfParamArr(outliersForSE, transform))
         );
 
         const finalURL = URL.baseBackendURL + URL.bnfFredDataSlug + paramStr;
@@ -276,7 +276,7 @@ const BasePage = ({initialState}) => {
             });
     }
 
-    const getResultsForUserSpecifiedData = async ({onFetchErrorCallback}) => {
+    const getResultsForUserSpecifiedData = async ({onFetchErrorCallback, transform}) => {
 
         // dealing with all operating system's newline characters
         const y = state.unprocessedY.replace(/(,?(\r\n|\n|\r))|(,\s)/gm, ",")
@@ -299,7 +299,7 @@ const BasePage = ({initialState}) => {
 
         setState({y});
 
-        const paramStr = pairArrayToParamStr(bnfParamArr(outliersForSE));
+        const paramStr = pairArrayToParamStr(bnfParamArr(outliersForSE, transform));
 
         const finalURL = URL.baseBackendURL + URL.bnfUserSpecifiedDataSlug + paramStr;
 
@@ -350,6 +350,7 @@ const BasePage = ({initialState}) => {
     const updateTransformationState = () => {
         const isTransformApplied = !(state.takeLog === false && state.dCode === 'nd' && state.pCode === 'np');
         setState({"transform": isTransformApplied});
+        return isTransformApplied;
     }
 
 
@@ -392,7 +393,7 @@ const BasePage = ({initialState}) => {
     const getResults = (errorsDisplayedCount, onSuccessCallback, onFetchErrorCallback) => e => {
         e?.preventDefault();
 
-        updateTransformationState();
+        const transform = updateTransformationState();
 
         if (state.dataInputType === FRED && state.fieldErrorMessages["mnemonic"] !== undefined) {
             setState({"alertErrorType": "INPUT_USER_M"});
@@ -405,8 +406,8 @@ const BasePage = ({initialState}) => {
             cancelLoading();
         } else if (errorsDisplayedCount() === 0) {
             onSuccessCallback();
-            if (state.dataInputType === FRED) getResultsForFREDData({onFetchErrorCallback});
-            else if (state.dataInputType === USER) getResultsForUserSpecifiedData({onFetchErrorCallback});
+            if (state.dataInputType === FRED) getResultsForFREDData({onFetchErrorCallback, transform});
+            else if (state.dataInputType === USER) getResultsForUserSpecifiedData({onFetchErrorCallback, transform});
         } else {
             setState({"alertErrorType": "INPUT_PARAM"});
             cancelLoading();
