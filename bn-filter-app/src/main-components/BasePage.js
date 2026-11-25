@@ -18,7 +18,8 @@ import {FRED, PARAMETERS_STEP, USER} from "../utils/consts";
 const {field, URL} = CONFIG;
 
 const BasePage = ({initialState}) => {
-    const [state, setState] = useReducer((state, newState) => ({...state, ...newState}),
+    const [state, setState] = useReducer(
+        (state, newState) => ({...state, ...(typeof newState === 'function' ? newState(state) : newState)}),
         {
             isDeeplinkApply: false,
             step: 1,
@@ -94,18 +95,20 @@ const BasePage = ({initialState}) => {
     }
 
     const setErrorMessage = (input, message) => {
-        setState({
+        setState(prev => ({
             fieldErrorMessages: {
-                ...state.fieldErrorMessages,
+                ...prev.fieldErrorMessages,
                 [input]: message
             }
-        });
+        }));
     }
 
     const deleteErrorMessage = input => {
-        const fem = {...state.fieldErrorMessages};
-        delete fem[input];
-        setState({fieldErrorMessages: fem});
+        setState(prev => {
+            const fem = {...prev.fieldErrorMessages};
+            delete fem[input];
+            return {fieldErrorMessages: fem};
+        });
     }
 
     const isEmptyString = (v, input) => {
