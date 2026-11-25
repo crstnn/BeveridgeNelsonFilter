@@ -75,13 +75,6 @@ export default class UserDataForm extends Component {
                         title="This option does not make alterations to the data but changes the display of the plot output"
                         style={{fontSize: 'large', marginTop: "20px", marginBottom: "24px"}}>Display Options</Divider>
                     <Stack spacing={3}>
-                        <DatePicker
-                            label={"Start Date"}
-                            title={"Series' start date (inclusive). The end date is determined based on frequency"}
-                            date={values.startDate}
-                            updateDate={handleChange('startDate')}
-                            frequency={values.frequency}
-                            isDisabled={values.frequency === "n"}/>
                         <FormControl variant="standard" fullWidth>
                             <InputLabel>Frequency</InputLabel>
                             <Select
@@ -90,6 +83,13 @@ export default class UserDataForm extends Component {
                                 value={values.frequency}
                             >{createMenuItems(field.optionField.frequencyManual.option)}</Select>
                         </FormControl>
+                        <DatePicker
+                            label={"Start Date"}
+                            title={"Series' start date (inclusive). The end date is determined based on frequency"}
+                            date={values.startDate}
+                            updateDate={handleChange('startDate')}
+                            frequency={values.frequency}
+                            isDisabled={values.frequency === "n"}/>
                     </Stack>
                 </div>
             </div>

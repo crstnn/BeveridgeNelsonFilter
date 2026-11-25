@@ -11,7 +11,7 @@ import {
     TextField,
     Tooltip,
 } from "@mui/material";
-import DatePicker from "./components/DatePicker";
+import DatePicker, {sameTimeFor} from "./components/DatePicker";
 import {CONFIG} from "../config.js";
 import {createMenuItems, fetchWithTimeout, pairArrayToParamStr} from "../utils/utils";
 import {ThreeDots} from "react-loader-spinner";
@@ -127,14 +127,46 @@ export default class FREDDataForm extends Component {
         });
     }
 
+    // The selectable dates for a frequency, or null when any date is allowed
+    // (no frequency yet, or one without a fixed step, such as daily)
+    frequencyDates = (frequency) => {
+        const {minDate, maxDate} = this.props.values;
+        if (!frequency) return null;
+        try {
+            return DateAbstract.createDate(frequency, DateAbstract.maybeConvertStringToDate(minDate))
+                .getDateSeriesUpToMaxDate(maxDate);
+        } catch (_e) {
+            return null;
+        }
+    }
+
+    // Moves the chosen dates onto the new frequency's periods, so they stay selectable
+    handleFrequency = (e) => {
+        const
+            frequency = e.target.value,
+            {startDateFRED, endDateFRED} = this.props.values,
+            update = {frequencyFRED: frequency},
+            series = this.frequencyDates(frequency);
+
+        if (series && series.length > 0) {
+            const
+                isSameTime = sameTimeFor(frequency),
+                isAllowed = date => series.some(d => isSameTime(d, date));
+
+            if (startDateFRED && !isAllowed(startDateFRED))
+                update.startDateFRED = series.find(d => d > startDateFRED) ?? series[series.length - 1];
+            if (endDateFRED && !isAllowed(endDateFRED))
+                update.endDateFRED = [...series].reverse().find(d => d < endDateFRED) ?? series[0];
+        }
+
+        this.props.setState(update);
+    }
+
     calculateDisabledSelections = () => {
-        const {frequencyFRED, minDate, maxDate} = this.props.values;
+        const generatedDates = this.frequencyDates(this.props.values.frequencyFRED);
 
-        if (!frequencyFRED)
+        if (!generatedDates)
             return (_isSameTime) => (_t) => false;
-
-        const generatedDates = DateAbstract.createDate(frequencyFRED, DateAbstract.maybeConvertStringToDate(minDate))
-            .getDateSeriesUpToMaxDate(maxDate);
 
         return (isSameTime) => (t) => !generatedDates.some(date => isSameTime(date, t));
     }
@@ -188,6 +220,19 @@ export default class FREDDataForm extends Component {
                         title="The options specifiy the data's range and frequency"
                         style={{fontSize: 'large', marginTop: "20px", marginBottom: "24px"}}>Options</Divider>
                     <Stack spacing={3}>
+                        <FormControl variant="standard" fullWidth>
+                            <InputLabel>Frequency
+                                <Tooltip
+                                    title="Time-series frequency. If the data is aggregated, the default aggregation method is averaging.">
+                                    <IconButton size="small"><InfoIcon fontSize="small"/></IconButton>
+                                </Tooltip>
+                            </InputLabel>
+                            <Select
+                                title="Time-series frequency"
+                                onChange={this.handleFrequency}
+                                value={values.frequencyFRED}
+                            >{this.createFilteredFrequencies()}</Select>
+                        </FormControl>
                         <DatePicker
                             label={"Start Date"}
                             title={"Series' start date (inclusive). Determined by FRED"}
@@ -206,19 +251,6 @@ export default class FREDDataForm extends Component {
                             frequency={values.frequencyFRED}
                             shouldDisableSelections={this.calculateDisabledSelections()}
                             updateDate={handleChange('endDateFRED')}/>
-                        <FormControl variant="standard" fullWidth>
-                            <InputLabel>Frequency
-                                <Tooltip
-                                    title="Time-series frequency. If the data is aggregated, the default aggregation method is averaging.">
-                                    <IconButton size="small"><InfoIcon fontSize="small"/></IconButton>
-                                </Tooltip>
-                            </InputLabel>
-                            <Select
-                                title="Time-series frequency"
-                                onChange={handleChange('frequencyFRED')}
-                                value={values.frequencyFRED}
-                            >{this.createFilteredFrequencies()}</Select>
-                        </FormControl>
                     </Stack>
                 </div>
             </div>

@@ -3,6 +3,13 @@ import {DesktopDatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFnsV3";
 import {isSameDay, isSameMonth, isSameYear} from "date-fns";
 
+// How finely a frequency's dates are compared: annual by year, sub-annual by month, else by day
+export const sameTimeFor = frequency => {
+    if (['a'].includes(frequency)) return isSameYear;
+    if (['sa', 'q', 'm'].includes(frequency)) return isSameMonth;
+    return isSameDay;
+}
+
 const DatePicker = ({
                         date,
                         label,
@@ -20,18 +27,17 @@ const DatePicker = ({
     };
 
     const availableViews = ['day', 'month', 'year'];
-    let dateSelectionFunc = isSameDay
     let minimumView = 'day'
 
     if (['a'].includes(frequency)) {
         availableViews.splice(0, 2)
         minimumView = availableViews[0]
-        dateSelectionFunc = isSameYear
     } else if (['sa', 'q', 'm'].includes(frequency)) {
         availableViews.splice(0, 1)
-        dateSelectionFunc = isSameMonth
         minimumView = availableViews[0]
     }
+
+    const dateSelectionFunc = sameTimeFor(frequency)
 
     const shouldDisableFunc = shouldDisableSelections(dateSelectionFunc)
 
