@@ -38,8 +38,19 @@ export default class UserDataForm extends Component {
         handleChange('unprocessedY')(e);
     }
 
+    handleStartDate = e => {
+        this.props.deleteErrorMessage("startDate");
+        this.props.handleChange('startDate')(e);
+    }
+
+    handleFrequency = e => {
+        // undated series don't need a start date
+        if (e.target.value === "n") this.props.deleteErrorMessage("startDate");
+        this.props.handleChange('frequency')(e);
+    }
+
     render() {
-        const {values, errors, handleChange} = this.props;
+        const {values, errors} = this.props;
 
         return (
             <div>
@@ -79,7 +90,7 @@ export default class UserDataForm extends Component {
                             <InputLabel>Frequency</InputLabel>
                             <Select
                                 title="Time-series frequency"
-                                onChange={handleChange('frequency')}
+                                onChange={this.handleFrequency}
                                 value={values.frequency}
                             >{createMenuItems(field.optionField.frequencyManual.option)}</Select>
                         </FormControl>
@@ -87,7 +98,8 @@ export default class UserDataForm extends Component {
                             label={"Start Date"}
                             title={"Series' start date (inclusive). The end date is determined based on frequency"}
                             date={values.startDate}
-                            updateDate={handleChange('startDate')}
+                            updateDate={this.handleStartDate}
+                            errorText={errors["startDate"]}
                             frequency={values.frequency}
                             isDisabled={values.frequency === "n"}/>
                     </Stack>

@@ -19,6 +19,7 @@ const DatePicker = ({
                         updateDate,
                         isDisabled,
                         frequency,
+                        errorText,
                         shouldDisableSelections = (_isSameTime) => (_t) => false
                     }) => {
 
@@ -55,7 +56,7 @@ const DatePicker = ({
                     views={availableViews}
                     onChange={handleDateChange}
                     disabled={isDisabled}
-                    slotProps={{textField: {fullWidth: true, title}}}
+                    slotProps={{textField: {fullWidth: true, title, error: Boolean(errorText), helperText: errorText}}}
                 />
             </LocalizationProvider>
         </div>
