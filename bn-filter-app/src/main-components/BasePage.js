@@ -247,9 +247,8 @@ const BasePage = ({initialState}) => {
                     ciRes = result["cycle_ci"],
                     ciAdjustRes = outliersForSE.length > 0 ? result["cycle_ci_adjusted"] : [],
                     x = result["dates"],
-                    transformedX = DateAbstract.createDate(state.frequencyFRED, DateAbstract.maybeConvertStringToDate(x[0]))
-                        .nextTimePeriod(getDifferencingPeriod(state.dCode))
-                        .getDateSeries(cycleRes.length).map(DateAbstract.truncatedDate);
+                    // the transformed series drops its first observations when differencing
+                    transformedX = x.slice(x.length - cycleRes.length);
 
                 setState({
                     x,
@@ -372,11 +371,11 @@ const BasePage = ({initialState}) => {
 
     const handleCovidOutliersForFredData = ({frequency, startDate, endDate}) => {
 
-        const generatedDates = DateAbstract.createDate(frequency, DateAbstract.maybeConvertStringToDate(startDate))
-            .nextTimePeriod(getDifferencingPeriod(state.dCode))
-            .getDateSeriesUpToMaxDate(endDate);
-
-        const outliersForSE = maybeAddOutliersForCovid(generatedDates);
+        const outliersForSE = frequency === 'd' ? [] : maybeAddOutliersForCovid(
+            DateAbstract.createDate(frequency, DateAbstract.maybeConvertStringToDate(startDate))
+                .nextTimePeriod(getDifferencingPeriod(state.dCode))
+                .getDateSeriesUpToMaxDate(endDate)
+        );
 
         const displayAdjConfInt = state.displayAdjustedConfInterval && outliersForSE.length > 0
 

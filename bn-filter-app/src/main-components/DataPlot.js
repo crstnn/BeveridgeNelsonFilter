@@ -28,6 +28,8 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
     const isAdjustedConfIntNotEstimated = useMemo(() => cycleAdjustedCI.includes(null) || cycleAdjustedCI.includes(undefined),
         [cycleAdjustedCI]);
     const hasNoChosenOutliers = plotPageValues.outliersForSE.length === 0
+    // Daily FRED data skips weekends and holidays, so its COVID observations can't be located up front
+    const isDailyFRED = plotPageValues.dataInputType === FRED && plotPageValues.frequencyFRED === 'd'
     const isValidAdjustedConfInt = displayAdjustedConfInterval && !isAdjustedConfIntNotEstimated && !hasNoChosenOutliers
 
     const defaultCI = isValidAdjustedConfInt ? "adjusted" : (displayConfInterval && !isConfIntNotEstimated ? "normal" : "off");
@@ -388,7 +390,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
 
                             {disableAdjustedConfIntButton ? (
                                 <Tooltip
-                                    title={hasNoChosenOutliers ? "This dataset does not have any COVID outliers (dates falling between 1 March 2020 - 30 September 2020)." : "There was a computational issue when calculating the adjusted confidence intervals. Try with a higher value of delta or consider working with the Matlab or R code"}
+                                    title={isDailyFRED ? "COVID adjusted error bands are not available for daily FRED series." : hasNoChosenOutliers ? "This dataset does not have any COVID outliers (dates falling between 1 March 2020 - 30 September 2020)." : "There was a computational issue when calculating the adjusted confidence intervals. Try with a higher value of delta or consider working with the Matlab or R code"}
                                     arrow
                                 >
                                     <span>{adjustedCIButton}</span>
