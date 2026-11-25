@@ -16,8 +16,10 @@ export default class UserDataForm extends Component {
 
         const
             notAnAcceptedCharReg = new RegExp(/[^\d-.,\s]+/),
-            arrayFormReg = new RegExp(/^(((-?\d)*(.\d+)?),\s*)+((-?\d)*(.\d+)?)\s*$/),
-            seriesFormReg = new RegExp(/^(((-?\d)*(.\d+)?)(\r\n|\n|\r))*(((-?\d)*(.\d+)?)(\r\n|\n|\r)?)$/);
+            // one value: optional minus, then digits with an optional decimal part (or a bare .5)
+            number = String.raw`(-?(?:\d+(?:\.\d*)?|\.\d+))?`,
+            arrayFormReg = new RegExp(String.raw`^(${number},\s*)+${number}\s*$`),
+            seriesFormReg = new RegExp(String.raw`^(${number}(\r\n|\n|\r))*(${number}(\r\n|\n|\r)?)$`);
 
         const
             notAnAcceptedCharTest = notAnAcceptedCharReg.test(timeSeries),
@@ -38,8 +40,19 @@ export default class UserDataForm extends Component {
         handleChange('unprocessedY')(e);
     }
 
+    handleStartDate = e => {
+        this.props.deleteErrorMessage("startDate");
+        this.props.handleChange('startDate')(e);
+    }
+
+    handleFrequency = e => {
+        // undated series don't need a start date
+        if (e.target.value === "n") this.props.deleteErrorMessage("startDate");
+        this.props.handleChange('frequency')(e);
+    }
+
     render() {
-        const {values, errors, handleChange} = this.props;
+        const {values, errors} = this.props;
 
         return (
             <div>
@@ -79,7 +92,7 @@ export default class UserDataForm extends Component {
                             <InputLabel>Frequency</InputLabel>
                             <Select
                                 title="Time-series frequency"
-                                onChange={handleChange('frequency')}
+                                onChange={this.handleFrequency}
                                 value={values.frequency}
                             >{createMenuItems(field.optionField.frequencyManual.option)}</Select>
                         </FormControl>
@@ -87,7 +100,8 @@ export default class UserDataForm extends Component {
                             label={"Start Date"}
                             title={"Series' start date (inclusive). The end date is determined based on frequency"}
                             date={values.startDate}
-                            updateDate={handleChange('startDate')}
+                            updateDate={this.handleStartDate}
+                            errorText={errors["startDate"]}
                             frequency={values.frequency}
                             isDisabled={values.frequency === "n"}/>
                     </Stack>

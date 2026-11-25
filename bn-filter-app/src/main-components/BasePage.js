@@ -18,7 +18,8 @@ import {FRED, PARAMETERS_STEP, USER} from "../utils/consts";
 const {field, URL} = CONFIG;
 
 const BasePage = ({initialState}) => {
-    const [state, setState] = useReducer((state, newState) => ({...state, ...newState}),
+    const [state, setState] = useReducer(
+        (state, newState) => ({...state, ...(typeof newState === 'function' ? newState(state) : newState)}),
         {
             isDeeplinkApply: false,
             step: 1,
@@ -94,18 +95,20 @@ const BasePage = ({initialState}) => {
     }
 
     const setErrorMessage = (input, message) => {
-        setState({
+        setState(prev => ({
             fieldErrorMessages: {
-                ...state.fieldErrorMessages,
+                ...prev.fieldErrorMessages,
                 [input]: message
             }
-        });
+        }));
     }
 
     const deleteErrorMessage = input => {
-        const fem = {...state.fieldErrorMessages};
-        delete fem[input];
-        setState({fieldErrorMessages: fem});
+        setState(prev => {
+            const fem = {...prev.fieldErrorMessages};
+            delete fem[input];
+            return {fieldErrorMessages: fem};
+        });
     }
 
     const isEmptyString = (v, input) => {
@@ -165,14 +168,14 @@ const BasePage = ({initialState}) => {
         validateField([isEmptyString, isNotAnInt, isNotANum, isExceedsMinMax,], input, e);
     }
 
-    const bnfParamArr = (outliersForSE) => [
+    const bnfParamArr = (outliersForSE, transform) => [
         ['window', state.rollingWindow],
         ['delta_select', state.deltaSelect],
         ['delta', state.delta],
         ['ib', state.iterativeBackcasting],
         ['demean', state.demean],].concat(
-        [['transform', state.transform]].concat(
-            state.transform ? [
+        [['transform', transform]].concat(
+            transform ? [
                     ['p_code', state.pCode],
                     ['d_code', state.dCode],
                     ['take_log', state.takeLog]
@@ -187,7 +190,7 @@ const BasePage = ({initialState}) => {
         const covidStartDate = new Date(2020, 2, 1); // 1st Mar 2020
         const covidEndDate = new Date(2020, 8, 30); // 30 Sept 2020
         const outliers = dates
-            .map((date, index) => ({date: new Date(date), index}))
+            .map((date, index) => ({date: DateAbstract.maybeConvertStringToDate(date), index}))
             .filter(({date}) => date >= covidStartDate && date <= covidEndDate);
         const outlierIndices = outliers
             .map(({index}) => index)
@@ -215,7 +218,7 @@ const BasePage = ({initialState}) => {
 
     }
 
-    const getResultsForFREDData = async ({onFetchErrorCallback}) => {
+    const getResultsForFREDData = async ({onFetchErrorCallback, transform}) => {
 
         const outliersForSE = handleCovidOutliersForFredData({
             frequency: state.frequencyFRED,
@@ -228,7 +231,7 @@ const BasePage = ({initialState}) => {
                 ['freq', state.frequencyFRED],
                 ['obs_start', DateAbstract.truncatedDate(state.startDateFRED)],
                 ['obs_end', DateAbstract.truncatedDate(state.endDateFRED)],
-            ].concat(bnfParamArr(outliersForSE))
+            ].concat(bnfParamArr(outliersForSE, transform))
         );
 
         const finalURL = URL.baseBackendURL + URL.bnfFredDataSlug + paramStr;
@@ -247,9 +250,8 @@ const BasePage = ({initialState}) => {
                     ciRes = result["cycle_ci"],
                     ciAdjustRes = outliersForSE.length > 0 ? result["cycle_ci_adjusted"] : [],
                     x = result["dates"],
-                    transformedX = DateAbstract.createDate(state.frequencyFRED, DateAbstract.maybeConvertStringToDate(x[0]))
-                        .nextTimePeriod(getDifferencingPeriod(state.dCode))
-                        .getDateSeries(cycleRes.length).map(DateAbstract.truncatedDate);
+                    // the transformed series drops its first observations when differencing
+                    transformedX = x.slice(x.length - cycleRes.length);
 
                 setState({
                     x,
@@ -276,7 +278,7 @@ const BasePage = ({initialState}) => {
             });
     }
 
-    const getResultsForUserSpecifiedData = async ({onFetchErrorCallback}) => {
+    const getResultsForUserSpecifiedData = async ({onFetchErrorCallback, transform}) => {
 
         // dealing with all operating system's newline characters
         const y = state.unprocessedY.replace(/(,?(\r\n|\n|\r))|(,\s)/gm, ",")
@@ -299,7 +301,7 @@ const BasePage = ({initialState}) => {
 
         setState({y});
 
-        const paramStr = pairArrayToParamStr(bnfParamArr(outliersForSE));
+        const paramStr = pairArrayToParamStr(bnfParamArr(outliersForSE, transform));
 
         const finalURL = URL.baseBackendURL + URL.bnfUserSpecifiedDataSlug + paramStr;
 
@@ -350,6 +352,7 @@ const BasePage = ({initialState}) => {
     const updateTransformationState = () => {
         const isTransformApplied = !(state.takeLog === false && state.dCode === 'nd' && state.pCode === 'np');
         setState({"transform": isTransformApplied});
+        return isTransformApplied;
     }
 
 
@@ -372,11 +375,11 @@ const BasePage = ({initialState}) => {
 
     const handleCovidOutliersForFredData = ({frequency, startDate, endDate}) => {
 
-        const generatedDates = DateAbstract.createDate(frequency, DateAbstract.maybeConvertStringToDate(startDate))
-            .nextTimePeriod(getDifferencingPeriod(state.dCode))
-            .getDateSeriesUpToMaxDate(endDate);
-
-        const outliersForSE = maybeAddOutliersForCovid(generatedDates);
+        const outliersForSE = frequency === 'd' ? [] : maybeAddOutliersForCovid(
+            DateAbstract.createDate(frequency, DateAbstract.maybeConvertStringToDate(startDate))
+                .nextTimePeriod(getDifferencingPeriod(state.dCode))
+                .getDateSeriesUpToMaxDate(endDate)
+        );
 
         const displayAdjConfInt = state.displayAdjustedConfInterval && outliersForSE.length > 0
 
@@ -392,7 +395,7 @@ const BasePage = ({initialState}) => {
     const getResults = (errorsDisplayedCount, onSuccessCallback, onFetchErrorCallback) => e => {
         e?.preventDefault();
 
-        updateTransformationState();
+        const transform = updateTransformationState();
 
         if (state.dataInputType === FRED && state.fieldErrorMessages["mnemonic"] !== undefined) {
             setState({"alertErrorType": "INPUT_USER_M"});
@@ -405,8 +408,8 @@ const BasePage = ({initialState}) => {
             cancelLoading();
         } else if (errorsDisplayedCount() === 0) {
             onSuccessCallback();
-            if (state.dataInputType === FRED) getResultsForFREDData({onFetchErrorCallback});
-            else if (state.dataInputType === USER) getResultsForUserSpecifiedData({onFetchErrorCallback});
+            if (state.dataInputType === FRED) getResultsForFREDData({onFetchErrorCallback, transform});
+            else if (state.dataInputType === USER) getResultsForUserSpecifiedData({onFetchErrorCallback, transform});
         } else {
             setState({"alertErrorType": "INPUT_PARAM"});
             cancelLoading();

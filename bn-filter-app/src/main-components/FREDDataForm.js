@@ -128,10 +128,10 @@ export default class FREDDataForm extends Component {
     }
 
     // The selectable dates for a frequency, or null when any date is allowed
-    // (no frequency yet, or one without a fixed step, such as daily)
+    // (no frequency yet, or daily, where FRED skips weekends and holidays)
     frequencyDates = (frequency) => {
         const {minDate, maxDate} = this.props.values;
-        if (!frequency) return null;
+        if (!frequency || frequency === 'd') return null;
         try {
             return DateAbstract.createDate(frequency, DateAbstract.maybeConvertStringToDate(minDate))
                 .getDateSeriesUpToMaxDate(maxDate);
