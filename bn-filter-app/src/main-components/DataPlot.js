@@ -111,6 +111,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
             type: 'scatter',
             mode: 'lines+markers',
             marker: {color: 'blue', size: 4},
+            line: {width: 1.5},
             hovertemplate: hoverValue,
             name: "Cycle",
             showlegend: true,
@@ -161,11 +162,12 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
             uirevision: 'true',  // essential to prevent user interactions being reset on a redrawing of the plot
             margin: {l: 10, r: 10, b: isNarrow ? 130 : 75, t: 20},
             hovermode: 'x unified',
-            xaxis: {automargin: true},
+            xaxis: {automargin: true, gridcolor: '#ececec'},
             yaxis: {
                 tickangle: 'auto',
                 automargin: true,
                 title: {text: 'Trend / series', font: {size: 12, color: 'grey'}},
+                gridcolor: '#ececec',
                 ...(trend.visible === true ? visibleAxisDisplay : invisibleAxisDisplay),
             },
             yaxis2: {
@@ -173,6 +175,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
                 side: 'right',
                 automargin: true,
                 title: {text: 'Cycle', font: {size: 12, color: 'grey'}},
+                gridcolor: '#ececec',
                 ...(cycle.visible === true ? visibleAxisDisplay : invisibleAxisDisplay),
             },
             legend: {
