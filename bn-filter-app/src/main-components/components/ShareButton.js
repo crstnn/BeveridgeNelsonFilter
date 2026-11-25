@@ -51,8 +51,9 @@ const ShareButton = ({buttonText, styles, lazyShareUrl,}) => {
             <Button
                 style={styles.button}
                 variant="outlined"
+                startIcon={<ShareIcon/>}
                 {...bindToggle(popupState)}
-            ><ShareIcon/>{buttonText}</Button>
+            >{buttonText}</Button>
             <Popper {...bindPopper(popupState)} transition>
                 {({TransitionProps}) => (
                     <Fade {...TransitionProps} timeout={300}>

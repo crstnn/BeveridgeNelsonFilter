@@ -1,18 +1,26 @@
 import React from 'react';
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/inter/700.css';
 import './styles/index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import theme from './theme';
 
 import {createRoot} from 'react-dom/client';
 import {HashRouter} from 'react-router-dom';
+import {ThemeProvider} from '@mui/material';
 
 const container = document.getElementById('root');
 const root = createRoot(container);
 root.render(
     <React.StrictMode>
-        <HashRouter future={{v7_startTransition: true}}>
-            <App/>
-        </HashRouter>
+        <ThemeProvider theme={theme}>
+            <HashRouter future={{v7_startTransition: true}}>
+                <App/>
+            </HashRouter>
+        </ThemeProvider>
     </React.StrictMode>
 );
 

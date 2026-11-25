@@ -6,9 +6,9 @@ const Loading = () =>
         <div style={{
             display: "flex",
             justifyContent: "space-around",
-            paddingTop: "30vh"
+            padding: "96px 0"
         }}>
-            <Circles height={75} width={75} color='grey'/>
+            <Circles height={64} width={64} color='#0a6782' ariaLabel='Running the BN filter'/>
         </div>)
 
 

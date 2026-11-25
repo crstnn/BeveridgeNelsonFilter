@@ -1,6 +1,5 @@
 import React from "react";
 import {DesktopDatePicker, LocalizationProvider} from '@mui/x-date-pickers';
-import {TextField} from "@mui/material";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFnsV3";
 import {isSameDay, isSameMonth, isSameYear} from "date-fns";
 
@@ -41,7 +40,6 @@ const DatePicker = ({
             <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DesktopDatePicker
                     label={label}
-                    inputFormat="dd/MM/yyyy"
                     value={date}
                     minDate={minDate}
                     maxDate={maxDate}
@@ -49,14 +47,9 @@ const DatePicker = ({
                     shouldDisableMonth={minimumView === 'month' ? shouldDisableFunc : undefined}
                     shouldDisableYear={minimumView === 'year' ? shouldDisableFunc : undefined}
                     views={availableViews}
-                    InputProps={{style: {width: 220}}}
                     onChange={handleDateChange}
                     disabled={isDisabled}
-                    renderInput={(params) =>
-                        <TextField {...params}
-                                   title={title}
-                                   InputLabelProps={{shrink: true}}
-                                   inputProps={{...params.inputProps, placeholder: "DD/MM/YYYY"}}/>}
+                    slotProps={{textField: {fullWidth: true, title}}}
                 />
             </LocalizationProvider>
         </div>
