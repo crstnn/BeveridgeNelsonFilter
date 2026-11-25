@@ -186,7 +186,7 @@ export default class FREDDataForm extends Component {
                     {this.mnemonicInput()}
                     <Divider
                         title="The options specifiy the data's range and frequency"
-                        sx={{fontSize: '1.05rem', fontWeight: 600, color: 'text.secondary', my: 3}}>Options</Divider>
+                        style={{fontSize: 'large', marginTop: "20px", marginBottom: "24px"}}>Options</Divider>
                     <Stack spacing={3}>
                         <DatePicker
                             label={"Start Date"}
@@ -206,20 +206,17 @@ export default class FREDDataForm extends Component {
                             frequency={values.frequencyFRED}
                             shouldDisableSelections={this.calculateDisabledSelections()}
                             updateDate={handleChange('endDateFRED')}/>
-                        <FormControl fullWidth>
-                            <InputLabel id="frequency-fred-label">Frequency</InputLabel>
+                        <FormControl variant="standard" fullWidth>
+                            <InputLabel>Frequency
+                                <Tooltip
+                                    title="Time-series frequency. If the data is aggregated, the default aggregation method is averaging.">
+                                    <IconButton size="small"><InfoIcon fontSize="small"/></IconButton>
+                                </Tooltip>
+                            </InputLabel>
                             <Select
-                                labelId="frequency-fred-label"
-                                label="Frequency"
                                 title="Time-series frequency"
                                 onChange={handleChange('frequencyFRED')}
                                 value={values.frequencyFRED}
-                                endAdornment={
-                                    <Tooltip
-                                        title="Time-series frequency. If the data is aggregated, the default aggregation method is averaging.">
-                                        <IconButton size="small" sx={{mr: 2}}><InfoIcon fontSize="small"/></IconButton>
-                                    </Tooltip>
-                                }
                             >{this.createFilteredFrequencies()}</Select>
                         </FormControl>
                     </Stack>

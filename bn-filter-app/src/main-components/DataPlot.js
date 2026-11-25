@@ -15,8 +15,6 @@ import {buildModelApplicationUrl, colsToRows, getDifferencingPeriod} from "../ut
 import {FRED} from "../utils/consts";
 import ShareButton from "./components/ShareButton";
 import InfoIcon from "@mui/icons-material/Info";
-import DownloadIcon from "@mui/icons-material/Download";
-import {COLORS} from "../theme";
 
 const Plot = createPlotlyComponent(Plotly);
 
@@ -49,7 +47,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
         y: plotPageValues.trend,
         type: 'scatter',
         mode: 'lines',
-        line: {color: COLORS.trend, width: 2.25},
+        marker: {color: 'orange'},
         hovertemplate: hoverValue,
         name: "Trend",
         showlegend: true,
@@ -78,7 +76,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
             x: plotPageValues.transformedX,
             y: plotPageValues[`trend${confIntSelection === 'adjusted' ? 'Adjusted' : ''}CIUB`],
             fill: "tonexty",
-            fillcolor: "rgba(196, 86, 42, 0.16)",
+            fillcolor: "rgba(255, 145, 0, 0.25)",
             line: {color: "transparent"},
             showlegend: false,
             type: "scatter",
@@ -96,7 +94,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
             y: plotPageValues.transformedY,
             type: 'scatter',
             mode: 'lines',
-            line: {color: COLORS.series, width: 1.5},
+            marker: {color: 'grey'},
             hovertemplate: hoverValue,
             name: `Series${plotPageValues.transform ? ' (Post-Transformation)' : ''}`,
             showlegend: true,
@@ -111,8 +109,8 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
             x: plotPageValues.transformedX,
             y: plotPageValues.cycle,
             type: 'scatter',
-            mode: 'lines',
-            line: {color: COLORS.cycle, width: 2},
+            mode: 'lines+markers',
+            marker: {color: 'blue', size: 4},
             hovertemplate: hoverValue,
             name: "Cycle",
             showlegend: true,
@@ -141,7 +139,7 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
             x: plotPageValues.transformedX,
             y: plotPageValues[`cycle${confIntSelection === 'adjusted' ? 'Adjusted' : ''}CIUB`],
             fill: "tonexty",
-            fillcolor: "rgba(10, 103, 130, 0.16)",
+            fillcolor: "rgba(0, 100, 80, 0.2)",
             line: {color: "transparent"},
             showlegend: false,
             type: "scatter",
@@ -162,27 +160,19 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
             autosize: true,
             uirevision: 'true',  // essential to prevent user interactions being reset on a redrawing of the plot
             margin: {l: 10, r: 10, b: isNarrow ? 130 : 75, t: 20},
-            font: {family: 'Inter, "Segoe UI", Roboto, Arial, sans-serif', color: COLORS.text, size: 12},
-            paper_bgcolor: 'rgba(0,0,0,0)',
-            plot_bgcolor: 'rgba(0,0,0,0)',
             hovermode: 'x unified',
-            hoverlabel: {bgcolor: '#fff', bordercolor: COLORS.border, font: {color: COLORS.text}},
-            xaxis: {automargin: true, gridcolor: '#eef1f4', linecolor: COLORS.border},
+            xaxis: {automargin: true},
             yaxis: {
                 tickangle: 'auto',
                 automargin: true,
-                title: {text: 'Trend / series', font: {size: 12, color: COLORS.muted}},
-                gridcolor: '#eef1f4',
-                zerolinecolor: COLORS.border,
+                title: {text: 'Trend / series', font: {size: 12, color: 'grey'}},
                 ...(trend.visible === true ? visibleAxisDisplay : invisibleAxisDisplay),
             },
             yaxis2: {
                 overlaying: 'y',
                 side: 'right',
                 automargin: true,
-                title: {text: 'Cycle', font: {size: 12, color: COLORS.muted}},
-                gridcolor: '#eef1f4',
-                zerolinecolor: '#b8c2cc',
+                title: {text: 'Cycle', font: {size: 12, color: 'grey'}},
                 ...(cycle.visible === true ? visibleAxisDisplay : invisibleAxisDisplay),
             },
             legend: {
@@ -195,8 +185,8 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
             annotations: [
                 {
                     font: {
-                        color: COLORS.muted,
-                        size: 10
+                        color: 'grey',
+                        size: 9
                     },
                     xref: 'paper',
                     yref: 'paper',
@@ -209,8 +199,8 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
                 },
                 {
                     font: {
-                        color: COLORS.muted,
-                        size: 10
+                        color: 'grey',
+                        size: 9
                     },
                     xref: 'paper',
                     yref: 'paper',
@@ -365,9 +355,9 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
                 <div className="plotWrap">
                     {plot}
                 </div>
-                <div style={{paddingBottom: '1rem', paddingTop: '0.75rem'}}>
+                <div style={{paddingBottom: '1rem', paddingTop: '0.25rem'}}>
                     <FormControl component="fieldset" sx={{width: '100%', maxWidth: 370}}>
-                        <FormLabel component="legend" sx={{mb: 1, fontWeight: 600}}>
+                        <FormLabel component="legend">
                             95% Confidence Intervals
                         </FormLabel>
 
@@ -405,8 +395,8 @@ const DataPlot = ({setState, plotPageValues, modelParams, prevStep}) => {
                         </ToggleButtonGroup>
                     </FormControl>
                 </div>
-                <CSVLink className="csvLink" filename={fileName} data={getCSVData()}>
-                    <DownloadIcon fontSize="small"/>Download as CSV</CSVLink>
+                <CSVLink style={{textDecoration: "underline", marginBottom: 7}}
+                         filename={fileName} data={getCSVData()}>Download as CSV</CSVLink>
 
             </div>
             <div className="buttonRow">

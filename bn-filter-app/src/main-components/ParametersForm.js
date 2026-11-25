@@ -53,7 +53,7 @@ const ParametersForm = ({handlers, values, errors, prevStep, nextStep, cancelLoa
                 <Tooltip
                     title="These transformations are applied to the base dataset. They are applied in the order of the fields."
                     arrow>
-                    <Divider sx={{fontSize: '1.05rem', fontWeight: 600, color: 'text.secondary', my: 3}}>
+                    <Divider sx={{fontSize: "x-large", mt: "25px", mb: 3}}>
                         Transformations<IconButton size="small"><InfoIcon fontSize="small"/></IconButton>
                     </Divider>
                 </Tooltip>
@@ -64,17 +64,15 @@ const ParametersForm = ({handlers, values, errors, prevStep, nextStep, cancelLoa
                         control={<Checkbox size="small" onChange={handleCheckboxChange('takeLog')}
                                            checked={values.takeLog}/>}
                     />
-                    <FormControl fullWidth>
-                        <InputLabel id="dcode-label">Differencing Method</InputLabel>
-                        <Select labelId="dcode-label" label="Differencing Method"
-                                onChange={handleChange('dCode')} value={values.dCode}>
+                    <FormControl variant="standard" fullWidth>
+                        <InputLabel>Differencing Method</InputLabel>
+                        <Select onChange={handleChange('dCode')} value={values.dCode}>
                             {createMenuItems(field.optionField.dCode.option)}
                         </Select>
                     </FormControl>
-                    <FormControl fullWidth>
-                        <InputLabel id="pcode-label">Computed Percentages</InputLabel>
-                        <Select labelId="pcode-label" label="Computed Percentages"
-                                onChange={handleChange('pCode')} value={values.pCode}>
+                    <FormControl variant="standard" fullWidth>
+                        <InputLabel>Computed Percentages</InputLabel>
+                        <Select onChange={handleChange('pCode')} value={values.pCode}>
                             {createMenuItems(field.optionField.pCode.option)}
                         </Select>
                     </FormControl>
@@ -88,19 +86,19 @@ const ParametersForm = ({handlers, values, errors, prevStep, nextStep, cancelLoa
 
         return (
             <>
-                <Divider sx={{fontSize: '1.05rem', fontWeight: 600, color: 'text.secondary', mt: 5, mb: 3}}>Filter Parameters</Divider>
+                <Divider sx={{fontSize: "x-large", mt: "50px", mb: 4}}>Filter Parameters</Divider>
                 <div className="formColumn" style={{maxWidth: 600}}>
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={8}>
-                            <FormControl fullWidth>
-                                <InputLabel id="delta-select-label">Signal-to-Noise Ratio (Delta)</InputLabel>
-                                <Select labelId="delta-select-label" label="Signal-to-Noise Ratio (Delta)"
-                                        onChange={handleChange('deltaSelect')} value={values.deltaSelect}
-                                        endAdornment={
-                                            <Tooltip title={createHoverText(field.optionField.deltaSelect.option)(values.deltaSelect)}>
-                                                <IconButton size="small" sx={{mr: 2}}><InfoIcon fontSize="small"/></IconButton>
-                                            </Tooltip>
-                                        }>
+                            <FormControl variant="standard" fullWidth>
+                                <InputLabel>
+                                    Signal-to-Noise Ratio (Delta)
+                                    <Tooltip
+                                        title={createHoverText(field.optionField.deltaSelect.option)(values.deltaSelect)}>
+                                        <IconButton size="small"><InfoIcon fontSize="small"/></IconButton>
+                                    </Tooltip>
+                                </InputLabel>
+                                <Select onChange={handleChange('deltaSelect')} value={values.deltaSelect}>
                                     {createMenuItems(field.optionField.deltaSelect.option)}
                                 </Select>
                             </FormControl>
@@ -125,15 +123,15 @@ const ParametersForm = ({handlers, values, errors, prevStep, nextStep, cancelLoa
                             />
                         </Grid>
                         <Grid item xs={12} sm={8}>
-                            <FormControl fullWidth>
-                                <InputLabel id="demean-label">Demeaning</InputLabel>
-                                <Select labelId="demean-label" label="Demeaning"
-                                        onChange={handleChange('demean')} value={values.demean}
-                                        endAdornment={
-                                            <Tooltip title={createHoverText(field.optionField.iterativeDynamicDemeaning.option)(values.demean)}>
-                                                <IconButton size="small" sx={{mr: 2}}><InfoIcon fontSize="small"/></IconButton>
-                                            </Tooltip>
-                                        }>
+                            <FormControl variant="standard" fullWidth>
+                                <InputLabel>
+                                    Demeaning
+                                    <Tooltip
+                                        title={createHoverText(field.optionField.iterativeDynamicDemeaning.option)(values.demean)}>
+                                        <IconButton size="small"><InfoIcon fontSize="small"/></IconButton>
+                                    </Tooltip>
+                                </InputLabel>
+                                <Select onChange={handleChange('demean')} value={values.demean}>
                                     {createMenuItems(field.optionField.iterativeDynamicDemeaning.option)}
                                 </Select>
                             </FormControl>

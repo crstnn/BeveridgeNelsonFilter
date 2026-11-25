@@ -73,7 +73,7 @@ export default class UserDataForm extends Component {
                     </FormControl>
                     <Divider
                         title="This option does not make alterations to the data but changes the display of the plot output"
-                        sx={{fontSize: '1.05rem', fontWeight: 600, color: 'text.secondary', my: 3}}>Display Options</Divider>
+                        style={{fontSize: 'large', marginTop: "20px", marginBottom: "24px"}}>Display Options</Divider>
                     <Stack spacing={3}>
                         <DatePicker
                             label={"Start Date"}
@@ -82,11 +82,9 @@ export default class UserDataForm extends Component {
                             updateDate={handleChange('startDate')}
                             frequency={values.frequency}
                             isDisabled={values.frequency === "n"}/>
-                        <FormControl fullWidth>
-                            <InputLabel id="frequency-user-label">Frequency</InputLabel>
+                        <FormControl variant="standard" fullWidth>
+                            <InputLabel>Frequency</InputLabel>
                             <Select
-                                labelId="frequency-user-label"
-                                label="Frequency"
                                 title="Time-series frequency"
                                 onChange={handleChange('frequency')}
                                 value={values.frequency}
