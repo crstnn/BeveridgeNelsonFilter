@@ -190,7 +190,7 @@ const BasePage = ({initialState}) => {
         const covidStartDate = new Date(2020, 2, 1); // 1st Mar 2020
         const covidEndDate = new Date(2020, 8, 30); // 30 Sept 2020
         const outliers = dates
-            .map((date, index) => ({date: new Date(date), index}))
+            .map((date, index) => ({date: DateAbstract.maybeConvertStringToDate(date), index}))
             .filter(({date}) => date >= covidStartDate && date <= covidEndDate);
         const outlierIndices = outliers
             .map(({index}) => index)
