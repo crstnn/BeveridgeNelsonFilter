@@ -97,7 +97,7 @@ const App = () => {
                     Benjamin Wong</a>
                 <br/>
                 <div className="handle">
-                    <a href="https://crstnn.github.io/" rel="noopener noreferrer" target="_blank">@cristian</a>
+                    <a href="https://crstnn.github.io/" rel="noopener noreferrer" target="_blank">Cristian Corrado</a>
                 </div>
             </footer>
         </div>
